@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Calendar, Zap } from "lucide-react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const TikTok = () => {
   return (
@@ -48,6 +49,7 @@ const TikTok = () => {
           </Link>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

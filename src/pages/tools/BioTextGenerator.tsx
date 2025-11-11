@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { User } from "lucide-react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { useState } from "react";
 
 const BioTextGenerator = () => {
@@ -75,6 +76,7 @@ const BioTextGenerator = () => {
           </Link>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

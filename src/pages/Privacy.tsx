@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Privacy = () => {
   return (
@@ -84,6 +85,7 @@ const Privacy = () => {
           </section>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

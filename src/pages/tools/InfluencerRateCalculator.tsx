@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { useState } from "react";
 
 const InfluencerRateCalculator = () => {
@@ -80,6 +81,7 @@ const InfluencerRateCalculator = () => {
           </Link>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

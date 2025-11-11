@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const ContentPlanner = () => {
   return (
@@ -52,6 +53,7 @@ const ContentPlanner = () => {
           </Link>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

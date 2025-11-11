@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Camera, Calendar, Zap } from "lucide-react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Snapchat = () => {
   return (
@@ -46,6 +47,7 @@ const Snapchat = () => {
           </Link>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

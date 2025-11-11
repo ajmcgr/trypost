@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import alexMacgregor from "@/assets/alex-macgregor.png";
 
 const About = () => {
@@ -8,9 +9,9 @@ const About = () => {
 
       {/* Content */}
       <main className="max-w-3xl mx-auto px-6 py-16">
-        <h1 className="font-reckless text-4xl md:text-5xl font-medium mb-8 text-center">Our story</h1>
-        
         <div className="prose prose-lg max-w-none space-y-6 text-foreground p-8 rounded-lg" style={{ border: '1px solid #e3e4e5' }}>
+          <h1 className="font-reckless text-4xl md:text-5xl font-medium mb-8 text-center">Our story</h1>
+          
           <p className="text-lg leading-relaxed text-center">
             We started this to empower creators and brands around the world with the most advanced social media scheduling technology that just works.
           </p>
@@ -68,6 +69,7 @@ const About = () => {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };
