@@ -12,9 +12,9 @@ const Index = () => {
       {/* Header */}
       <header className="bg-card">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <a href="https://trypost.ai" className="flex items-center gap-2">
             <img src={postLogo} alt="Post" className="h-8" />
-          </div>
+          </a>
           <nav className="hidden md:flex items-center gap-8">
             <Link to="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Pricing
