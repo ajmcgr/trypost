@@ -37,11 +37,14 @@ const Index = () => {
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Post helps creators and brands plan, queue, and publish content across all social platforms from one simple dashboard.
         </p>
-        <Link to="/signup">
-          <Button size="lg" className="text-lg px-8 py-6 rounded-2xl">
-            Start Scheduling Free
-          </Button>
-        </Link>
+        <div className="flex items-center justify-center gap-3">
+          <Link to="/signup">
+            <Button size="lg" className="text-lg px-8 py-6 rounded-2xl">
+              Start Scheduling Free
+            </Button>
+          </Link>
+          <div className="senja-embed" data-id="eacf7a79-5b6c-4a80-9f5a-0e6dfe631ec6" data-mode="shadow" data-lazyload="false"></div>
+        </div>
         <div className="mt-16 rounded-3xl overflow-hidden shadow-2xl border border-border bg-card p-8">
           <div className="bg-muted/30 rounded-2xl aspect-video flex items-center justify-center">
             <Calendar className="w-24 h-24 text-muted-foreground/30" />
