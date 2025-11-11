@@ -1,0 +1,69 @@
+import { Link } from "react-router-dom";
+import postLogo from "@/assets/post-logo.png";
+
+const About = () => {
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-card">
+        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2">
+            <img src={postLogo} alt="Post" className="h-8" />
+          </Link>
+        </div>
+      </header>
+
+      {/* Content */}
+      <main className="max-w-3xl mx-auto px-6 py-16">
+        <h1 className="font-reckless text-4xl md:text-5xl font-medium mb-8">Our story</h1>
+        
+        <div className="prose prose-lg max-w-none space-y-6 text-foreground">
+          <p className="text-lg leading-relaxed">
+            We started this to empower creators and brands around the world with the most advanced social media scheduling technology that just works.
+          </p>
+
+          <p className="font-semibold text-xl mt-8">Hello there!</p>
+
+          <p className="leading-relaxed">
+            Social media management tools were revolutionary once, but somewhere along the way they traded focus for feature bloat.
+          </p>
+
+          <p className="leading-relaxed">
+            That frustration became the spark for Post. We're building a lean, AI-first social media scheduling platform that prizes speed, accuracy, and transparency over shiny add-ons.
+          </p>
+
+          <p className="leading-relaxed">
+            Imagine describing your content strategy the way you'd brief a colleague—and seeing your posts scheduled across all platforms in seconds, not hours. Then imagine paying a fair, cancel-anytime rate for that clarity instead of an annual contract padded with modules you'll never open.
+          </p>
+
+          <p className="leading-relaxed">
+            Our small team writes code in the daylight and verifies data at night, propelled by a simple goal: help you share your content without the busywork. We'd rather invest in product improvements than celebrity keynotes; rather answer a customer email than craft another upsell deck.
+          </p>
+
+          <p className="leading-relaxed">
+            Above all, we believe the best software feels invisible—it melts into your daily rhythm so you can focus on creating content, not clicking buttons.
+          </p>
+
+          <p className="leading-relaxed">
+            If that vision resonates, stay close. We'll be sharing progress openly and shipping fast. Together we can build the tool our industry has been waiting for.
+          </p>
+
+          <p className="leading-relaxed mt-8">
+            Thanks for reading, and for giving Post a try. You can always contact me directly if you have any questions at{" "}
+            <a href="mailto:support@trypost.ai" className="text-primary hover:underline">
+              support@trypost.ai
+            </a>
+            . I look forward to hearing from you.
+          </p>
+
+          <div className="mt-12 pt-8 border-t border-border">
+            <p className="text-lg font-medium">— The Post Team</p>
+            <p className="text-muted-foreground">Founders, Post</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default About;
