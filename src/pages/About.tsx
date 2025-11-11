@@ -57,12 +57,11 @@ const About = () => {
             . I look forward to hearing from you.
           </p>
 
-          <div className="mt-12">
+          <div className="mt-12 p-6 rounded-lg" style={{ border: '1px solid #e3e4e5' }}>
             <img 
               src={alexMacgregor} 
               alt="Alex MacGregor" 
               className="w-32 h-32 rounded-lg mb-4"
-              style={{ border: '1px solid #e3e4e5' }}
             />
             <p className="text-lg font-medium">— Alex MacGregor</p>
             <p className="text-muted-foreground">Founder, Post</p>
