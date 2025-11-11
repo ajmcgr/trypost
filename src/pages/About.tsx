@@ -18,7 +18,7 @@ const About = () => {
       <main className="max-w-3xl mx-auto px-6 py-16">
         <h1 className="font-reckless text-4xl md:text-5xl font-medium mb-8 text-center">Our story</h1>
         
-        <div className="prose prose-lg max-w-none space-y-6 text-foreground">
+        <div className="prose prose-lg max-w-none space-y-6 text-foreground p-8 rounded-lg" style={{ border: '1px solid #e3e4e5' }}>
           <p className="text-lg leading-relaxed text-center">
             We started this to empower creators and brands around the world with the most advanced social media scheduling technology that just works.
           </p>
@@ -56,8 +56,9 @@ const About = () => {
             </a>
             . I look forward to hearing from you.
           </p>
+        </div>
 
-          <div className="mt-12 p-6 rounded-lg" style={{ border: '1px solid #e3e4e5' }}>
+        <div className="mt-12">
             <img 
               src={alexMacgregor} 
               alt="Alex MacGregor" 
@@ -74,7 +75,6 @@ const About = () => {
               Connect with me on LinkedIn
             </a>
           </div>
-        </div>
       </main>
     </div>
   );
