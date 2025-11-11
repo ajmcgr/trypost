@@ -24,7 +24,6 @@ import ContentPlanner from "./pages/tools/ContentPlanner";
 import InfluencerRateCalculator from "./pages/tools/InfluencerRateCalculator";
 import BioTextGenerator from "./pages/tools/BioTextGenerator";
 import CaptionGenerator from "./pages/tools/CaptionGenerator";
-import Connect from "./pages/tools/Connect";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -57,7 +56,6 @@ const App = () => (
           <Route path="/tools/influencer-rate-calculator" element={<InfluencerRateCalculator />} />
           <Route path="/tools/bio-text-generator" element={<BioTextGenerator />} />
           <Route path="/tools/caption-generator" element={<CaptionGenerator />} />
-          <Route path="/tools/connect" element={<Connect />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

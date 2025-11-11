@@ -1,18 +1,10 @@
-import { Link } from "react-router-dom";
-import postLogo from "@/assets/post-logo.png";
+import Header from "@/components/Header";
 import alexMacgregor from "@/assets/alex-macgregor.png";
 
 const About = () => {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={postLogo} alt="Post" className="h-8" />
-          </Link>
-        </div>
-      </header>
+      <Header />
 
       {/* Content */}
       <main className="max-w-3xl mx-auto px-6 py-16">
@@ -56,13 +48,12 @@ const About = () => {
             </a>
             . I look forward to hearing from you.
           </p>
-        </div>
 
-        <div className="mt-12">
+          <div className="mt-8">
             <img 
               src={alexMacgregor} 
               alt="Alex MacGregor" 
-              className="w-32 h-32 rounded-lg mb-4"
+              className="w-32 h-32 mb-4"
             />
             <p className="text-lg font-medium">— Alex MacGregor</p>
             <p className="text-muted-foreground">Founder, Post</p>
@@ -75,6 +66,7 @@ const About = () => {
               Connect with me on LinkedIn
             </a>
           </div>
+        </div>
       </main>
     </div>
   );

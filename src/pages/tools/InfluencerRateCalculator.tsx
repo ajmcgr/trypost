@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
-import postLogo from "@/assets/post-logo.png";
+import Header from "@/components/Header";
 import { useState } from "react";
 
 const InfluencerRateCalculator = () => {
@@ -26,16 +26,7 @@ const InfluencerRateCalculator = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="bg-card">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={postLogo} alt="Post" className="h-8" />
-          </Link>
-          <Link to="/signup">
-            <Button>Start Free</Button>
-          </Link>
-        </div>
-      </header>
+      <Header showSignup />
 
       <main className="max-w-3xl mx-auto px-6 py-16">
         <div className="flex items-center gap-4 mb-6">
