@@ -29,7 +29,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20 text-center">
-        <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">
+        <h1 className="font-reckless text-5xl md:text-6xl font-medium mb-6 tracking-tight">
           Create once.
           <br />
           <span className="text-primary">Schedule everywhere.</span>
@@ -52,7 +52,7 @@ const Index = () => {
       {/* How It Works */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">How it works</h2>
+          <h2 className="font-reckless text-4xl font-medium mb-4">How it works</h2>
           <p className="text-lg text-muted-foreground">Three simple steps to social media success</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
@@ -89,7 +89,7 @@ const Index = () => {
       {/* Supported Platforms */}
       <section className="container mx-auto px-6 py-20 bg-muted/30 rounded-3xl">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Works with all your platforms</h2>
+          <h2 className="font-reckless text-4xl font-medium mb-4">Works with all your platforms</h2>
           <p className="text-lg text-muted-foreground">Connect once, publish everywhere</p>
         </div>
         <div className="flex flex-wrap justify-center gap-8">
@@ -150,7 +150,7 @@ const Index = () => {
 
       {/* CTA Section */}
       <section className="container mx-auto px-6 py-20 text-center">
-        <h2 className="text-4xl font-bold mb-6">Ready to simplify your social media?</h2>
+        <h2 className="font-reckless text-4xl font-medium mb-6">Ready to simplify your social media?</h2>
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Join thousands of creators who schedule smarter with Post.
         </p>
@@ -169,9 +169,6 @@ const Index = () => {
               <div className="flex items-center gap-2 mb-4">
                 <img src={postLogo} alt="Post" className="h-8" />
               </div>
-              <p className="text-sm text-muted-foreground">
-                Part of the Works.xyz ecosystem
-              </p>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Product</h4>
@@ -197,7 +194,7 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            © 2024 Post by Works.xyz. All rights reserved.
+            Copyright © 2025 Works App, Inc. Built with ♥️ by <a href="https://works.xyz" className="hover:text-foreground transition-colors">Works</a>.
           </div>
         </div>
       </footer>
