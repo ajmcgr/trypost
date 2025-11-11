@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Check, Calendar } from "lucide-react";
+import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Pricing = () => {
   const plans = [
@@ -51,25 +53,7 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-semibold">Post</span>
-          </Link>
-          <nav className="flex items-center gap-8">
-            <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Login
-            </Link>
-            <Link to="/signup">
-              <Button>Start Free</Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header showSignup />
 
       {/* Pricing Hero */}
       <section className="container mx-auto px-6 py-20 text-center">
@@ -161,48 +145,7 @@ const Pricing = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card mt-20">
-        <div className="container mx-auto px-6 py-12">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                  <Calendar className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <span className="text-xl font-semibold">Post</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Part of the Works.xyz ecosystem
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link to="/pricing" className="text-muted-foreground hover:text-foreground">Pricing</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Works</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="https://trybio.ai" className="text-muted-foreground hover:text-foreground">trybio.ai</a></li>
-                <li><a href="https://trycreators.ai" className="text-muted-foreground hover:text-foreground">trycreators.ai</a></li>
-                <li><a href="https://trymedia.ai" className="text-muted-foreground hover:text-foreground">trymedia.ai</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground">Privacy</Link></li>
-                <li><Link to="/terms" className="text-muted-foreground hover:text-foreground">Terms</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            © 2024 Post by Works.xyz. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

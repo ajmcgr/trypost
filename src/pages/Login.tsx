@@ -2,19 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import Header from "@/components/Header";
 
 const Login = () => {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        <Link to="/" className="flex items-center gap-2 justify-center mb-8">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-            <Calendar className="w-6 h-6 text-primary-foreground" />
-          </div>
-          <span className="text-2xl font-semibold">Post</span>
-        </Link>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="flex items-center justify-center p-6 pt-16">
+        <div className="w-full max-w-md">
 
         <Card className="p-8 rounded-3xl border-2">
           <h1 className="text-3xl font-bold mb-2 text-center">Welcome back</h1>
@@ -59,6 +55,7 @@ const Login = () => {
           {" · "}
           <Link to="/terms" className="hover:underline">Terms of Service</Link>
         </p>
+        </div>
       </div>
     </div>
   );
