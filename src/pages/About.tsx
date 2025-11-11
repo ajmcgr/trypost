@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import postLogo from "@/assets/post-logo.png";
+import alexMacgregor from "@/assets/alex-macgregor.png";
 
 const About = () => {
   return (
@@ -15,10 +16,10 @@ const About = () => {
 
       {/* Content */}
       <main className="max-w-3xl mx-auto px-6 py-16">
-        <h1 className="font-reckless text-4xl md:text-5xl font-medium mb-8">Our story</h1>
+        <h1 className="font-reckless text-4xl md:text-5xl font-medium mb-8 text-center">Our story</h1>
         
         <div className="prose prose-lg max-w-none space-y-6 text-foreground">
-          <p className="text-lg leading-relaxed">
+          <p className="text-lg leading-relaxed text-center">
             We started this to empower creators and brands around the world with the most advanced social media scheduling technology that just works.
           </p>
 
@@ -56,9 +57,23 @@ const About = () => {
             . I look forward to hearing from you.
           </p>
 
-          <div className="mt-12 pt-8 border-t border-border">
-            <p className="text-lg font-medium">— The Post Team</p>
-            <p className="text-muted-foreground">Founders, Post</p>
+          <div className="mt-12">
+            <img 
+              src={alexMacgregor} 
+              alt="Alex MacGregor" 
+              className="w-32 h-32 rounded-lg mb-4"
+              style={{ border: '1px solid #e3e4e5' }}
+            />
+            <p className="text-lg font-medium">— Alex MacGregor</p>
+            <p className="text-muted-foreground">Founder, Post</p>
+            <a 
+              href="https://www.linkedin.com/in/alexmacgregor2/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline inline-block mt-2"
+            >
+              Connect with me on LinkedIn
+            </a>
           </div>
         </div>
       </main>
