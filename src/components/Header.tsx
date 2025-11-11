@@ -15,7 +15,7 @@ const Header = ({ showSignup = false }: HeaderProps) => {
         </Link>
         {showSignup && (
           <Link to="/signup">
-            <Button>Start Free</Button>
+            <Button>Sign Up →</Button>
           </Link>
         )}
       </div>

@@ -21,7 +21,7 @@ const Index = () => {
               Login
             </Link>
             <Link to="/signup">
-              <Button>Start Free</Button>
+              <Button>Sign Up →</Button>
             </Link>
           </nav>
         </div>
@@ -39,8 +39,8 @@ const Index = () => {
         </p>
         <div className="flex items-center justify-center gap-3">
           <Link to="/signup">
-            <Button size="lg" className="text-lg px-8 py-6 rounded-2xl">
-              Start Scheduling Free
+            <Button size="lg" className="text-xl px-10 py-7 rounded-2xl">
+              Start Scheduling Free →
             </Button>
           </Link>
           <div className="senja-embed" data-id="eacf7a79-5b6c-4a80-9f5a-0e6dfe631ec6" data-mode="shadow" data-lazyload="false"></div>
@@ -159,7 +159,7 @@ const Index = () => {
         </p>
         <Link to="/signup">
           <Button size="lg" className="text-lg px-8 py-6 rounded-2xl">
-            Get Started Free
+            Start Scheduling Free →
           </Button>
         </Link>
       </section>
