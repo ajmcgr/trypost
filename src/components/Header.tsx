@@ -10,9 +10,9 @@ const Header = ({ showSignup = false }: HeaderProps) => {
   return (
     <header className="bg-card">
       <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+        <a href="https://trypost.ai" className="flex items-center gap-2">
           <img src={postLogo} alt="Post" className="h-8" />
-        </Link>
+        </a>
         {showSignup && (
           <Link to="/signup">
             <Button>Sign Up →</Button>
