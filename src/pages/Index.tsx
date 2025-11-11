@@ -167,7 +167,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border bg-card">
         <div className="max-w-6xl mx-auto px-6 py-12">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-5 gap-8">
             <div>
               <h4 className="font-semibold mb-4">About</h4>
               <ul className="space-y-2 text-sm">
@@ -206,7 +206,13 @@ const Index = () => {
                 <li><Link to="/tools/influencer-rate-calculator" className="text-muted-foreground hover:text-foreground">Influencer Rate Calculator</Link></li>
                 <li><Link to="/tools/bio-text-generator" className="text-muted-foreground hover:text-foreground">Bio Text Generator</Link></li>
                 <li><Link to="/tools/caption-generator" className="text-muted-foreground hover:text-foreground">Caption Generator</Link></li>
-                <li><Link to="/tools/connect" className="text-muted-foreground hover:text-foreground">Connect</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Connect</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="https://x.com/trypostai" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">X</a></li>
+                <li><a href="https://discord.gg/vNyMmrRDXA" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Discord</a></li>
               </ul>
             </div>
           </div>
