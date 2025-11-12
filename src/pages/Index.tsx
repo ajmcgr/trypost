@@ -1,10 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Zap, BarChart3, Twitter, Linkedin, Instagram, Facebook, Youtube, ChevronDown, Check } from "lucide-react";
+import { Calendar, Zap, BarChart3, ChevronDown, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 import postLogo from "@/assets/post-logo.png";
+import facebookLogo from "@/assets/facebook.svg";
+import xLogo from "@/assets/x.svg";
+import linkedinLogo from "@/assets/linkedin.svg";
+import instagramLogo from "@/assets/instagram.svg";
+import youtubeLogo from "@/assets/youtube.svg";
+import threadsLogo from "@/assets/threads.svg";
+import tiktokLogo from "@/assets/tiktok.svg";
 
 const Index = () => {
   return (
@@ -215,55 +222,31 @@ const Index = () => {
         </div>
         <div className="flex flex-wrap justify-center gap-8">
           <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <Twitter className="w-6 h-6 text-google-blue" />
+            <img src={xLogo} alt="X" className="w-6 h-6" />
             <span className="font-medium">Twitter / X</span>
           </div>
           <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <Linkedin className="w-6 h-6 text-google-blue" />
+            <img src={linkedinLogo} alt="LinkedIn" className="w-6 h-6" />
             <span className="font-medium">LinkedIn</span>
           </div>
           <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <Instagram className="w-6 h-6 text-google-red" />
+            <img src={instagramLogo} alt="Instagram" className="w-6 h-6" />
             <span className="font-medium">Instagram</span>
           </div>
           <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <Facebook className="w-6 h-6 text-google-blue" />
+            <img src={facebookLogo} alt="Facebook" className="w-6 h-6" />
             <span className="font-medium">Facebook</span>
           </div>
           <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <Youtube className="w-6 h-6 text-google-red" />
+            <img src={youtubeLogo} alt="YouTube" className="w-6 h-6" />
             <span className="font-medium">YouTube</span>
           </div>
           <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <svg className="w-6 h-6" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none">
-              <path d="M96 162c-14.152 0-24.336-.007-32.276-.777-7.849-.761-12.87-2.223-16.877-4.741a36 36 0 0 1-11.33-11.329c-2.517-4.007-3.98-9.028-4.74-16.877C30.007 120.336 30 110.152 30 96c0-14.152.007-24.336.777-32.276.76-7.849 2.223-12.87 4.74-16.877a36 36 0 0 1 11.33-11.33c4.007-2.517 9.028-3.98 16.877-4.74C71.663 30.007 81.847 30 96 30c14.152 0 24.336.007 32.276.777 7.849.76 12.87 2.223 16.877 4.74a36 36 0 0 1 11.329 11.33c2.518 4.007 3.98 9.028 4.741 16.877.77 7.94.777 18.124.777 32.276 0 14.152-.007 24.336-.777 32.276-.761 7.849-2.223 12.87-4.741 16.877a36 36 0 0 1-11.329 11.329c-4.007 2.518-9.028 3.98-16.877 4.741-7.94.77-18.124.777-32.276.777Z" fill="url(#a)"/>
-              <path d="M96 162c-14.152 0-24.336-.007-32.276-.777-7.849-.761-12.87-2.223-16.877-4.741a36 36 0 0 1-11.33-11.329c-2.517-4.007-3.98-9.028-4.74-16.877C30.007 120.336 30 110.152 30 96c0-14.152.007-24.336.777-32.276.76-7.849 2.223-12.87 4.74-16.877a36 36 0 0 1 11.33-11.33c4.007-2.517 9.028-3.98 16.877-4.74C71.663 30.007 81.847 30 96 30c14.152 0 24.336.007 32.276.777 7.849.76 12.87 2.223 16.877 4.74a36 36 0 0 1 11.329 11.33c2.518 4.007 3.98 9.028 4.741 16.877.77 7.94.777 18.124.777 32.276 0 14.152-.007 24.336-.777 32.276-.761 7.849-2.223 12.87-4.741 16.877a36 36 0 0 1-11.329 11.329c-4.007 2.518-9.028 3.98-16.877 4.741-7.94.77-18.124.777-32.276.777Z" fill="url(#b)"/>
-              <path d="M96 162c-14.152 0-24.336-.007-32.276-.777-7.849-.761-12.87-2.223-16.877-4.741a36 36 0 0 1-11.33-11.329c-2.517-4.007-3.98-9.028-4.74-16.877C30.007 120.336 30 110.152 30 96c0-14.152.007-24.336.777-32.276.76-7.849 2.223-12.87 4.74-16.877a36 36 0 0 1 11.33-11.33c4.007-2.517 9.028-3.98 16.877-4.74C71.663 30.007 81.847 30 96 30c14.152 0 24.336.007 32.276.777 7.849.76 12.87 2.223 16.877 4.74a36 36 0 0 1 11.329 11.33c2.518 4.007 3.98 9.028 4.741 16.877.77 7.94.777 18.124.777 32.276 0 14.152-.007 24.336-.777 32.276-.761 7.849-2.223 12.87-4.741 16.877a36 36 0 0 1-11.329 11.329c-4.007 2.518-9.028 3.98-16.877 4.741-7.94.77-18.124.777-32.276.777Z" fill="url(#c)"/>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M96 30c-14.152 0-24.336.007-32.276.777-7.849.76-12.87 2.223-16.877 4.74a36 36 0 0 0-11.33 11.33c-2.517 4.007-3.98 9.028-4.74 16.877C30.007 71.663 30 81.847 30 96v-.054l32.284-32.284a6 6 0 0 1 8.486 0l13.526 13.526 44.758-44.757A6 6 0 0 1 133.296 30H96Z" fill="#000" fill-opacity=".4"/>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M96 162c14.152 0 24.336-.007 32.276-.777 7.849-.761 12.87-2.223 16.877-4.741a36 36 0 0 0 11.329-11.329c2.518-4.007 3.98-9.028 4.741-16.877.77-7.94.777-18.124.777-32.276v-5.59l-8.122 8.121a6 6 0 0 1-8.485 0l-22.269-22.269-44.758 44.758a6 6 0 0 1-8.485 0l-13.526-13.526L30 134.024C30.653 146.927 32.284 155.052 38.153 162H96Z" fill="#000" fill-opacity=".4"/>
-              <defs>
-                <radialGradient id="a" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="rotate(45 -10.339 113.339) scale(175.388)">
-                  <stop stop-color="#FFF478"/>
-                  <stop offset=".474" stop-color="#FFB02E"/>
-                  <stop offset="1" stop-color="#F70A8D"/>
-                </radialGradient>
-                <radialGradient id="b" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="rotate(45 -10.339 113.339) scale(175.388)">
-                  <stop stop-color="#FFF478"/>
-                  <stop offset=".474" stop-color="#FFB02E"/>
-                  <stop offset="1" stop-color="#F70A8D"/>
-                </radialGradient>
-                <radialGradient id="c" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(38.66608 0 0 39.02743 30.688 160.832)">
-                  <stop stop-color="#3771C8"/>
-                  <stop offset="1" stop-color="#3771C8" stop-opacity="0"/>
-                </radialGradient>
-              </defs>
-            </svg>
+            <img src={threadsLogo} alt="Threads" className="w-6 h-6" />
             <span className="font-medium">Threads</span>
           </div>
           <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <svg className="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-              <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/>
-            </svg>
+            <img src={tiktokLogo} alt="TikTok" className="w-6 h-6" />
             <span className="font-medium">TikTok</span>
           </div>
         </div>
