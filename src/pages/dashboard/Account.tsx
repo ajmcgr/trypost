@@ -14,7 +14,6 @@ const Account = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
-  const [loadingPortal, setLoadingPortal] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
 
   const handleChangePassword = async () => {
@@ -43,25 +42,8 @@ const Account = () => {
     setChangingPassword(false);
   };
 
-  const handleManageBilling = async () => {
-    setLoadingPortal(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("customer-portal", {
-        headers: {
-          Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-        },
-      });
-
-      if (error) throw error;
-
-      if (data?.url) {
-        window.open(data.url, "_blank");
-      }
-    } catch (error: any) {
-      toast.error(error.message || "Failed to open billing portal");
-    } finally {
-      setLoadingPortal(false);
-    }
+  const handleManageBilling = () => {
+    window.open("https://billing.stripe.com/p/login/fZu28s0G63tj31Xa9f2sM00", "_blank");
   };
 
   const handleDeleteAccount = async () => {
@@ -173,10 +155,9 @@ const Account = () => {
           <CardContent>
             <Button 
               onClick={handleManageBilling}
-              disabled={loadingPortal}
               variant="outline"
             >
-              {loadingPortal ? "Loading..." : "Manage Billing"}
+              Manage Billing
             </Button>
           </CardContent>
         </Card>
