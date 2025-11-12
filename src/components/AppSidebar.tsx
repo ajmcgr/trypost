@@ -1,6 +1,5 @@
 import {
   Calendar,
-  FileText,
   Layers,
   FileEdit,
   Clock,
@@ -8,12 +7,6 @@ import {
   FileCheck,
   Users,
   Settings,
-  Key,
-  MessageSquare,
-  CalendarDays,
-  Gift,
-  Twitter,
-  BookOpen,
   FileStack,
   Link2,
   Wand2,
@@ -57,16 +50,6 @@ const workspaceItems = [
 
 const configItems = [
   { title: "Settings", url: "/dashboard/settings", icon: Settings },
-  { title: "API Keys", url: "/dashboard/api-keys", icon: Key },
-];
-
-const supportItems = [
-  { title: "Share feedback", url: "/dashboard/feedback", icon: MessageSquare },
-  { title: "Book consultation", url: "/dashboard/consultation", icon: CalendarDays },
-  { title: "Earn 30% referral", url: "/dashboard/referral", icon: Gift },
-  { title: "Stay updated", url: "https://x.com/trypostai", icon: Twitter, external: true },
-  { title: "Growth guide", url: "/dashboard/growth", icon: BookOpen },
-  { title: "Docs", url: "https://docs.trypost.ai", icon: FileText, external: true },
 ];
 
 export function AppSidebar() {
@@ -166,32 +149,6 @@ export function AppSidebar() {
                       <item.icon className="h-4 w-4" />
                       {!collapsed && <span>{item.title}</span>}
                     </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {/* Support Section */}
-        <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>Support</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {supportItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={!item.external && isActive(item.url)}>
-                    {item.external ? (
-                      <a href={item.url} target="_blank" rel="noopener noreferrer" className="hover:bg-muted/50">
-                        <item.icon className="h-4 w-4" />
-                        {!collapsed && <span>{item.title}</span>}
-                      </a>
-                    ) : (
-                      <NavLink to={item.url} className="hover:bg-muted/50">
-                        <item.icon className="h-4 w-4" />
-                        {!collapsed && <span>{item.title}</span>}
-                      </NavLink>
-                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
