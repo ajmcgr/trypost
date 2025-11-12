@@ -216,8 +216,7 @@ const Composer = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
-};
-
-export default Composer;
+    );
+  };
+  
+  export default Composer;
