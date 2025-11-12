@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const createItems = [
-  { title: "New post", url: "/dashboard/composer", icon: FileEdit },
+  { title: "New post", url: "/dashboard", icon: FileEdit },
   { title: "Studio", url: "/dashboard/studio", icon: Wand2 },
   { title: "Bulk tools", url: "/dashboard/bulk-tools", icon: Layers },
 ];
@@ -84,7 +84,7 @@ export function AppSidebar() {
       <SidebarContent>
         {/* Create Post Button */}
         <div className="p-3">
-          <NavLink to="/dashboard/composer">
+          <NavLink to="/dashboard">
             <Button className="w-full bg-[#7ED957] hover:bg-[#6FC847] text-black font-medium rounded-xl">
               {!collapsed && (
                 <>

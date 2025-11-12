@@ -45,6 +45,7 @@ import Consultation from "./pages/dashboard/Consultation";
 import Referral from "./pages/dashboard/Referral";
 import Growth from "./pages/dashboard/Growth";
 import Account from "./pages/dashboard/Account";
+import Home from "./pages/dashboard/Home";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -68,7 +69,7 @@ const App = () => (
           
           {/* Dashboard Routes with Sidebar */}
           <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Connections />} />
+            <Route index element={<Home />} />
             <Route path="composer" element={<Composer />} />
             <Route path="calendar" element={<Calendar />} />
             <Route path="posts" element={<Posts />} />
