@@ -45,12 +45,12 @@ const postsItems = [
 ];
 
 const workspaceItems = [
-  { title: "Connections", url: "/dashboard/connections", icon: Link2 },
   { title: "Teams", url: "/dashboard/teams", icon: Users },
 ];
 
 const configItems = [
   { title: "Settings", url: "/dashboard/settings", icon: Settings },
+  { title: "Social Platforms", url: "/dashboard/connections", icon: Link2 },
 ];
 
 export function AppSidebar() {
