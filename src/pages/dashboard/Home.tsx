@@ -1,10 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, FileText, Image, Video, Facebook, Twitter, Linkedin, Instagram, Youtube, Pin } from "lucide-react";
+import { AlertCircle, FileText, Image, Video } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
+import facebookLogo from "@/assets/facebook.svg";
+import xLogo from "@/assets/x.svg";
+import linkedinLogo from "@/assets/linkedin.svg";
+import instagramLogo from "@/assets/instagram.svg";
+import youtubeLogo from "@/assets/youtube.svg";
+import threadsLogo from "@/assets/threads.svg";
+import tiktokLogo from "@/assets/tiktok.svg";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -36,19 +43,19 @@ const Home = () => {
     {
       title: "Text Post",
       icon: FileText,
-      platforms: [Facebook, Twitter, Linkedin, Instagram, Twitter],
+      platforms: [facebookLogo, xLogo, linkedinLogo, instagramLogo, threadsLogo],
       route: "/dashboard/composer",
     },
     {
       title: "Image Post",
       icon: Image,
-      platforms: [Facebook, Twitter, Linkedin, Instagram, Twitter, Instagram, Pin],
+      platforms: [facebookLogo, xLogo, linkedinLogo, instagramLogo, threadsLogo, tiktokLogo],
       route: "/dashboard/image-composer",
     },
     {
       title: "Video Post",
       icon: Video,
-      platforms: [Facebook, Twitter, Linkedin, Instagram, Twitter, Instagram, Pin, Youtube],
+      platforms: [facebookLogo, xLogo, linkedinLogo, instagramLogo, threadsLogo, tiktokLogo, youtubeLogo],
       route: "/dashboard/video-composer",
     },
   ];
@@ -70,8 +77,8 @@ const Home = () => {
               </div>
               <h3 className="text-xl font-semibold mb-6">{type.title}</h3>
               <div className="flex flex-wrap gap-2 justify-center opacity-40">
-                {type.platforms.map((Platform, idx) => (
-                  <Platform key={idx} className="w-5 h-5 text-muted-foreground" />
+                {type.platforms.map((platform, idx) => (
+                  <img key={idx} src={platform} alt="" className="w-5 h-5" />
                 ))}
               </div>
             </CardContent>

@@ -5,6 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
+import facebookLogo from "@/assets/facebook.svg";
+import xLogo from "@/assets/x.svg";
+import linkedinLogo from "@/assets/linkedin.svg";
+import instagramLogo from "@/assets/instagram.svg";
+import youtubeLogo from "@/assets/youtube.svg";
+import threadsLogo from "@/assets/threads.svg";
+import tiktokLogo from "@/assets/tiktok.svg";
 
 interface OAuthConnection {
   id: string;
@@ -14,13 +21,13 @@ interface OAuthConnection {
 }
 
 const platforms = [
-  { id: 'twitter', name: 'Twitter / X', icon: '𝕏' },
-  { id: 'linkedin', name: 'LinkedIn', icon: '💼' },
-  { id: 'instagram', name: 'Instagram', icon: '📷' },
-  { id: 'facebook', name: 'Facebook', icon: '👥' },
-  { id: 'youtube', name: 'YouTube', icon: '▶️' },
-  { id: 'threads', name: 'Threads', icon: '🧵' },
-  { id: 'tiktok', name: 'TikTok', icon: '🎵' },
+  { id: 'twitter', name: 'Twitter / X', icon: xLogo },
+  { id: 'linkedin', name: 'LinkedIn', icon: linkedinLogo },
+  { id: 'instagram', name: 'Instagram', icon: instagramLogo },
+  { id: 'facebook', name: 'Facebook', icon: facebookLogo },
+  { id: 'youtube', name: 'YouTube', icon: youtubeLogo },
+  { id: 'threads', name: 'Threads', icon: threadsLogo },
+  { id: 'tiktok', name: 'TikTok', icon: tiktokLogo },
 ];
 
 const Connections = () => {
@@ -101,7 +108,7 @@ const Connections = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-3xl">{platform.icon}</span>
+                    <img src={platform.icon} alt={platform.name} className="w-8 h-8" />
                     <div>
                       <CardTitle className="text-lg">{platform.name}</CardTitle>
                       {connection?.platform_username && (
