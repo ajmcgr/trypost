@@ -68,7 +68,7 @@ export function AppSidebar() {
       <SidebarContent>
         {/* Logo */}
         <div className="p-3">
-          <NavLink to="/dashboard" className="flex justify-center">
+          <NavLink to="/dashboard" className="flex">
             <img src={postLogo} alt="Post" className={collapsed ? "h-8" : "h-10"} />
           </NavLink>
         </div>
