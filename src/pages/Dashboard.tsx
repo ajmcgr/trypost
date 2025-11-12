@@ -1,0 +1,145 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabase';
+import Header from '@/components/Header';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Loader2 } from 'lucide-react';
+
+interface OAuthConnection {
+  id: string;
+  platform: string;
+  platform_username: string | null;
+  is_connected: boolean;
+}
+
+const platforms = [
+  { id: 'twitter', name: 'Twitter / X', icon: '𝕏' },
+  { id: 'linkedin', name: 'LinkedIn', icon: '💼' },
+  { id: 'instagram', name: 'Instagram', icon: '📷' },
+  { id: 'facebook', name: 'Facebook', icon: '👥' },
+  { id: 'youtube', name: 'YouTube', icon: '▶️' },
+  { id: 'threads', name: 'Threads', icon: '🧵' },
+  { id: 'tiktok', name: 'TikTok', icon: '🎵' },
+];
+
+const Dashboard = () => {
+  const { user, loading: authLoading, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [connections, setConnections] = useState<OAuthConnection[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/login');
+    }
+  }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+    if (user) {
+      loadConnections();
+    }
+  }, [user]);
+
+  const loadConnections = async () => {
+    const { data, error } = await supabase
+      .from('oauth_connections')
+      .select('*')
+      .eq('user_id', user?.id);
+
+    if (!error && data) {
+      setConnections(data);
+    }
+    setLoading(false);
+  };
+
+  const handleConnect = (platform: string) => {
+    // This will be implemented with actual OAuth flows
+    console.log('Connecting to', platform);
+  };
+
+  const handleDisconnect = async (connectionId: string) => {
+    await supabase
+      .from('oauth_connections')
+      .delete()
+      .eq('id', connectionId);
+    
+    loadConnections();
+  };
+
+  if (authLoading || loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header showSignup={false} />
+      
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+            <p className="text-muted-foreground">Manage your social media connections</p>
+          </div>
+          <Button variant="outline" onClick={signOut}>
+            Sign Out
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {platforms.map((platform) => {
+            const connection = connections.find(c => c.platform === platform.id);
+            const isConnected = connection?.is_connected;
+
+            return (
+              <Card key={platform.id}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl">{platform.icon}</span>
+                      <div>
+                        <CardTitle className="text-lg">{platform.name}</CardTitle>
+                        {connection?.platform_username && (
+                          <CardDescription>@{connection.platform_username}</CardDescription>
+                        )}
+                      </div>
+                    </div>
+                    {isConnected && (
+                      <Badge variant="default">Connected</Badge>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {isConnected ? (
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => connection && handleDisconnect(connection.id)}
+                    >
+                      Disconnect
+                    </Button>
+                  ) : (
+                    <Button
+                      className="w-full"
+                      onClick={() => handleConnect(platform.id)}
+                    >
+                      Connect
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
