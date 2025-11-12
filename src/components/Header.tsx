@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 import postLogo from "@/assets/post-logo.png";
 
 interface HeaderProps {
@@ -7,16 +8,24 @@ interface HeaderProps {
 }
 
 const Header = ({ showSignup = false }: HeaderProps) => {
+  const { user } = useAuth();
+
   return (
     <header className="bg-card">
       <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
         <a href="https://trypost.ai" className="flex items-center gap-2">
           <img src={postLogo} alt="Post" className="h-8" />
         </a>
-        {showSignup && (
-          <Link to="/signup">
-            <Button>Sign Up →</Button>
+        {user ? (
+          <Link to="/dashboard">
+            <Button>Go to Dashboard →</Button>
           </Link>
+        ) : (
+          showSignup && (
+            <Link to="/signup">
+              <Button>Sign Up →</Button>
+            </Link>
+          )
         )}
       </div>
     </header>

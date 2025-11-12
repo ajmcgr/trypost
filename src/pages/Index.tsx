@@ -4,6 +4,7 @@ import { Calendar, Zap, BarChart3, ChevronDown, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import postLogo from "@/assets/post-logo.png";
 import facebookLogo from "@/assets/facebook.svg";
 import xLogo from "@/assets/x.svg";
@@ -14,6 +15,8 @@ import threadsLogo from "@/assets/threads.svg";
 import tiktokLogo from "@/assets/tiktok.svg";
 
 const Index = () => {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -26,12 +29,20 @@ const Index = () => {
             <Link to="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Pricing
             </Link>
-            <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Login
-            </Link>
-            <Link to="/signup">
-              <Button>Sign Up →</Button>
-            </Link>
+            {user ? (
+              <Link to="/dashboard">
+                <Button>Go to Dashboard →</Button>
+              </Link>
+            ) : (
+              <>
+                <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  Login
+                </Link>
+                <Link to="/signup">
+                  <Button>Sign Up →</Button>
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       </header>
