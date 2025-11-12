@@ -43,7 +43,7 @@ const Home = () => {
       title: "Image Post",
       icon: Image,
       platforms: [Facebook, Twitter, Linkedin, Instagram, Twitter, Instagram, Pin],
-      route: "/dashboard/composer",
+      route: "/dashboard/image-composer",
     },
     {
       title: "Video Post",
