@@ -9,6 +9,7 @@ import Pricing from "./pages/Pricing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import Composer from "./pages/Composer";
 import OAuthCallback from "./pages/oauth/OAuthCallback";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/composer" element={<Composer />} />
           <Route path="/oauth/:platform/callback" element={<OAuthCallback />} />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
