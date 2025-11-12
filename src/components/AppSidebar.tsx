@@ -16,6 +16,7 @@ import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "./ui/button";
 import postLogo from "@/assets/post-logo.png";
+import postIcon from "@/assets/post-icon.png";
 
 import {
   Sidebar,
@@ -69,7 +70,11 @@ export function AppSidebar() {
         {/* Logo */}
         <div className="p-3">
           <NavLink to="/dashboard" className="flex">
-            <img src={postLogo} alt="Post" className={collapsed ? "h-6" : "h-7"} />
+            <img 
+              src={collapsed ? postIcon : postLogo} 
+              alt="Post" 
+              className={collapsed ? "h-8 w-8" : "h-7"} 
+            />
           </NavLink>
         </div>
 
