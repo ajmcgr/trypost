@@ -4,10 +4,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Loader2 } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Loader2, Search, ChevronDown, Send, Save, Info } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface OAuthConnection {
@@ -35,6 +36,8 @@ const Composer = () => {
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [publishing, setPublishing] = useState(false);
+  const [schedulePost, setSchedulePost] = useState(false);
+  const [remember, setRemember] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -124,99 +127,136 @@ const Composer = () => {
 
   return (
     <div className="container mx-auto px-6 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Create Post</h1>
-        <p className="text-muted-foreground">Write once, publish everywhere</p>
-      </div>
+      <h1 className="text-3xl font-bold mb-6">Create text post</h1>
 
-      <div className="space-y-6 max-w-4xl">
-          <Card>
-            <CardHeader>
-              <CardTitle>Post Content</CardTitle>
-            </CardHeader>
-            <CardContent>
+      <div className="flex gap-6">
+        {/* Main Content Area */}
+        <div className="flex-1 space-y-6">
+          {/* Top Bar */}
+          <div className="flex items-center justify-between">
+            <Button variant="ghost" className="text-muted-foreground gap-2">
+              <Search className="w-4 h-4" />
+              Search & Filter
+              <ChevronDown className="w-4 h-4" />
+            </Button>
+            
+            <div className="flex items-center gap-2">
+              <Checkbox 
+                id="remember" 
+                checked={remember}
+                onCheckedChange={(checked) => setRemember(checked as boolean)}
+              />
+              <Label htmlFor="remember" className="text-sm cursor-pointer">Remember</Label>
+            </div>
+          </div>
+
+          {/* Connection Alert */}
+          {connections.length === 0 && (
+            <Card className="bg-muted/30 border-0">
+              <div className="p-8 text-center space-y-4">
+                <h3 className="text-xl font-semibold">No accounts connected</h3>
+                <p className="text-muted-foreground">
+                  Connect your social media accounts to start creating posts
+                </p>
+                <Button 
+                  onClick={() => navigate('/dashboard/connections')}
+                  className="bg-[#7ED957] hover:bg-[#6FC847] text-black font-medium"
+                >
+                  Connect Accounts
+                </Button>
+              </div>
+            </Card>
+          )}
+
+          {/* Main Caption */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Label className="text-base font-medium">Main Caption</Label>
+              <Info className="w-4 h-4 text-muted-foreground" />
+            </div>
+            
+            <div className="relative">
               <Textarea
-                placeholder="What's on your mind?"
+                placeholder="Start writing your post here..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="min-h-[200px] resize-none"
-                maxLength={280}
+                className="min-h-[300px] resize-none text-base"
+                maxLength={2200}
               />
-              <div className="mt-2 text-sm text-muted-foreground text-right">
-                {content.length} / 280 characters
+              <div className="absolute bottom-3 right-3 text-sm text-muted-foreground">
+                {content.length}/2200
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Select Platforms</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {connections.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">
-                    No connected platforms found
-                  </p>
-                  <Button onClick={() => navigate('/dashboard/connections')}>
-                    Connect Platforms
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {connections.map((connection) => (
-                    <div key={connection.id} className="flex items-center space-x-3">
-                      <Checkbox
-                        id={connection.platform}
-                        checked={selectedPlatforms.includes(connection.platform)}
-                        onCheckedChange={() => togglePlatform(connection.platform)}
-                      />
-                      <Label
-                        htmlFor={connection.platform}
-                        className="flex-1 cursor-pointer"
-                      >
-                        <div className="font-medium">
-                          {platformNames[connection.platform] || connection.platform}
-                        </div>
-                        {connection.platform_username && (
-                          <div className="text-sm text-muted-foreground">
-                            @{connection.platform_username}
-                          </div>
-                        )}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              onClick={() => navigate('/dashboard/connections')}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handlePublish}
-              disabled={publishing || !content.trim() || selectedPlatforms.length === 0}
-              className="flex-1"
-            >
-              {publishing ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Publishing...
-                </>
-              ) : (
-                'Publish'
-              )}
-            </Button>
+          {/* Post Configuration Tools */}
+          <div className="space-y-3">
+            <Label className="text-sm text-muted-foreground">Post configurations & tools</Label>
+            <div className="flex gap-3">
+              <Button variant="outline" className="gap-2">
+                <span className="text-muted-foreground">📱</span>
+                Platform Captions
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" className="gap-2">
+                <span className="text-muted-foreground">✏️</span>
+                Past Captions
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/* Right Sidebar */}
+        <div className="w-80 space-y-4">
+          {/* Schedule Toggle */}
+          <div className="flex items-center justify-between p-4 bg-card rounded-lg border">
+            <Label htmlFor="schedule" className="font-medium cursor-pointer">Schedule post</Label>
+            <Switch 
+              id="schedule"
+              checked={schedulePost}
+              onCheckedChange={setSchedulePost}
+            />
+          </div>
+
+          {/* Post Now Button */}
+          <Button 
+            onClick={handlePublish}
+            disabled={publishing || !content.trim() || connections.length === 0}
+            className="w-full gap-2 h-12"
+          >
+            {publishing ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Publishing...
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4" />
+                Post now
+              </>
+            )}
+          </Button>
+          
+          {connections.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center">
+              Select an account to post to
+            </p>
+          )}
+
+          {/* Save to Drafts */}
+          <Button 
+            variant="outline" 
+            className="w-full gap-2 h-12"
+            disabled={!content.trim()}
+          >
+            <Save className="w-4 h-4" />
+            Save to Drafts
+          </Button>
+        </div>
       </div>
-    );
-  };
-  
-  export default Composer;
+    </div>
+  );
+};
+
+export default Composer;
