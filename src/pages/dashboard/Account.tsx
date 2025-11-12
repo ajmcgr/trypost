@@ -138,7 +138,10 @@ const Account = () => {
             <p className="text-sm text-muted-foreground mb-4">
               Upgrade to access advanced features, unlimited posts, and priority support.
             </p>
-            <Button variant="default">
+            <Button 
+              variant="default"
+              onClick={() => window.open('/pricing', '_blank')}
+            >
               View Plans
             </Button>
           </CardContent>
