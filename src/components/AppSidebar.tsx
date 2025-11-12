@@ -15,6 +15,7 @@ import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "./ui/button";
+import postLogo from "@/assets/post-logo.png";
 
 import {
   Sidebar,
@@ -65,8 +66,15 @@ export function AppSidebar() {
   return (
     <Sidebar className={collapsed ? "w-14" : "w-64"} collapsible="icon">
       <SidebarContent>
-        {/* Create Post Button */}
+        {/* Logo */}
         <div className="p-3">
+          <NavLink to="/dashboard" className="flex justify-center">
+            <img src={postLogo} alt="Post" className={collapsed ? "h-8" : "h-10"} />
+          </NavLink>
+        </div>
+
+        {/* Create Post Button */}
+        <div className="px-3 pb-3">
           <NavLink to="/dashboard">
             <Button className="w-full rounded-xl">
               {!collapsed && (
