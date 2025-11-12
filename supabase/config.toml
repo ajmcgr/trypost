@@ -1,0 +1,22 @@
+project_id = "qfqowhetrxritoyjzzcz"
+
+[functions.oauth-twitter]
+verify_jwt = true
+
+[functions.oauth-linkedin]
+verify_jwt = true
+
+[functions.oauth-instagram]
+verify_jwt = true
+
+[functions.oauth-facebook]
+verify_jwt = true
+
+[functions.oauth-youtube]
+verify_jwt = true
+
+[functions.oauth-threads]
+verify_jwt = true
+
+[functions.oauth-tiktok]
+verify_jwt = true

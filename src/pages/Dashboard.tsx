@@ -41,6 +41,19 @@ const Dashboard = () => {
     if (user) {
       loadConnections();
     }
+    
+    // Check for OAuth callback success/error
+    const params = new URLSearchParams(window.location.search);
+    const connected = params.get('connected');
+    const error = params.get('error');
+    
+    if (connected) {
+      alert(`Successfully connected to ${connected}!`);
+      window.history.replaceState({}, '', '/dashboard');
+    } else if (error) {
+      alert(`Error: ${error}`);
+      window.history.replaceState({}, '', '/dashboard');
+    }
   }, [user]);
 
   const loadConnections = async () => {
@@ -55,9 +68,40 @@ const Dashboard = () => {
     setLoading(false);
   };
 
-  const handleConnect = (platform: string) => {
-    // This will be implemented with actual OAuth flows
-    console.log('Connecting to', platform);
+  const handleConnect = async (platform: string) => {
+    try {
+      setLoading(true);
+      
+      if (platform === 'twitter') {
+        // Twitter uses direct credentials, no OAuth flow needed
+        const { data, error } = await supabase.functions.invoke('oauth-twitter', {
+          body: {}
+        });
+        
+        if (error) throw error;
+        
+        if (data.success) {
+          await loadConnections();
+        }
+      } else {
+        // For other platforms, initiate OAuth flow
+        const { data, error } = await supabase.functions.invoke(`oauth-${platform}`, {
+          body: { redirect_uri: window.location.origin }
+        });
+        
+        if (error) throw error;
+        
+        if (data.authUrl) {
+          // Redirect to OAuth provider
+          window.location.href = data.authUrl;
+        }
+      }
+    } catch (error: any) {
+      console.error('Connection error:', error);
+      alert(`Failed to connect to ${platform}: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDisconnect = async (connectionId: string) => {
