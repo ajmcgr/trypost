@@ -85,7 +85,7 @@ export function AppSidebar() {
         {/* Create Post Button */}
         <div className="p-3">
           <NavLink to="/dashboard">
-            <Button className="w-full bg-[#7ED957] hover:bg-[#6FC847] text-black font-medium rounded-xl">
+            <Button className="w-full rounded-xl">
               {!collapsed && (
                 <>
                   <FileEdit className="mr-2 h-4 w-4" />

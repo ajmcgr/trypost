@@ -67,6 +67,10 @@ export default {
           yellow: "hsl(var(--google-yellow))",
           green: "hsl(var(--google-green))",
         },
+        "accent-green": {
+          DEFAULT: "hsl(var(--accent-green))",
+          foreground: "hsl(var(--accent-green-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

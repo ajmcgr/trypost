@@ -161,7 +161,6 @@ const ImageComposer = () => {
                 </p>
                 <Button 
                   onClick={() => navigate('/dashboard/connections')}
-                  className="bg-[#7ED957] hover:bg-[#6FC847] text-black font-medium"
                 >
                   Connect Accounts
                 </Button>
@@ -179,8 +178,8 @@ const ImageComposer = () => {
           >
             <div className="p-12 text-center space-y-4">
               <div className="flex justify-center">
-                <div className="w-20 h-20 rounded-2xl bg-[#7ED957]/20 flex items-center justify-center">
-                  <ImageIcon className="w-10 h-10 text-[#7ED957]" strokeWidth={1.5} />
+                <div className="w-20 h-20 rounded-2xl bg-accent-green/20 flex items-center justify-center">
+                  <ImageIcon className="w-10 h-10 text-accent-green" strokeWidth={1.5} />
                 </div>
               </div>
               
@@ -195,7 +194,7 @@ const ImageComposer = () => {
               </div>
 
               <Button 
-                className="bg-[#7ED957] hover:bg-[#6FC847] text-black font-medium gap-2"
+                className="bg-accent-green hover:bg-accent-green/90 text-accent-green-foreground gap-2"
                 onClick={(e) => {
                   e.stopPropagation();
                   fileInputRef.current?.click();

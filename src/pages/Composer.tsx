@@ -160,7 +160,6 @@ const Composer = () => {
                 </p>
                 <Button 
                   onClick={() => navigate('/dashboard/connections')}
-                  className="bg-[#7ED957] hover:bg-[#6FC847] text-black font-medium"
                 >
                   Connect Accounts
                 </Button>
