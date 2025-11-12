@@ -1,0 +1,221 @@
+import {
+  Calendar,
+  FileText,
+  Layers,
+  FileEdit,
+  Clock,
+  CheckCircle2,
+  FileCheck,
+  Users,
+  Settings,
+  Key,
+  MessageSquare,
+  CalendarDays,
+  Gift,
+  Twitter,
+  BookOpen,
+  FileStack,
+  Link2,
+  Wand2,
+} from "lucide-react";
+import { NavLink } from "@/components/NavLink";
+import { useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "./ui/button";
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+  SidebarFooter,
+} from "@/components/ui/sidebar";
+
+const createItems = [
+  { title: "New post", url: "/dashboard/composer", icon: FileEdit },
+  { title: "Studio", url: "/dashboard/studio", icon: Wand2 },
+  { title: "Bulk tools", url: "/dashboard/bulk-tools", icon: Layers },
+];
+
+const postsItems = [
+  { title: "Calendar", url: "/dashboard/calendar", icon: Calendar },
+  { title: "All", url: "/dashboard/posts", icon: FileStack },
+  { title: "Scheduled", url: "/dashboard/scheduled", icon: Clock },
+  { title: "Posted", url: "/dashboard/posted", icon: CheckCircle2 },
+  { title: "Drafts", url: "/dashboard/drafts", icon: FileCheck },
+];
+
+const workspaceItems = [
+  { title: "Connections", url: "/dashboard/connections", icon: Link2 },
+  { title: "Teams", url: "/dashboard/teams", icon: Users },
+];
+
+const configItems = [
+  { title: "Settings", url: "/dashboard/settings", icon: Settings },
+  { title: "API Keys", url: "/dashboard/api-keys", icon: Key },
+];
+
+const supportItems = [
+  { title: "Share feedback", url: "/dashboard/feedback", icon: MessageSquare },
+  { title: "Book consultation", url: "/dashboard/consultation", icon: CalendarDays },
+  { title: "Earn 30% referral", url: "/dashboard/referral", icon: Gift },
+  { title: "Stay updated", url: "https://x.com/trypostai", icon: Twitter, external: true },
+  { title: "Growth guide", url: "/dashboard/growth", icon: BookOpen },
+  { title: "Docs", url: "https://docs.trypost.ai", icon: FileText, external: true },
+];
+
+export function AppSidebar() {
+  const { state } = useSidebar();
+  const location = useLocation();
+  const { user } = useAuth();
+  const currentPath = location.pathname;
+  
+  const collapsed = state === "collapsed";
+
+  const isActive = (path: string) => currentPath === path;
+
+  return (
+    <Sidebar className={collapsed ? "w-14" : "w-64"} collapsible="icon">
+      <SidebarContent>
+        {/* Create Post Button */}
+        <div className="p-3">
+          <NavLink to="/dashboard/composer">
+            <Button className="w-full bg-[#7ED957] hover:bg-[#6FC847] text-black font-medium rounded-xl">
+              {!collapsed && (
+                <>
+                  <FileEdit className="mr-2 h-4 w-4" />
+                  Create post
+                </>
+              )}
+              {collapsed && <FileEdit className="h-4 w-4" />}
+            </Button>
+          </NavLink>
+        </div>
+
+        {/* Create Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>Create</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {createItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url} className="hover:bg-muted/50">
+                      <item.icon className="h-4 w-4" />
+                      {!collapsed && <span>{item.title}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Posts Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>Posts</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {postsItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url} className="hover:bg-muted/50">
+                      <item.icon className="h-4 w-4" />
+                      {!collapsed && <span>{item.title}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Workspace Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>Workspace</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {workspaceItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url} className="hover:bg-muted/50">
+                      <item.icon className="h-4 w-4" />
+                      {!collapsed && <span>{item.title}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Configuration Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>Configuration</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {configItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url} className="hover:bg-muted/50">
+                      <item.icon className="h-4 w-4" />
+                      {!collapsed && <span>{item.title}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Support Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>Support</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {supportItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={!item.external && isActive(item.url)}>
+                    {item.external ? (
+                      <a href={item.url} target="_blank" rel="noopener noreferrer" className="hover:bg-muted/50">
+                        <item.icon className="h-4 w-4" />
+                        {!collapsed && <span>{item.title}</span>}
+                      </a>
+                    ) : (
+                      <NavLink to={item.url} className="hover:bg-muted/50">
+                        <item.icon className="h-4 w-4" />
+                        {!collapsed && <span>{item.title}</span>}
+                      </NavLink>
+                    )}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+
+      {/* Account Footer */}
+      <SidebarFooter className="border-t">
+        <div className="p-3">
+          <NavLink to="/dashboard/account" className="flex items-center gap-3 hover:bg-muted/50 rounded-lg p-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-medium">
+              {user?.email?.[0].toUpperCase() || "A"}
+            </div>
+            {!collapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">Account</p>
+                <p className="text-xs text-muted-foreground truncate">Creator Plan</p>
+              </div>
+            )}
+          </NavLink>
+        </div>
+      </SidebarFooter>
+    </Sidebar>
+  );
+}

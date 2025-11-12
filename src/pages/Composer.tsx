@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
-import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -124,16 +123,13 @@ const Composer = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header showSignup={false} />
-      
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Create Post</h1>
-          <p className="text-muted-foreground">Write once, publish everywhere</p>
-        </div>
+    <div className="container mx-auto px-6 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Create Post</h1>
+        <p className="text-muted-foreground">Write once, publish everywhere</p>
+      </div>
 
-        <div className="space-y-6">
+      <div className="space-y-6 max-w-4xl">
           <Card>
             <CardHeader>
               <CardTitle>Post Content</CardTitle>
@@ -162,7 +158,7 @@ const Composer = () => {
                   <p className="text-muted-foreground mb-4">
                     No connected platforms found
                   </p>
-                  <Button onClick={() => navigate('/dashboard')}>
+                  <Button onClick={() => navigate('/dashboard/connections')}>
                     Connect Platforms
                   </Button>
                 </div>
@@ -198,7 +194,7 @@ const Composer = () => {
           <div className="flex gap-4">
             <Button
               variant="outline"
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/dashboard/connections')}
               className="flex-1"
             >
               Cancel
