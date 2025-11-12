@@ -49,7 +49,7 @@ const Home = () => {
       title: "Video Post",
       icon: Video,
       platforms: [Facebook, Twitter, Linkedin, Instagram, Twitter, Instagram, Pin, Youtube],
-      route: "/dashboard/composer",
+      route: "/dashboard/video-composer",
     },
   ];
 

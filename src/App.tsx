@@ -47,6 +47,7 @@ import Growth from "./pages/dashboard/Growth";
 import Account from "./pages/dashboard/Account";
 import Home from "./pages/dashboard/Home";
 import ImageComposer from "./pages/dashboard/ImageComposer";
+import VideoComposer from "./pages/dashboard/VideoComposer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -73,6 +74,7 @@ const App = () => (
             <Route index element={<Home />} />
             <Route path="composer" element={<Composer />} />
             <Route path="image-composer" element={<ImageComposer />} />
+            <Route path="video-composer" element={<VideoComposer />} />
             <Route path="calendar" element={<Calendar />} />
             <Route path="posts" element={<Posts />} />
             <Route path="scheduled" element={<Scheduled />} />
