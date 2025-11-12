@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Zap, BarChart3, Twitter, Linkedin, Instagram, Facebook, Youtube, ChevronDown } from "lucide-react";
+import { Calendar, Zap, BarChart3, Twitter, Linkedin, Instagram, Facebook, Youtube, ChevronDown, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
@@ -87,6 +87,122 @@ const Index = () => {
             <p className="text-muted-foreground">
               Monitor engagement, reach, and performance across all your social channels.
             </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="text-center mb-16">
+          <h2 className="font-reckless text-4xl font-medium mb-4">Simple, transparent pricing</h2>
+          <p className="text-lg text-muted-foreground">Choose the plan that fits your needs</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {/* Free Plan */}
+          <Card className="p-8 rounded-3xl border-2 flex flex-col">
+            <h3 className="text-2xl font-bold mb-2">Free</h3>
+            <div className="mb-2">
+              <span className="text-5xl font-bold">$0</span>
+            </div>
+            <p className="text-muted-foreground mb-8">Perfect for getting started</p>
+            
+            <ul className="space-y-4 mb-8 flex-grow">
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">2 social networks</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">10 scheduled posts per month</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">Basic analytics</span>
+              </li>
+            </ul>
+
+            <Link to="/signup">
+              <Button className="w-full rounded-2xl" variant="outline" size="lg">
+                Get Started
+              </Button>
+            </Link>
+          </Card>
+
+          {/* Pro Plan */}
+          <Card className="p-8 rounded-3xl border-2 border-primary shadow-xl scale-105 flex flex-col">
+            <div className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full w-fit mx-auto mb-4">
+              Most Popular
+            </div>
+            <h3 className="text-2xl font-bold mb-2">Pro</h3>
+            <div className="mb-2">
+              <span className="text-5xl font-bold">$19</span>
+              <span className="text-muted-foreground">/month</span>
+            </div>
+            <p className="text-muted-foreground mb-8">For individual creators</p>
+            
+            <ul className="space-y-4 mb-8 flex-grow">
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">5 social networks</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">Unlimited scheduled posts</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">Advanced analytics</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">Priority support</span>
+              </li>
+            </ul>
+
+            <Link to="/signup">
+              <Button className="w-full rounded-2xl" size="lg">
+                Start Free Trial
+              </Button>
+            </Link>
+          </Card>
+
+          {/* Business Plan */}
+          <Card className="p-8 rounded-3xl border-2 flex flex-col">
+            <h3 className="text-2xl font-bold mb-2">Business</h3>
+            <div className="mb-2">
+              <span className="text-5xl font-bold">$49</span>
+              <span className="text-muted-foreground">/month</span>
+            </div>
+            <p className="text-muted-foreground mb-8">For teams and agencies</p>
+            
+            <ul className="space-y-4 mb-8 flex-grow">
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">All social networks</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">Unlimited posts</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">Team collaboration</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">Advanced analytics & reporting</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">Dedicated support</span>
+              </li>
+            </ul>
+
+            <Link to="/signup">
+              <Button className="w-full rounded-2xl" variant="outline" size="lg">
+                Start Free Trial
+              </Button>
+            </Link>
           </Card>
         </div>
       </section>
