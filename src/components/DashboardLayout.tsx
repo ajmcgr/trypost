@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Loader2 } from "lucide-react";
+import postLogo from "@/assets/post-logo.png";
 
 const DashboardLayout = () => {
   const { user, loading } = useAuth();
@@ -32,8 +33,9 @@ const DashboardLayout = () => {
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         <div className="flex-1 flex flex-col">
-          <header className="h-14 border-b bg-card flex items-center px-4">
+          <header className="h-14 border-b bg-card flex items-center px-4 gap-4">
             <SidebarTrigger />
+            <img src={postLogo} alt="Post" className="h-8" />
           </header>
           <main className="flex-1 overflow-auto">
             <Outlet />
