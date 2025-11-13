@@ -65,8 +65,7 @@ import { toast } from "sonner";
 
 const createItems = [
   { title: "New post", url: "/dashboard", icon: FileEdit },
-  { title: "Studio", url: "/dashboard/studio", icon: Wand2 },
-  { title: "Bulk tools", url: "/dashboard/bulk-tools", icon: Layers },
+  { title: "Bulk post", url: "/dashboard/bulk-tools", icon: Layers },
 ];
 
 const postsItems = [
