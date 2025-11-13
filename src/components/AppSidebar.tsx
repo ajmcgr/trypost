@@ -21,6 +21,7 @@ import {
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Button } from "./ui/button";
 import postLogo from "@/assets/post-logo.png";
 import postIcon from "@/assets/post-icon.png";
@@ -94,6 +95,7 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { userRole, canAccessBilling } = useWorkspace();
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const [accountOpen, setAccountOpen] = useState(false);
@@ -109,6 +111,10 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path;
 
   const handleBilling = () => {
+    if (!canAccessBilling) {
+      toast.error("Only workspace owners can access billing");
+      return;
+    }
     // TODO: Implement Stripe portal integration
     window.open("https://billing.stripe.com/p/login/test_00000000000000000000000000", "_blank");
   };
@@ -315,22 +321,30 @@ export function AppSidebar() {
           {!collapsed && (
             <CollapsibleContent className="space-y-1 px-2 py-2">
               <SidebarMenu>
-                {accountItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                      <NavLink to={item.url} className="hover:bg-muted/50">
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
-                      </NavLink>
+                {accountItems.map((item) => {
+                  // Hide Plans for non-owners
+                  if (item.title === "Plans" && !canAccessBilling) {
+                    return null;
+                  }
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                        <NavLink to={item.url} className="hover:bg-muted/50">
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.title}</span>
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+                {canAccessBilling && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton onClick={handleBilling}>
+                      <CreditCard className="h-4 w-4" />
+                      <span>Billing</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                ))}
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={handleBilling}>
-                    <CreditCard className="h-4 w-4" />
-                    <span>Billing</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                )}
                 <SidebarMenuItem>
                   <SidebarMenuButton onClick={handleLogout} className="text-red-600 hover:text-red-600 hover:bg-red-50">
                     <LogOut className="h-4 w-4" />

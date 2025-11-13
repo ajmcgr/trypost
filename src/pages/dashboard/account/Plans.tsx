@@ -1,8 +1,12 @@
-import { Check } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useWorkspace } from "@/hooks/useWorkspace";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Plans = () => {
+  const { canAccessBilling, userRole } = useWorkspace();
+
   const plans = [
     {
       name: "Creator",
@@ -52,6 +56,24 @@ const Plans = () => {
       current: false,
     },
   ];
+
+  if (!canAccessBilling) {
+    return (
+      <div className="container mx-auto px-6 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Plans & Pricing</h1>
+          <p className="text-muted-foreground">Workspace billing information</p>
+        </div>
+
+        <Alert className="max-w-2xl">
+          <Lock className="h-4 w-4" />
+          <AlertDescription>
+            Only the workspace owner can view and manage billing. You are currently a {userRole} of this workspace.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-6 py-8">
