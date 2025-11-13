@@ -11,16 +11,15 @@ interface PublishingLoaderProps {
 
 const PublishingLoader = ({ onCheckStatus, autoRefresh = true }: PublishingLoaderProps) => {
   const navigate = useNavigate();
-  const [refreshCount, setRefreshCount] = useState(0);
 
   useEffect(() => {
-    if (autoRefresh) {
-      const interval = setInterval(() => {
-        setRefreshCount((prev) => prev + 1);
-        onCheckStatus?.();
-      }, 5000); // Auto-refresh every 5 seconds
+    if (autoRefresh && onCheckStatus) {
+      // Trigger status check immediately
+      const initialTimer = setTimeout(() => {
+        onCheckStatus();
+      }, 100);
 
-      return () => clearInterval(interval);
+      return () => clearTimeout(initialTimer);
     }
   }, [autoRefresh, onCheckStatus]);
 

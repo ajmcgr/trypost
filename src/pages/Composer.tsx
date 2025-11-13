@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
@@ -31,7 +31,8 @@ const platformNames: Record<string, string> = {
 const Composer = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const [content, setContent] = useState('');
+  const location = useLocation();
+  const [content, setContent] = useState(location.state?.content || '');
   const [connections, setConnections] = useState<OAuthConnection[]>([]);
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -100,19 +101,25 @@ const Composer = () => {
       const failed = results.filter((r: any) => !r.success).length;
 
       if (failed === 0) {
-        toast.success(`Published to all ${successful} platforms!`);
-        setContent('');
-        setSelectedPlatforms([]);
-        navigate('/dashboard');
+        // Navigate to publishing screen on success
+        navigate('/dashboard/publishing', {
+          state: {
+            postData: { content, platforms: selectedPlatforms },
+            successful,
+            total: results.length
+          }
+        });
       } else if (successful > 0) {
-        toast.warning(`Published to ${successful} platforms, ${failed} failed`);
+        toast.warning(`Published to ${successful} platforms, ${failed} failed. Check the posts page for details.`);
+        // Still navigate to posts on partial success
+        setTimeout(() => navigate('/dashboard/posts'), 2000);
       } else {
-        toast.error('Failed to publish to any platform');
+        toast.error('Failed to publish to any platform. Please try again.');
+        setPublishing(false);
       }
     } catch (error: any) {
       console.error('Publishing error:', error);
-      toast.error(error.message || 'Failed to publish');
-    } finally {
+      toast.error(error.message || 'Failed to publish. Please try again.');
       setPublishing(false);
     }
   };
