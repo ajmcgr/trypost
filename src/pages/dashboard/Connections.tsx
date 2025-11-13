@@ -57,14 +57,29 @@ const Connections = () => {
     try {
       setLoading(true);
       
-      const { data, error } = await supabase.functions.invoke(`oauth-${platform}`, {
-        body: { redirect_uri: window.location.origin }
-      });
-      
-      if (error) throw error;
-      
-      if (data.authUrl) {
-        window.location.href = data.authUrl;
+      if (platform === 'twitter') {
+        // Twitter uses direct credentials, no OAuth flow needed
+        const { data, error } = await supabase.functions.invoke('oauth-twitter', {
+          body: {}
+        });
+        
+        if (error) throw error;
+        
+        if (data.success) {
+          await loadConnections();
+          alert(`Successfully connected to Twitter as @${data.username}!`);
+        }
+      } else {
+        // For other platforms, initiate OAuth flow
+        const { data, error } = await supabase.functions.invoke(`oauth-${platform}`, {
+          body: { redirect_uri: window.location.origin }
+        });
+        
+        if (error) throw error;
+        
+        if (data.authUrl) {
+          window.location.href = data.authUrl;
+        }
       }
     } catch (error: any) {
       console.error('Connection error:', error);
