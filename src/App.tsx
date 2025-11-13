@@ -48,6 +48,7 @@ import Referral from "./pages/dashboard/Referral";
 import Growth from "./pages/dashboard/Growth";
 import Account from "./pages/dashboard/Account";
 import Workspaces from "./pages/dashboard/Workspaces";
+import Publishing from "./pages/dashboard/Publishing";
 import Home from "./pages/dashboard/Home";
 import ImageComposer from "./pages/dashboard/ImageComposer";
 import VideoComposer from "./pages/dashboard/VideoComposer";
@@ -97,6 +98,7 @@ const App = () => (
             <Route path="referral" element={<Referral />} />
             <Route path="growth" element={<Growth />} />
             <Route path="account" element={<Account />} />
+            <Route path="publishing" element={<Publishing />} />
           </Route>
 
           {/* Platform Pages */}
