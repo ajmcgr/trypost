@@ -10,6 +10,11 @@ import {
   FileStack,
   Link2,
   Wand2,
+  CreditCard,
+  HelpCircle,
+  SquareUser,
+  LogOut,
+  ChevronDown,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -30,6 +35,15 @@ import {
   useSidebar,
   SidebarFooter,
 } from "@/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { supabase } from "@/lib/supabase";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const createItems = [
   { title: "New post", url: "/dashboard", icon: FileEdit },
@@ -50,19 +64,41 @@ const workspaceItems = [
 ];
 
 const configItems = [
-  { title: "Settings", url: "/dashboard/settings", icon: Settings },
   { title: "Social Platforms", url: "/dashboard/connections", icon: Link2 },
+];
+
+const accountItems = [
+  { title: "Settings", url: "/dashboard/account/settings", icon: Settings },
+  { title: "Plans", url: "/dashboard/account/plans", icon: SquareUser },
+  { title: "Support", url: "/dashboard/account/support", icon: HelpCircle },
 ];
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
+  const [accountOpen, setAccountOpen] = useState(false);
   
   const collapsed = state === "collapsed";
 
   const isActive = (path: string) => currentPath === path;
+
+  const handleBilling = () => {
+    // TODO: Implement Stripe portal integration
+    window.open("https://billing.stripe.com/p/login/test_00000000000000000000000000", "_blank");
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate("/login");
+      toast.success("Logged out successfully");
+    } catch (error) {
+      toast.error("Failed to log out");
+    }
+  };
 
   return (
     <Sidebar className={collapsed ? "w-14" : "w-64"} collapsible="icon">
@@ -172,19 +208,54 @@ export function AppSidebar() {
 
       {/* Account Footer */}
       <SidebarFooter className="border-t">
-        <div className="p-3">
-          <NavLink to="/dashboard/account" className="flex items-center gap-3 hover:bg-muted/50 rounded-lg p-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-medium">
-              {user?.email?.[0].toUpperCase() || "A"}
-            </div>
-            {!collapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">Account</p>
-                <p className="text-xs text-muted-foreground truncate">Creator Plan</p>
+        <Collapsible open={accountOpen} onOpenChange={setAccountOpen} className="group/collapsible">
+          <CollapsibleTrigger asChild>
+            <SidebarMenuButton className="w-full">
+              <div className="flex items-center gap-3 w-full">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-medium flex-shrink-0">
+                  {user?.email?.[0].toUpperCase() || "A"}
+                </div>
+                {!collapsed && (
+                  <>
+                    <div className="flex-1 min-w-0 text-left">
+                      <p className="text-sm font-medium truncate">Account</p>
+                      <p className="text-xs text-muted-foreground truncate">Creator Plan</p>
+                    </div>
+                    <ChevronDown className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
+                  </>
+                )}
               </div>
-            )}
-          </NavLink>
-        </div>
+            </SidebarMenuButton>
+          </CollapsibleTrigger>
+          {!collapsed && (
+            <CollapsibleContent className="space-y-1 px-2 py-2">
+              <SidebarMenu>
+                {accountItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                      <NavLink to={item.url} className="hover:bg-muted/50">
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={handleBilling}>
+                    <CreditCard className="h-4 w-4" />
+                    <span>Billing</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={handleLogout} className="text-red-600 hover:text-red-600 hover:bg-red-50">
+                    <LogOut className="h-4 w-4" />
+                    <span>Logout</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </CollapsibleContent>
+          )}
+        </Collapsible>
       </SidebarFooter>
     </Sidebar>
   );

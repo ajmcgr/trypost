@@ -38,7 +38,9 @@ import Studio from "./pages/dashboard/Studio";
 import BulkTools from "./pages/dashboard/BulkTools";
 import Connections from "./pages/dashboard/Connections";
 import Teams from "./pages/dashboard/Teams";
-import Settings from "./pages/dashboard/Settings";
+import Settings from "./pages/dashboard/account/Settings";
+import Plans from "./pages/dashboard/account/Plans";
+import Support from "./pages/dashboard/account/Support";
 import APIKeys from "./pages/dashboard/APIKeys";
 import Feedback from "./pages/dashboard/Feedback";
 import Consultation from "./pages/dashboard/Consultation";
@@ -84,7 +86,9 @@ const App = () => (
             <Route path="bulk-tools" element={<BulkTools />} />
             <Route path="connections" element={<Connections />} />
             <Route path="teams" element={<Teams />} />
-            <Route path="settings" element={<Settings />} />
+            <Route path="account/settings" element={<Settings />} />
+            <Route path="account/plans" element={<Plans />} />
+            <Route path="account/support" element={<Support />} />
             <Route path="api-keys" element={<APIKeys />} />
             <Route path="feedback" element={<Feedback />} />
             <Route path="consultation" element={<Consultation />} />
