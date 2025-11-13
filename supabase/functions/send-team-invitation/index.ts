@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { Resend } from "npm:resend@4.0.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -111,9 +112,55 @@ serve(async (req) => {
       );
     }
 
-    // TODO: Send email notification
-    // For now, we'll just log it
-    console.log(`Invitation created for ${email} to join workspace ${workspace.name}`);
+    // Send email notification using Resend
+    try {
+      const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
+      const appUrl = Deno.env.get('SUPABASE_URL')?.replace('.supabase.co', '.lovable.app') || 'https://app.lovable.app';
+      
+      await resend.emails.send({
+        from: 'Post <alex@trypost.ai>',
+        to: [email],
+        subject: `You've been invited to join ${workspace.name} on Post`,
+        html: `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background: white; padding: 30px; border: 1px solid #e5e7eb; border-top: none; }
+                .button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+                .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>You're Invited! 🎉</h1>
+                </div>
+                <div class="content">
+                  <p>Hi there!</p>
+                  <p>You've been invited to join <strong>${workspace.name}</strong> on Post as a <strong>${role}</strong>.</p>
+                  <p>Click the button below to accept your invitation and start collaborating:</p>
+                  <div style="text-align: center;">
+                    <a href="${appUrl}/dashboard/invitations" class="button">Accept Invitation</a>
+                  </div>
+                  <p style="margin-top: 30px; color: #6b7280; font-size: 14px;">If you didn't expect this invitation, you can safely ignore this email.</p>
+                </div>
+                <div class="footer">
+                  <p>© ${new Date().getFullYear()} Post. All rights reserved.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `,
+      });
+      console.log(`Invitation email sent to ${email} for workspace ${workspace.name}`);
+    } catch (emailError) {
+      console.error('Failed to send invitation email:', emailError);
+      // Continue even if email fails - invitation is still created
+    }
 
     return new Response(
       JSON.stringify({
