@@ -67,16 +67,21 @@ export const WorkspaceProvider = ({ children }: { children: ReactNode }) => {
         .select('workspace_id, role')
         .eq('user_id', user.id);
 
-      if (memberError) throw memberError;
+      // Ignore error if workspace_members table doesn't exist yet
+      if (memberError && memberError.code !== 'PGRST205') {
+        throw memberError;
+      }
 
-      const workspaceIds = memberData.map(m => m.workspace_id);
-      
-      if (workspaceIds.length === 0) {
+      // If table doesn't exist or no memberships, set empty state
+      if (!memberData || memberData.length === 0) {
         setWorkspaces([]);
         setCurrentWorkspace(null);
+        setUserRole(null);
         setLoading(false);
         return;
       }
+
+      const workspaceIds = memberData.map(m => m.workspace_id);
 
       const { data: workspaceData, error: workspaceError } = await supabase
         .from('workspaces')

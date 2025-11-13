@@ -1,5 +1,8 @@
 project_id = "qfqowhetrxritoyjzzcz"
 
+[functions.health-check]
+verify_jwt = false
+
 [functions.oauth-twitter]
 verify_jwt = true
 

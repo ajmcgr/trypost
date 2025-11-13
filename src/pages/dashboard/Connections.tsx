@@ -57,17 +57,23 @@ const Connections = () => {
     try {
       setLoading(true);
       
+      console.log(`Connecting to ${platform}...`);
+      
       if (platform === 'twitter') {
         // Twitter uses direct credentials, no OAuth flow needed
         const { data, error } = await supabase.functions.invoke('oauth-twitter', {
           body: {}
         });
         
+        console.log('Twitter response:', { data, error });
+        
         if (error) throw error;
         
-        if (data.success) {
+        if (data?.success) {
           await loadConnections();
           alert(`Successfully connected to Twitter as @${data.username}!`);
+        } else {
+          throw new Error(data?.error || 'Failed to connect to Twitter');
         }
       } else {
         // For other platforms, initiate OAuth flow
@@ -75,15 +81,32 @@ const Connections = () => {
           body: { redirect_uri: window.location.origin }
         });
         
-        if (error) throw error;
+        console.log(`${platform} OAuth response:`, { data, error });
         
-        if (data.authUrl) {
+        if (error) {
+          console.error('Function invoke error:', error);
+          throw new Error(`Edge function error: ${error.message}`);
+        }
+        
+        if (data?.authUrl) {
+          console.log(`Redirecting to ${platform} OAuth...`);
           window.location.href = data.authUrl;
+        } else {
+          throw new Error(data?.error || 'No authorization URL returned');
         }
       }
     } catch (error: any) {
       console.error('Connection error:', error);
-      alert(`Failed to connect to ${platform}: ${error.message}`);
+      
+      // More user-friendly error messages
+      let errorMessage = error.message;
+      if (error.message?.includes('Failed to send a request')) {
+        errorMessage = 'Unable to reach authentication service. Please try again in a moment.';
+      } else if (error.message?.includes('Failed to fetch')) {
+        errorMessage = 'Network error. Please check your connection and try again.';
+      }
+      
+      alert(`Failed to connect to ${platform}: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
