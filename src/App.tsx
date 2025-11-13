@@ -47,6 +47,7 @@ import Consultation from "./pages/dashboard/Consultation";
 import Referral from "./pages/dashboard/Referral";
 import Growth from "./pages/dashboard/Growth";
 import Account from "./pages/dashboard/Account";
+import Workspaces from "./pages/dashboard/Workspaces";
 import Home from "./pages/dashboard/Home";
 import ImageComposer from "./pages/dashboard/ImageComposer";
 import VideoComposer from "./pages/dashboard/VideoComposer";
@@ -86,6 +87,7 @@ const App = () => (
             <Route path="bulk-tools" element={<BulkTools />} />
             <Route path="connections" element={<Connections />} />
             <Route path="teams" element={<Teams />} />
+            <Route path="workspaces" element={<Workspaces />} />
             <Route path="account/settings" element={<Settings />} />
             <Route path="account/plans" element={<Plans />} />
             <Route path="account/support" element={<Support />} />

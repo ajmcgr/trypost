@@ -125,7 +125,7 @@ export function AppSidebar() {
   };
 
   const handleManageWorkspaces = () => {
-    navigate("/dashboard/account/settings");
+    navigate("/dashboard/workspaces");
     setWorkspaceOpen(false);
   };
 
