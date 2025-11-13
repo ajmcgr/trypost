@@ -155,7 +155,7 @@ export function AppSidebar() {
               <img 
                 src={collapsed ? postIcon : postLogo} 
                 alt="Post" 
-                className={collapsed ? "h-8 w-8" : "h-7"} 
+                className={collapsed ? "h-8 w-8 object-contain" : "h-7"} 
               />
             </NavLink>
 
