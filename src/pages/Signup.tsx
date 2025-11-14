@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
 
@@ -141,7 +142,7 @@ const Signup = () => {
           </Card>
 
           <p className="text-center text-sm text-muted-foreground mt-8">
-            By signing up, you agree to our{" "}
+             By signing up, you agree to our{" "}
             <Link to="/terms" className="hover:underline">
               Terms
             </Link>
@@ -152,6 +153,7 @@ const Signup = () => {
           </p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
