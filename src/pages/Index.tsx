@@ -57,7 +57,7 @@ const Index = () => {
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Post helps creators and brands plan, queue, and publish content across all social platforms from one simple dashboard.
         </p>
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-3">
           <Link to="/signup">
             <Button size="lg" className="text-xl px-10 py-7 rounded-2xl">
               Start Scheduling Free →
