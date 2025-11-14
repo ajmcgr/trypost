@@ -11,23 +11,23 @@ const Header = ({ showSignup = false }: HeaderProps) => {
   const { user } = useAuth();
 
   return (
-    <header className="bg-card">
-      <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="https://trypost.ai" className="flex items-center gap-2">
-          <img src={postLogo} alt="Post" className="h-8" />
+    <header className="bg-card border-b">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
+        <a href="https://trypost.ai" className="flex items-center gap-2 shrink-0">
+          <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
         </a>
         {user ? (
           <Link to="/dashboard">
-            <Button>Go to Dashboard →</Button>
+            <Button className="text-sm sm:text-base">Go to Dashboard →</Button>
           </Link>
         ) : (
           showSignup && (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <Link to="/login">
-                <Button variant="ghost">Log In</Button>
+                <Button variant="ghost" className="text-sm sm:text-base px-3 sm:px-4">Log In</Button>
               </Link>
               <Link to="/signup">
-                <Button>Sign Up →</Button>
+                <Button className="text-sm sm:text-base px-3 sm:px-4">Sign Up →</Button>
               </Link>
             </div>
           )
