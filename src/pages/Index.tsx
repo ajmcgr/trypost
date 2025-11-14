@@ -20,26 +20,26 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-card">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <a href="https://trypost.ai" className="flex items-center gap-2">
-            <img src={postLogo} alt="Post" className="h-8" />
+      <header className="bg-card border-b">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
+          <a href="https://trypost.ai" className="flex items-center gap-2 shrink-0">
+            <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
           </a>
-          <nav className="hidden md:flex items-center gap-8">
-            <Link to="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <nav className="flex items-center gap-2 sm:gap-4 md:gap-8">
+            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
               Pricing
             </Link>
             {user ? (
               <Link to="/dashboard">
-                <Button>Go to Dashboard →</Button>
+                <Button className="text-sm sm:text-base px-3 sm:px-4">Go to Dashboard →</Button>
               </Link>
             ) : (
               <>
-                <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                  Login
+                <Link to="/login">
+                  <Button variant="ghost" className="text-sm sm:text-base px-3 sm:px-4">Log In</Button>
                 </Link>
                 <Link to="/signup">
-                  <Button>Sign Up →</Button>
+                  <Button className="text-sm sm:text-base px-3 sm:px-4">Sign Up →</Button>
                 </Link>
               </>
             )}
