@@ -22,9 +22,14 @@ const Header = ({ showSignup = false }: HeaderProps) => {
           </Link>
         ) : (
           showSignup && (
-            <Link to="/signup">
-              <Button>Sign Up →</Button>
-            </Link>
+            <div className="flex items-center gap-4">
+              <Link to="/login">
+                <Button variant="ghost">Log In</Button>
+              </Link>
+              <Link to="/signup">
+                <Button>Sign Up →</Button>
+              </Link>
+            </div>
           )
         )}
       </div>
