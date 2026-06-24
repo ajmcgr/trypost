@@ -50,6 +50,8 @@ const Composer = () => {
   const [media, setMedia] = useState<MediaRef[]>([]);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
     if (!authLoading && !user) {
       navigate('/login');
     }
