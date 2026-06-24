@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
@@ -8,8 +8,16 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, Search, ChevronDown, Send, Save, Info } from 'lucide-react';
+import { Loader2, Search, ChevronDown, Send, Save, Info, ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
+
+interface MediaRef {
+  media_id: string;
+  path: string;
+  url: string;
+  mime: string;
+  kind: 'image' | 'video';
+}
 
 interface OAuthConnection {
   id: string;
@@ -39,8 +47,9 @@ const Composer = () => {
   const [publishing, setPublishing] = useState(false);
   const [schedulePost, setSchedulePost] = useState(false);
   const [remember, setRemember] = useState(false);
-
-  useEffect(() => {
+  const [media, setMedia] = useState<MediaRef[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
     if (!authLoading && !user) {
       navigate('/login');
     }
