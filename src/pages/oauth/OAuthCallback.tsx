@@ -12,6 +12,8 @@ const OAuthCallback = () => {
     const handleCallback = async () => {
       const params = new URLSearchParams(location.search);
       const code = params.get('code');
+      const oauthToken = params.get('oauth_token');
+      const oauthVerifier = params.get('oauth_verifier');
       const error = params.get('error');
 
       if (error) {
@@ -20,7 +22,7 @@ const OAuthCallback = () => {
         return;
       }
 
-      if (!code) {
+      if (!code && !(platform === 'twitter' && oauthToken && oauthVerifier)) {
         console.error('No authorization code received');
         navigate('/dashboard');
         return;
@@ -31,6 +33,8 @@ const OAuthCallback = () => {
         const { data, error: invokeError } = await supabase.functions.invoke(`oauth-${platform}`, {
           body: {
             code,
+            oauth_token: oauthToken,
+            oauth_verifier: oauthVerifier,
             redirect_uri: `${window.location.origin}/oauth/${platform}/callback`,
           },
         });

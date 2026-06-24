@@ -9,8 +9,15 @@ const corsHeaders = {
 
 const API_KEY = Deno.env.get('TWITTER_CONSUMER_KEY')?.trim();
 const API_SECRET = Deno.env.get('TWITTER_CONSUMER_SECRET')?.trim();
-const ACCESS_TOKEN = Deno.env.get('TWITTER_ACCESS_TOKEN')?.trim();
-const ACCESS_TOKEN_SECRET = Deno.env.get('TWITTER_ACCESS_TOKEN_SECRET')?.trim();
+
+function pct(value: string): string {
+  return encodeURIComponent(value)
+    .replace(/[!'()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`);
+}
+
+function parseFormEncoded(text: string): Record<string, string> {
+  return Object.fromEntries(new URLSearchParams(text).entries());
+}
 
 function generateOAuthSignature(
   method: string,
@@ -19,35 +26,44 @@ function generateOAuthSignature(
   consumerSecret: string,
   tokenSecret: string
 ): string {
-  const signatureBaseString = `${method}&${encodeURIComponent(url)}&${encodeURIComponent(
+  const signatureBaseString = `${method.toUpperCase()}&${pct(url)}&${pct(
     Object.entries(params)
       .sort()
-      .map(([k, v]) => `${k}=${v}`)
+      .map(([k, v]) => `${pct(k)}=${pct(v)}`)
       .join('&')
   )}`;
-  const signingKey = `${encodeURIComponent(consumerSecret)}&${encodeURIComponent(tokenSecret)}`;
+  const signingKey = `${pct(consumerSecret)}&${pct(tokenSecret)}`;
   const hmacSha1 = createHmac('sha1', signingKey);
   return hmacSha1.update(signatureBaseString).digest('base64');
 }
 
-function generateOAuthHeader(method: string, url: string): string {
-  const oauthParams = {
+function generateOAuthHeader(method: string, url: string, extraParams: Record<string, string> = {}, tokenSecret = ''): string {
+  if (!API_KEY || !API_SECRET) {
+    throw new Error('Twitter OAuth credentials are not configured');
+  }
+
+  const oauthParams: Record<string, string> = {
     oauth_consumer_key: API_KEY!,
     oauth_nonce: Math.random().toString(36).substring(2),
     oauth_signature_method: 'HMAC-SHA1',
     oauth_timestamp: Math.floor(Date.now() / 1000).toString(),
-    oauth_token: ACCESS_TOKEN!,
     oauth_version: '1.0',
   };
 
-  const signature = generateOAuthSignature(method, url, oauthParams, API_SECRET!, ACCESS_TOKEN_SECRET!);
+  for (const [key, value] of Object.entries(extraParams)) {
+    if (key.startsWith('oauth_')) {
+      oauthParams[key] = value;
+    }
+  }
+
+  const signature = generateOAuthSignature(method, url, { ...oauthParams, ...extraParams }, API_SECRET!, tokenSecret);
   const signedOAuthParams = { ...oauthParams, oauth_signature: signature };
 
   return (
     'OAuth ' +
     Object.entries(signedOAuthParams)
       .sort((a, b) => a[0].localeCompare(b[0]))
-      .map(([k, v]) => `${encodeURIComponent(k)}="${encodeURIComponent(v)}"`)
+      .map(([k, v]) => `${pct(k)}="${pct(v)}"`)
       .join(', ')
   );
 }
@@ -74,37 +90,90 @@ Deno.serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    // Verify Twitter credentials by getting user info
-    const userUrl = 'https://api.x.com/2/users/me';
-    const oauthHeader = generateOAuthHeader('GET', userUrl);
-    
-    const response = await fetch(userUrl, {
-      method: 'GET',
+    const { oauth_token, oauth_verifier, redirect_uri } = await req.json();
+
+    if (!oauth_token || !oauth_verifier) {
+      const callbackUrl = `${redirect_uri || req.headers.get('origin')}/oauth/twitter/callback`;
+      const requestTokenUrl = 'https://api.x.com/oauth/request_token';
+      const requestTokenParams = { oauth_callback: callbackUrl };
+      const requestTokenResponse = await fetch(requestTokenUrl, {
+        method: 'POST',
+        headers: { Authorization: generateOAuthHeader('POST', requestTokenUrl, requestTokenParams) },
+      });
+
+      const requestTokenText = await requestTokenResponse.text();
+      const requestTokenData = parseFormEncoded(requestTokenText);
+
+      if (!requestTokenResponse.ok || requestTokenData.oauth_callback_confirmed !== 'true') {
+        console.error('Twitter request token error:', requestTokenText);
+        throw new Error(`Twitter request token error: ${requestTokenResponse.status}`);
+      }
+
+      const { error: tempError } = await supabase
+        .from('oauth_connections')
+        .upsert({
+          user_id: user.id,
+          platform: 'twitter',
+          platform_user_id: requestTokenData.oauth_token,
+          platform_username: 'Twitter authorization in progress',
+          access_token: requestTokenData.oauth_token,
+          access_token_secret: requestTokenData.oauth_token_secret,
+          is_connected: false,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'user_id,platform'
+        });
+
+      if (tempError) {
+        console.error('Twitter temp token database error:', tempError);
+        throw tempError;
+      }
+
+      return new Response(
+        JSON.stringify({ authUrl: `https://api.x.com/oauth/authorize?oauth_token=${encodeURIComponent(requestTokenData.oauth_token)}` }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { data: tempConnection, error: tempLookupError } = await supabase
+      .from('oauth_connections')
+      .select('access_token_secret')
+      .eq('user_id', user.id)
+      .eq('platform', 'twitter')
+      .eq('access_token', oauth_token)
+      .maybeSingle();
+
+    if (tempLookupError || !tempConnection?.access_token_secret) {
+      console.error('Twitter temp token lookup error:', tempLookupError);
+      throw new Error('Twitter authorization session expired. Please try connecting again.');
+    }
+
+    const accessTokenUrl = 'https://api.x.com/oauth/access_token';
+    const accessTokenParams = { oauth_token, oauth_verifier };
+    const accessTokenResponse = await fetch(accessTokenUrl, {
+      method: 'POST',
       headers: {
-        Authorization: oauthHeader,
-        'Content-Type': 'application/json',
+        Authorization: generateOAuthHeader('POST', accessTokenUrl, accessTokenParams, tempConnection.access_token_secret),
       },
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Twitter API Error:', errorText);
-      throw new Error(`Twitter API error: ${response.status}`);
+    const accessTokenText = await accessTokenResponse.text();
+    const accessTokenData = parseFormEncoded(accessTokenText);
+
+    if (!accessTokenResponse.ok || !accessTokenData.oauth_token || !accessTokenData.oauth_token_secret) {
+      console.error('Twitter access token error:', accessTokenText);
+      throw new Error(`Twitter access token error: ${accessTokenResponse.status}`);
     }
 
-    const userData = await response.json();
-    console.log('Twitter user data:', userData);
-
-    // Store connection in database
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({
         user_id: user.id,
         platform: 'twitter',
-        platform_user_id: userData.data?.id,
-        platform_username: userData.data?.username,
-        access_token: ACCESS_TOKEN,
-        refresh_token: null,
+        platform_user_id: accessTokenData.user_id,
+        platform_username: accessTokenData.screen_name,
+        access_token: accessTokenData.oauth_token,
+        access_token_secret: accessTokenData.oauth_token_secret,
         is_connected: true,
         updated_at: new Date().toISOString(),
       }, {
@@ -119,7 +188,7 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: true, 
-        username: userData.data?.username 
+        username: accessTokenData.screen_name 
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

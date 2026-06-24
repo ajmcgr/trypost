@@ -59,41 +59,22 @@ const Connections = () => {
       
       console.log(`Connecting to ${platform}...`);
       
-      if (platform === 'twitter') {
-        // Twitter uses direct credentials, no OAuth flow needed
-        const { data, error } = await supabase.functions.invoke('oauth-twitter', {
-          body: {}
-        });
-        
-        console.log('Twitter response:', { data, error });
-        
-        if (error) throw error;
-        
-        if (data?.success) {
-          await loadConnections();
-          alert(`Successfully connected to Twitter as @${data.username}!`);
-        } else {
-          throw new Error(data?.error || 'Failed to connect to Twitter');
-        }
+      const { data, error } = await supabase.functions.invoke(`oauth-${platform}`, {
+        body: { redirect_uri: window.location.origin }
+      });
+      
+      console.log(`${platform} OAuth response:`, { data, error });
+      
+      if (error) {
+        console.error('Function invoke error:', error);
+        throw new Error(`Edge function error: ${error.message}`);
+      }
+      
+      if (data?.authUrl) {
+        console.log(`Redirecting to ${platform} OAuth...`);
+        window.location.href = data.authUrl;
       } else {
-        // For other platforms, initiate OAuth flow
-        const { data, error } = await supabase.functions.invoke(`oauth-${platform}`, {
-          body: { redirect_uri: window.location.origin }
-        });
-        
-        console.log(`${platform} OAuth response:`, { data, error });
-        
-        if (error) {
-          console.error('Function invoke error:', error);
-          throw new Error(`Edge function error: ${error.message}`);
-        }
-        
-        if (data?.authUrl) {
-          console.log(`Redirecting to ${platform} OAuth...`);
-          window.location.href = data.authUrl;
-        } else {
-          throw new Error(data?.error || 'No authorization URL returned');
-        }
+        throw new Error(data?.error || 'No authorization URL returned');
       }
     } catch (error: any) {
       console.error('Connection error:', error);
