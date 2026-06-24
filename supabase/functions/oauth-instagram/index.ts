@@ -6,6 +6,26 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+function resolveRedirectUri(redirectUri: string | null | undefined, platform: string, origin: string | null): string {
+  const fallbackOrigin = origin ?? 'https://trypost.ai';
+  const candidate = (redirectUri ?? fallbackOrigin).trim();
+  return candidate.includes('/oauth/')
+    ? candidate
+    : `${candidate.replace(/\/+$/, '')}/oauth/${platform}/callback`;
+}
+
+async function fetchMetaPages(userAccessToken: string) {
+  const pagesResponse = await fetch(
+    `https://graph.facebook.com/v18.0/me/accounts?fields=id,name,access_token,instagram_business_account{id,username}&access_token=${encodeURIComponent(userAccessToken)}`
+  );
+  const pagesData = await pagesResponse.json();
+  if (!pagesResponse.ok) {
+    console.error('Instagram pages error:', pagesData);
+    throw new Error(pagesData.error?.message || 'Failed to load connected Facebook pages');
+  }
+  return pagesData.data ?? [];
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -31,11 +51,10 @@ Deno.serve(async (req) => {
     const { code, redirect_uri } = await req.json();
 
     if (!code) {
-      // Return authorization URL (Instagram Basic Display API)
-      const clientId = Deno.env.get('INSTAGRAM_CLIENT_ID');
-      const redirectUri = `${redirect_uri || req.headers.get('origin')}/oauth/instagram/callback`;
-      const scope = 'user_profile,user_media';
-      const authUrl = `https://api.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&response_type=code`;
+      const clientId = Deno.env.get('FACEBOOK_APP_ID');
+      const redirectUri = resolveRedirectUri(redirect_uri, 'instagram', req.headers.get('origin'));
+      const scope = 'instagram_business_basic,instagram_business_content_publish,pages_show_list,business_management';
+      const authUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=code`;
       
       return new Response(
         JSON.stringify({ authUrl }),
@@ -43,21 +62,13 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Exchange code for token
-    const clientId = Deno.env.get('INSTAGRAM_CLIENT_ID');
-    const clientSecret = Deno.env.get('INSTAGRAM_CLIENT_SECRET');
-    const redirectUri = redirect_uri || `${req.headers.get('origin')}/oauth/instagram/callback`;
+    const clientId = Deno.env.get('FACEBOOK_APP_ID');
+    const clientSecret = Deno.env.get('FACEBOOK_APP_SECRET');
+    const redirectUri = resolveRedirectUri(redirect_uri, 'instagram', req.headers.get('origin'));
 
-    const tokenResponse = await fetch('https://api.instagram.com/oauth/access_token', {
-      method: 'POST',
-      body: new URLSearchParams({
-        client_id: clientId!,
-        client_secret: clientSecret!,
-        grant_type: 'authorization_code',
-        redirect_uri: redirectUri,
-        code,
-      }),
-    });
+    const tokenResponse = await fetch(
+      `https://graph.facebook.com/v18.0/oauth/access_token?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&client_secret=${clientSecret}&code=${code}`
+    );
 
     const tokenData = await tokenResponse.json();
     
@@ -66,15 +77,20 @@ Deno.serve(async (req) => {
       throw new Error('Failed to get access token');
     }
 
-    // Store connection
+    const pages = await fetchMetaPages(tokenData.access_token);
+    const pageWithInstagram = pages.find((page: any) => page.instagram_business_account?.id && page.access_token);
+    if (!pageWithInstagram?.instagram_business_account?.id || !pageWithInstagram?.access_token) {
+      throw new Error('No Instagram business account is connected to a Facebook page for this login.');
+    }
+
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({
         user_id: user.id,
         platform: 'instagram',
-        platform_user_id: tokenData.user_id,
-        platform_username: tokenData.username || 'Instagram User',
-        access_token: tokenData.access_token,
+        platform_user_id: pageWithInstagram.instagram_business_account.id,
+        platform_username: pageWithInstagram.instagram_business_account.username || pageWithInstagram.name,
+        access_token: pageWithInstagram.access_token,
         is_connected: true,
         updated_at: new Date().toISOString(),
       }, {
