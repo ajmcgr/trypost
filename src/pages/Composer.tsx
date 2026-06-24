@@ -84,9 +84,38 @@ const Composer = () => {
     );
   };
 
+  const handleFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Not authenticated');
+      const uploaded: MediaRef[] = [];
+      for (const file of Array.from(files)) {
+        const fd = new FormData();
+        fd.append('file', file);
+        const resp = await fetch(
+          `${(supabase as any).supabaseUrl}/functions/v1/upload-media`,
+          { method: 'POST', headers: { Authorization: `Bearer ${session.access_token}` }, body: fd },
+        );
+        const j = await resp.json();
+        if (!resp.ok) throw new Error(j.error || 'Upload failed');
+        uploaded.push(j);
+      }
+      setMedia((m) => [...m, ...uploaded]);
+    } catch (e: any) {
+      toast.error(e.message || 'Upload failed');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const removeMedia = (id: string) => setMedia((m) => m.filter((x) => x.media_id !== id));
+
   const handlePublish = async () => {
-    if (!content.trim()) {
-      toast.error('Please enter some content');
+    if (!content.trim() && media.length === 0) {
+      toast.error('Add some content or media');
       return;
     }
 
@@ -102,6 +131,7 @@ const Composer = () => {
         body: {
           content,
           platforms: selectedPlatforms,
+          media: media.map(({ media_id, path, url, mime, kind }) => ({ media_id, path, url, mime, kind })),
         },
       });
 
