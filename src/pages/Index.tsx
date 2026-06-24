@@ -26,7 +26,7 @@ const Index = () => {
             <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
           </a>
           <nav className="flex items-center gap-2 sm:gap-4 md:gap-8">
-            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
+            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:text-foreground transition-colors hidden sm:inline">
               Pricing
             </Link>
             {user ? (
