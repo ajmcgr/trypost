@@ -6,6 +6,14 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+function resolveRedirectUri(redirectUri: string | null | undefined, platform: string, origin: string | null): string {
+  const fallbackOrigin = origin ?? 'https://trypost.ai';
+  const candidate = (redirectUri ?? fallbackOrigin).trim();
+  return candidate.includes('/oauth/')
+    ? candidate
+    : `${candidate.replace(/\/+$/, '')}/oauth/${platform}/callback`;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -31,9 +39,8 @@ Deno.serve(async (req) => {
     const { code, redirect_uri } = await req.json();
 
     if (!code) {
-      // Return authorization URL (Threads uses Meta's OAuth)
       const appId = Deno.env.get('THREADS_APP_ID');
-      const redirectUri = `${redirect_uri || req.headers.get('origin')}/oauth/threads/callback`;
+      const redirectUri = resolveRedirectUri(redirect_uri, 'threads', req.headers.get('origin'));
       const scope = 'threads_basic,threads_content_publish';
       const authUrl = `https://threads.net/oauth/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=code`;
       
@@ -43,10 +50,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Exchange code for token
     const appId = Deno.env.get('THREADS_APP_ID');
     const appSecret = Deno.env.get('THREADS_APP_SECRET');
-    const redirectUri = redirect_uri || `${req.headers.get('origin')}/oauth/threads/callback`;
+    const redirectUri = resolveRedirectUri(redirect_uri, 'threads', req.headers.get('origin'));
 
     const tokenResponse = await fetch(
       `https://graph.threads.net/oauth/access_token`,
@@ -70,13 +76,11 @@ Deno.serve(async (req) => {
       throw new Error('Failed to get access token');
     }
 
-    // Get user info
     const meResponse = await fetch(
       `https://graph.threads.net/v1.0/me?fields=id,username&access_token=${tokenData.access_token}`
     );
     const meData = await meResponse.json();
 
-    // Store connection
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({
