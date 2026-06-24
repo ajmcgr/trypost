@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
         .from('oauth_connections')
         .upsert({
           user_id: user.id,
-          platform: 'twitter_temp',
+          platform: 'twitter',
           platform_user_id: requestTokenData.oauth_token,
           platform_username: 'Twitter authorization in progress',
           access_token: requestTokenData.oauth_token,
@@ -137,9 +137,9 @@ Deno.serve(async (req) => {
 
     const { data: tempConnection, error: tempLookupError } = await supabase
       .from('oauth_connections')
-      .select('id, access_token_secret')
+      .select('access_token_secret')
       .eq('user_id', user.id)
-      .eq('platform', 'twitter_temp')
+      .eq('platform', 'twitter')
       .eq('access_token', oauth_token)
       .maybeSingle();
 
@@ -184,11 +184,6 @@ Deno.serve(async (req) => {
       console.error('Database error:', dbError);
       throw dbError;
     }
-
-    await supabase
-      .from('oauth_connections')
-      .delete()
-      .eq('id', tempConnection.id);
 
     return new Response(
       JSON.stringify({ 
