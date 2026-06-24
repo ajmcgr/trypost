@@ -236,10 +236,64 @@ const Composer = () => {
             </div>
           </div>
 
+          {/* Media attachments */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm text-muted-foreground">Media (images / video)</Label>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+              >
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />}
+                {uploading ? 'Uploading…' : 'Add media'}
+              </Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*,video/*"
+                multiple
+                className="hidden"
+                onChange={(e) => handleFiles(e.target.files)}
+              />
+            </div>
+            {media.length > 0 && (
+              <div className="flex flex-wrap gap-3">
+                {media.map((m) => (
+                  <div key={m.media_id} className="relative w-24 h-24 rounded-md overflow-hidden border bg-muted">
+                    {m.kind === 'image' ? (
+                      <img src={m.url} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <video src={m.url} className="w-full h-full object-cover" muted />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeMedia(m.media_id)}
+                      className="absolute top-1 right-1 bg-background/80 rounded-full p-1"
+                      aria-label="Remove media"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Post Configuration Tools */}
           <div className="space-y-3">
             <Label className="text-sm text-muted-foreground">Post configurations & tools</Label>
             <div className="flex gap-3">
+              <Button variant="outline" className="gap-2">
+                <span className="text-muted-foreground">📱</span>
+                Platform Captions
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" className="gap-2">
+                <span className="text-muted-foreground">✏️</span>
+                Past Captions
               <Button variant="outline" className="gap-2">
                 <span className="text-muted-foreground">📱</span>
                 Platform Captions
