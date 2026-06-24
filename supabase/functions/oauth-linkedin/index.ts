@@ -6,6 +6,14 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+function resolveRedirectUri(redirectUri: string | null | undefined, origin: string | null): string {
+  const fallbackOrigin = origin ?? 'https://trypost.ai';
+  const candidate = (redirectUri ?? fallbackOrigin).trim();
+  return candidate.includes('/oauth/')
+    ? candidate
+    : `${candidate.replace(/\/+$/, '')}/oauth/linkedin/callback`;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -28,14 +36,14 @@ Deno.serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { code, redirect_uri } = await req.json();
+    const { code, redirect_uri, state } = await req.json();
 
     if (!code) {
-      // Return authorization URL
       const clientId = Deno.env.get('LINKEDIN_CLIENT_ID');
-      const redirectUri = `${redirect_uri || req.headers.get('origin')}/oauth/linkedin/callback`;
+      const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
       const scope = 'openid profile email w_member_social';
-      const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
+      const authState = state || crypto.randomUUID();
+      const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(authState)}&scope=${encodeURIComponent(scope)}`;
       
       return new Response(
         JSON.stringify({ authUrl }),
@@ -43,10 +51,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Exchange code for token
     const clientId = Deno.env.get('LINKEDIN_CLIENT_ID');
     const clientSecret = Deno.env.get('LINKEDIN_CLIENT_SECRET');
-    const redirectUri = redirect_uri || `${req.headers.get('origin')}/oauth/linkedin/callback`;
+    const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
 
     const tokenResponse = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
       method: 'POST',
@@ -67,14 +74,12 @@ Deno.serve(async (req) => {
       throw new Error('Failed to get access token');
     }
 
-    // Get user profile
     const profileResponse = await fetch('https://api.linkedin.com/v2/userinfo', {
       headers: { Authorization: `Bearer ${tokenData.access_token}` },
     });
 
     const profileData = await profileResponse.json();
 
-    // Store connection
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({
