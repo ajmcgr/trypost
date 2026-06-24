@@ -94,7 +94,7 @@ Deno.serve(async (req) => {
 
     if (!oauth_token || !oauth_verifier) {
       const callbackUrl = `${redirect_uri || req.headers.get('origin')}/oauth/twitter/callback`;
-      const requestTokenUrl = 'https://api.x.com/oauth/request_token';
+      const requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
       const requestTokenParams = { oauth_callback: callbackUrl };
       const requestTokenResponse = await fetch(requestTokenUrl, {
         method: 'POST',
@@ -130,7 +130,7 @@ Deno.serve(async (req) => {
       }
 
       return new Response(
-        JSON.stringify({ authUrl: `https://api.x.com/oauth/authorize?oauth_token=${encodeURIComponent(requestTokenData.oauth_token)}` }),
+        JSON.stringify({ authUrl: `https://api.twitter.com/oauth/authorize?oauth_token=${encodeURIComponent(requestTokenData.oauth_token)}` }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -148,7 +148,7 @@ Deno.serve(async (req) => {
       throw new Error('Twitter authorization session expired. Please try connecting again.');
     }
 
-    const accessTokenUrl = 'https://api.x.com/oauth/access_token';
+    const accessTokenUrl = 'https://api.twitter.com/oauth/access_token';
     const accessTokenParams = { oauth_token, oauth_verifier };
     const accessTokenResponse = await fetch(accessTokenUrl, {
       method: 'POST',
