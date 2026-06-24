@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
@@ -8,8 +8,16 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, Search, ChevronDown, Send, Save, Info } from 'lucide-react';
+import { Loader2, Search, ChevronDown, Send, Save, Info, ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
+
+interface MediaRef {
+  media_id: string;
+  path: string;
+  url: string;
+  mime: string;
+  kind: 'image' | 'video';
+}
 
 interface OAuthConnection {
   id: string;
@@ -39,6 +47,9 @@ const Composer = () => {
   const [publishing, setPublishing] = useState(false);
   const [schedulePost, setSchedulePost] = useState(false);
   const [remember, setRemember] = useState(false);
+  const [media, setMedia] = useState<MediaRef[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -73,9 +84,38 @@ const Composer = () => {
     );
   };
 
+  const handleFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Not authenticated');
+      const uploaded: MediaRef[] = [];
+      for (const file of Array.from(files)) {
+        const fd = new FormData();
+        fd.append('file', file);
+        const resp = await fetch(
+          `${(supabase as any).supabaseUrl}/functions/v1/upload-media`,
+          { method: 'POST', headers: { Authorization: `Bearer ${session.access_token}` }, body: fd },
+        );
+        const j = await resp.json();
+        if (!resp.ok) throw new Error(j.error || 'Upload failed');
+        uploaded.push(j);
+      }
+      setMedia((m) => [...m, ...uploaded]);
+    } catch (e: any) {
+      toast.error(e.message || 'Upload failed');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const removeMedia = (id: string) => setMedia((m) => m.filter((x) => x.media_id !== id));
+
   const handlePublish = async () => {
-    if (!content.trim()) {
-      toast.error('Please enter some content');
+    if (!content.trim() && media.length === 0) {
+      toast.error('Add some content or media');
       return;
     }
 
@@ -91,6 +131,7 @@ const Composer = () => {
         body: {
           content,
           platforms: selectedPlatforms,
+          media: media.map(({ media_id, path, url, mime, kind }) => ({ media_id, path, url, mime, kind })),
         },
       });
 
@@ -193,6 +234,52 @@ const Composer = () => {
                 {content.length}/2200
               </div>
             </div>
+          </div>
+
+          {/* Media attachments */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm text-muted-foreground">Media (images / video)</Label>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+              >
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />}
+                {uploading ? 'Uploading…' : 'Add media'}
+              </Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*,video/*"
+                multiple
+                className="hidden"
+                onChange={(e) => handleFiles(e.target.files)}
+              />
+            </div>
+            {media.length > 0 && (
+              <div className="flex flex-wrap gap-3">
+                {media.map((m) => (
+                  <div key={m.media_id} className="relative w-24 h-24 rounded-md overflow-hidden border bg-muted">
+                    {m.kind === 'image' ? (
+                      <img src={m.url} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <video src={m.url} className="w-full h-full object-cover" muted />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeMedia(m.media_id)}
+                      className="absolute top-1 right-1 bg-background/80 rounded-full p-1"
+                      aria-label="Remove media"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Post Configuration Tools */}
