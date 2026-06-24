@@ -50,8 +50,10 @@ function generateOAuthHeader(method: string, url: string, extraParams: Record<st
     oauth_version: '1.0',
   };
 
-  if (extraParams.oauth_token) {
-    oauthParams.oauth_token = extraParams.oauth_token;
+  for (const [key, value] of Object.entries(extraParams)) {
+    if (key.startsWith('oauth_')) {
+      oauthParams[key] = value;
+    }
   }
 
   const signature = generateOAuthSignature(method, url, { ...oauthParams, ...extraParams }, API_SECRET!, tokenSecret);
@@ -152,9 +154,7 @@ Deno.serve(async (req) => {
       method: 'POST',
       headers: {
         Authorization: generateOAuthHeader('POST', accessTokenUrl, accessTokenParams, tempConnection.access_token_secret),
-        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: new URLSearchParams({ oauth_verifier }),
     });
 
     const accessTokenText = await accessTokenResponse.text();
