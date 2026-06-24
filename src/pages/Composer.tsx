@@ -294,14 +294,6 @@ const Composer = () => {
               <Button variant="outline" className="gap-2">
                 <span className="text-muted-foreground">✏️</span>
                 Past Captions
-              <Button variant="outline" className="gap-2">
-                <span className="text-muted-foreground">📱</span>
-                Platform Captions
-                <ChevronDown className="w-4 h-4" />
-              </Button>
-              <Button variant="outline" className="gap-2">
-                <span className="text-muted-foreground">✏️</span>
-                Past Captions
                 <ChevronDown className="w-4 h-4" />
               </Button>
             </div>
