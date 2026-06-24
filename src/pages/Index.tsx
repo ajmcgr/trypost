@@ -31,15 +31,15 @@ const Index = () => {
             </Link>
             {user ? (
               <Link to="/dashboard">
-                <Button className="text-sm sm:text-base px-3 sm:px-4">Go to Dashboard →</Button>
+                <Button className="text-xs sm:text-sm px-3 sm:px-4">Go to Dashboard →</Button>
               </Link>
             ) : (
               <>
                 <Link to="/login">
-                  <Button variant="ghost" className="text-sm sm:text-base px-3 sm:px-4">Log In</Button>
+                  <Button variant="ghost" className="text-xs sm:text-sm px-3 sm:px-4">Log In</Button>
                 </Link>
                 <Link to="/signup">
-                  <Button className="text-sm sm:text-base px-3 sm:px-4">Sign Up →</Button>
+                  <Button className="text-xs sm:text-sm px-3 sm:px-4">Sign Up →</Button>
                 </Link>
               </>
             )}
