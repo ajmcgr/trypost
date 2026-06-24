@@ -6,6 +6,26 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+function resolveRedirectUri(redirectUri: string | null | undefined, platform: string, origin: string | null): string {
+  const fallbackOrigin = origin ?? 'https://trypost.ai';
+  const candidate = (redirectUri ?? fallbackOrigin).trim();
+  return candidate.includes('/oauth/')
+    ? candidate
+    : `${candidate.replace(/\/+$/, '')}/oauth/${platform}/callback`;
+}
+
+async function fetchMetaPages(userAccessToken: string) {
+  const pagesResponse = await fetch(
+    `https://graph.facebook.com/v18.0/me/accounts?fields=id,name,access_token&access_token=${encodeURIComponent(userAccessToken)}`
+  );
+  const pagesData = await pagesResponse.json();
+  if (!pagesResponse.ok) {
+    console.error('Facebook pages error:', pagesData);
+    throw new Error(pagesData.error?.message || 'Failed to load Facebook pages');
+  }
+  return pagesData.data ?? [];
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -31,11 +51,10 @@ Deno.serve(async (req) => {
     const { code, redirect_uri } = await req.json();
 
     if (!code) {
-      // Return authorization URL
       const appId = Deno.env.get('FACEBOOK_APP_ID');
-      const redirectUri = `${redirect_uri || req.headers.get('origin')}/oauth/facebook/callback`;
-      const scope = 'pages_manage_posts,pages_read_engagement,pages_show_list';
-      const authUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
+      const redirectUri = resolveRedirectUri(redirect_uri, 'facebook', req.headers.get('origin'));
+      const scope = 'pages_manage_posts,pages_read_engagement,pages_show_list,business_management';
+      const authUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=code`;
       
       return new Response(
         JSON.stringify({ authUrl }),
@@ -43,10 +62,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Exchange code for token
     const appId = Deno.env.get('FACEBOOK_APP_ID');
     const appSecret = Deno.env.get('FACEBOOK_APP_SECRET');
-    const redirectUri = redirect_uri || `${req.headers.get('origin')}/oauth/facebook/callback`;
+    const redirectUri = resolveRedirectUri(redirect_uri, 'facebook', req.headers.get('origin'));
 
     const tokenResponse = await fetch(
       `https://graph.facebook.com/v18.0/oauth/access_token?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&client_secret=${appSecret}&code=${code}`
@@ -59,19 +77,20 @@ Deno.serve(async (req) => {
       throw new Error('Failed to get access token');
     }
 
-    // Get user info
-    const meResponse = await fetch(`https://graph.facebook.com/me?access_token=${tokenData.access_token}`);
-    const meData = await meResponse.json();
+    const pages = await fetchMetaPages(tokenData.access_token);
+    const page = pages[0];
+    if (!page?.id || !page?.access_token) {
+      throw new Error('No Facebook page was returned. Connect a page to this Meta app first.');
+    }
 
-    // Store connection
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({
         user_id: user.id,
         platform: 'facebook',
-        platform_user_id: meData.id,
-        platform_username: meData.name,
-        access_token: tokenData.access_token,
+        platform_user_id: page.id,
+        platform_username: page.name,
+        access_token: page.access_token,
         is_connected: true,
         updated_at: new Date().toISOString(),
       }, {
@@ -81,7 +100,7 @@ Deno.serve(async (req) => {
     if (dbError) throw dbError;
 
     return new Response(
-      JSON.stringify({ success: true, username: meData.name }),
+      JSON.stringify({ success: true, username: page.name }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error: any) {
