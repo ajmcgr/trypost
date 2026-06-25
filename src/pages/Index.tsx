@@ -68,7 +68,7 @@ const Index = () => {
         <div className="mt-16 rounded-3xl overflow-hidden shadow-2xl border border-border bg-card p-8">
           <div className="rounded-2xl overflow-hidden">
             <img
-              src={heroScreenshot.url}
+              src="/hero-screenshot.png"
               alt="TryPost composer interface showing connected social accounts and a ready-to-publish post"
               className="w-full h-auto"
             />
