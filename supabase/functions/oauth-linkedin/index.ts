@@ -14,12 +14,69 @@ function resolveRedirectUri(redirectUri: string | null | undefined, origin: stri
     : `${candidate.replace(/\/+$/, '')}/oauth/linkedin/callback`;
 }
 
+async function fetchLinkedInProfile(accessToken: string) {
+  const endpoints = [
+    {
+      url: 'https://api.linkedin.com/v2/me',
+      map: (payload: any) => ({
+        id: payload?.id,
+        name: [payload?.localizedFirstName, payload?.localizedLastName].filter(Boolean).join(' ').trim(),
+      }),
+    },
+    {
+      url: 'https://api.linkedin.com/v2/userinfo',
+      map: (payload: any) => ({
+        id: payload?.sub,
+        name: payload?.name,
+      }),
+    },
+  ];
+
+  for (const endpoint of endpoints) {
+    const response = await fetch(endpoint.url, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    const payload = await response.json();
+    if (!response.ok) {
+      console.error('LinkedIn profile lookup failed:', endpoint.url, payload);
+      continue;
+    }
+
+    const profile = endpoint.map(payload);
+    if (profile.id) {
+      return {
+        id: profile.id as string,
+        name: (profile.name as string | undefined)?.trim() || 'LinkedIn User',
+      };
+    }
+  }
+
+  throw new Error('Failed to load LinkedIn member profile');
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    const { code, redirect_uri, state } = await req.json();
+
+    if (!code) {
+      // Return authorization URL
+      const clientId = Deno.env.get('LINKEDIN_CLIENT_ID');
+      const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
+      const scope = 'r_liteprofile w_member_social';
+      const authState = state || crypto.randomUUID();
+      const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(authState)}&scope=${encodeURIComponent(scope)}`;
+      
+      return new Response(
+        JSON.stringify({ authUrl }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       throw new Error('Missing authorization header');
@@ -33,24 +90,11 @@ Deno.serve(async (req) => {
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
+      console.error('LinkedIn callback auth failure:', userError);
       throw new Error('Unauthorized');
     }
 
-    const { code, redirect_uri, state } = await req.json();
-
-    if (!code) {
-      const clientId = Deno.env.get('LINKEDIN_CLIENT_ID');
-      const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
-      const scope = 'openid profile email w_member_social';
-      const authState = state || crypto.randomUUID();
-      const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(authState)}&scope=${encodeURIComponent(scope)}`;
-      
-      return new Response(
-        JSON.stringify({ authUrl }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
+    // Exchange code for token
     const clientId = Deno.env.get('LINKEDIN_CLIENT_ID');
     const clientSecret = Deno.env.get('LINKEDIN_CLIENT_SECRET');
     const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
@@ -74,18 +118,15 @@ Deno.serve(async (req) => {
       throw new Error('Failed to get access token');
     }
 
-    const profileResponse = await fetch('https://api.linkedin.com/v2/userinfo', {
-      headers: { Authorization: `Bearer ${tokenData.access_token}` },
-    });
+    const profileData = await fetchLinkedInProfile(tokenData.access_token);
 
-    const profileData = await profileResponse.json();
-
+    // Store connection
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({
         user_id: user.id,
         platform: 'linkedin',
-        platform_user_id: profileData.sub,
+        platform_user_id: profileData.id,
         platform_username: profileData.name,
         access_token: tokenData.access_token,
         refresh_token: tokenData.refresh_token,
