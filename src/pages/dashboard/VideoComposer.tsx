@@ -130,14 +130,22 @@ const VideoComposer = () => {
     setVideoPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
+  const togglePlatform = (platform: string) => {
+    setSelectedPlatforms(prev =>
+      prev.includes(platform)
+        ? prev.filter(p => p !== platform)
+        : [...prev, platform]
+    );
+  };
+
   const handlePublish = async () => {
     if (!content.trim() && selectedVideos.length === 0) {
       toast.error('Please add content or videos');
       return;
     }
 
-    if (connections.length === 0) {
-      toast.error('Please connect at least one account');
+    if (selectedPlatforms.length === 0) {
+      toast.error('Please select at least one account');
       return;
     }
 
