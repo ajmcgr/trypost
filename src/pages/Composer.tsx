@@ -8,8 +8,25 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, Search, ChevronDown, Send, Save, Info, ImagePlus, X } from 'lucide-react';
+import { Loader2, Search, ChevronDown, Send, Save, Info, ImagePlus, X, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import twitterIcon from '@/assets/x.svg';
+import linkedinIcon from '@/assets/linkedin.svg';
+import instagramIcon from '@/assets/instagram.svg';
+import facebookIcon from '@/assets/facebook.svg';
+import youtubeIcon from '@/assets/youtube.svg';
+import threadsIcon from '@/assets/threads.svg';
+import tiktokIcon from '@/assets/tiktok.svg';
+
+const platformIcons: Record<string, string> = {
+  twitter: twitterIcon,
+  linkedin: linkedinIcon,
+  instagram: instagramIcon,
+  facebook: facebookIcon,
+  youtube: youtubeIcon,
+  threads: threadsIcon,
+  tiktok: tiktokIcon,
+};
 
 interface MediaRef {
   media_id: string;
@@ -215,6 +232,66 @@ const Composer = () => {
             </Card>
           )}
 
+          {/* Account Selector */}
+          {connections.length > 0 && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm text-muted-foreground">
+                  Select accounts to post to ({selectedPlatforms.length}/{connections.length})
+                </Label>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-xs"
+                    onClick={() => setSelectedPlatforms(connections.map((c) => c.platform))}
+                  >
+                    Select all
+                  </Button>
+                  {selectedPlatforms.length > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-xs"
+                      onClick={() => setSelectedPlatforms([])}
+                    >
+                      Clear
+                    </Button>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {connections.map((conn) => {
+                  const isSelected = selectedPlatforms.includes(conn.platform);
+                  return (
+                    <button
+                      key={conn.id}
+                      type="button"
+                      onClick={() => togglePlatform(conn.platform)}
+                      className={`relative group rounded-full transition-all ${
+                        isSelected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'opacity-60 hover:opacity-100'
+                      }`}
+                      title={`${platformNames[conn.platform] || conn.platform}${conn.platform_username ? ` · @${conn.platform_username}` : ''}`}
+                    >
+                      <div className="relative w-12 h-12 rounded-full bg-muted flex items-center justify-center overflow-hidden border">
+                        <img
+                          src={platformIcons[conn.platform]}
+                          alt={conn.platform}
+                          className="w-6 h-6"
+                        />
+                      </div>
+                      {isSelected && (
+                        <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center border-2 border-background">
+                          <Check className="w-3 h-3" />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Main Caption */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -315,7 +392,7 @@ const Composer = () => {
           {/* Post Now Button */}
           <Button 
             onClick={handlePublish}
-            disabled={publishing || !content.trim() || connections.length === 0}
+            disabled={publishing || !content.trim() || connections.length === 0 || selectedPlatforms.length === 0}
             className="w-full gap-2 h-12"
           >
             {publishing ? (
@@ -331,9 +408,9 @@ const Composer = () => {
             )}
           </Button>
           
-          {connections.length === 0 && (
+          {(connections.length === 0 || selectedPlatforms.length === 0) && (
             <p className="text-sm text-muted-foreground text-center">
-              Select an account to post to
+              {connections.length === 0 ? 'Connect an account first' : 'Select an account to post to'}
             </p>
           )}
 
