@@ -37,6 +37,7 @@ import {
   SidebarMenuItem,
   useSidebar,
   SidebarFooter,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
   Collapsible,
@@ -203,6 +204,11 @@ export function AppSidebar() {
               </div>
             )}
           </div>
+
+        {/* Collapse Toggle */}
+        <div className="px-3 pt-3 flex justify-end">
+          <SidebarTrigger />
+        </div>
 
         {/* Create Post Button */}
         <div className="px-3 pb-3">
