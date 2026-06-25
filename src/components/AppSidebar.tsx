@@ -37,6 +37,7 @@ import {
   SidebarMenuItem,
   useSidebar,
   SidebarFooter,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
   Collapsible,
