@@ -56,6 +56,7 @@ const VideoComposer = () => {
   const [remember, setRemember] = useState(false);
   const [selectedVideos, setSelectedVideos] = useState<File[]>([]);
   const [videoPreviews, setVideoPreviews] = useState<string[]>([]);
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
