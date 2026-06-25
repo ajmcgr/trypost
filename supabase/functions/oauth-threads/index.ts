@@ -14,12 +14,36 @@ function resolveRedirectUri(redirectUri: string | null | undefined, platform: st
     : `${candidate.replace(/\/+$/, '')}/oauth/${platform}/callback`;
 }
 
+async function readJsonResponse(response: Response) {
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { raw: text };
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    const { code, redirect_uri } = await req.json();
+
+    if (!code) {
+      // Return authorization URL (Threads uses Meta's OAuth)
+      const appId = Deno.env.get('THREADS_APP_ID');
+      const redirectUri = resolveRedirectUri(redirect_uri, 'threads', req.headers.get('origin'));
+      const scope = 'threads_basic,threads_content_publish';
+      const authUrl = `https://threads.net/oauth/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=code`;
+      
+      return new Response(
+        JSON.stringify({ authUrl }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       throw new Error('Missing authorization header');
@@ -33,26 +57,18 @@ Deno.serve(async (req) => {
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
+      console.error('Threads callback auth failure:', userError);
       throw new Error('Unauthorized');
     }
 
-    const { code, redirect_uri } = await req.json();
-
-    if (!code) {
-      const appId = Deno.env.get('THREADS_APP_ID');
-      const redirectUri = resolveRedirectUri(redirect_uri, 'threads', req.headers.get('origin'));
-      const scope = 'threads_basic,threads_content_publish';
-      const authUrl = `https://threads.net/oauth/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=code`;
-      
-      return new Response(
-        JSON.stringify({ authUrl }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
+    // Exchange code for token
     const appId = Deno.env.get('THREADS_APP_ID');
     const appSecret = Deno.env.get('THREADS_APP_SECRET');
     const redirectUri = resolveRedirectUri(redirect_uri, 'threads', req.headers.get('origin'));
+
+    if (!appId || !appSecret) {
+      throw new Error('Threads app credentials are not configured');
+    }
 
     const tokenResponse = await fetch(
       `https://graph.threads.net/oauth/access_token`,
@@ -69,18 +85,34 @@ Deno.serve(async (req) => {
       }
     );
 
-    const tokenData = await tokenResponse.json();
+    const tokenData = await readJsonResponse(tokenResponse);
     
     if (!tokenResponse.ok) {
       console.error('Threads token error:', tokenData);
-      throw new Error('Failed to get access token');
+      throw new Error(tokenData.error?.message || tokenData.error_message || tokenData.raw || 'Failed to get Threads access token');
     }
 
+    // Get user info
     const meResponse = await fetch(
-      `https://graph.threads.net/v1.0/me?fields=id,username&access_token=${tokenData.access_token}`
+      `https://graph.threads.net/v1.0/me?fields=id,username`,
+      {
+        headers: {
+          Authorization: `Bearer ${tokenData.access_token}`,
+        },
+      }
     );
-    const meData = await meResponse.json();
+    const meData = await readJsonResponse(meResponse);
+    if (!meResponse.ok) {
+      console.error('Threads me error:', meData);
+      throw new Error(meData.error?.message || meData.error_message || meData.raw || 'Failed to load Threads profile');
+    }
 
+    if (!meData.id || !meData.username) {
+      console.error('Threads me payload missing expected fields:', meData);
+      throw new Error('Threads profile response did not include an id and username');
+    }
+
+    // Store connection
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({
