@@ -8,8 +8,35 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, Search, ChevronDown, Send, Save, Info, Upload, Image as ImageIcon, X } from 'lucide-react';
+import { Loader2, Search, ChevronDown, Send, Save, Info, Upload, Image as ImageIcon, X, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import twitterIcon from '@/assets/x.svg';
+import linkedinIcon from '@/assets/linkedin.svg';
+import instagramIcon from '@/assets/instagram.svg';
+import facebookIcon from '@/assets/facebook.svg';
+import youtubeIcon from '@/assets/youtube.svg';
+import threadsIcon from '@/assets/threads.svg';
+import tiktokIcon from '@/assets/tiktok.svg';
+
+const platformIcons: Record<string, string> = {
+  twitter: twitterIcon,
+  linkedin: linkedinIcon,
+  instagram: instagramIcon,
+  facebook: facebookIcon,
+  youtube: youtubeIcon,
+  threads: threadsIcon,
+  tiktok: tiktokIcon,
+};
+
+const platformNames: Record<string, string> = {
+  twitter: 'Twitter / X',
+  linkedin: 'LinkedIn',
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  youtube: 'YouTube',
+  threads: 'Threads',
+  tiktok: 'TikTok',
+};
 
 interface OAuthConnection {
   id: string;
