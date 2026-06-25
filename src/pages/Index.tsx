@@ -13,6 +13,7 @@ import instagramLogo from "@/assets/instagram.svg";
 import youtubeLogo from "@/assets/youtube.svg";
 import threadsLogo from "@/assets/threads.svg";
 import tiktokLogo from "@/assets/tiktok.svg";
+import heroScreenshot from "@/assets/hero-screenshot.png.asset.json";
 
 const Index = () => {
   const { user } = useAuth();
