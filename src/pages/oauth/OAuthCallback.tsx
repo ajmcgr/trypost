@@ -2,6 +2,27 @@ import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { Loader2 } from 'lucide-react';
+import { getOAuthCallbackUrl } from '@/lib/appUrl';
+
+async function getSessionAccessToken(retries = 10, delayMs = 250): Promise<string | null> {
+  for (let attempt = 0; attempt < retries; attempt += 1) {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+      throw error;
+    }
+
+    const accessToken = data.session?.access_token ?? null;
+    if (accessToken) {
+      return accessToken;
+    }
+
+    if (attempt < retries - 1) {
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+
+  return null;
+}
 
 const OAuthCallback = () => {
   const navigate = useNavigate();
@@ -29,13 +50,21 @@ const OAuthCallback = () => {
       }
 
       try {
+        const accessToken = await getSessionAccessToken();
+        if (!accessToken) {
+          throw new Error('Your session expired. Please sign in again and reconnect.');
+        }
+
         // Send code to backend to exchange for token
         const { data, error: invokeError } = await supabase.functions.invoke(`oauth-${platform}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
           body: {
             code,
             oauth_token: oauthToken,
             oauth_verifier: oauthVerifier,
-            redirect_uri: `${window.location.origin}/oauth/${platform}/callback`,
+            redirect_uri: getOAuthCallbackUrl(platform),
           },
         });
 
@@ -44,11 +73,11 @@ const OAuthCallback = () => {
           throw invokeError;
         }
 
-        if (data.success) {
+        if (data?.success) {
           // Redirect back to dashboard with success
           navigate('/dashboard?connected=' + platform);
         } else {
-          throw new Error('Failed to connect account');
+          throw new Error(data?.error || 'Failed to connect account');
         }
       } catch (err: any) {
         console.error('Callback error:', err);
