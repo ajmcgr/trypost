@@ -205,6 +205,11 @@ export function AppSidebar() {
             )}
           </div>
 
+        {/* Collapse Toggle */}
+        <div className="px-3 pt-3 flex justify-end">
+          <SidebarTrigger />
+        </div>
+
         {/* Create Post Button */}
         <div className="px-3 pb-3">
           <NavLink to="/dashboard">
