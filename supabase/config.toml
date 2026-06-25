@@ -24,6 +24,12 @@ verify_jwt = false
 [functions.oauth-tiktok]
 verify_jwt = false
 
+[functions.meta-deauthorize]
+verify_jwt = false
+
+[functions.meta-data-deletion]
+verify_jwt = false
+
 [functions.publish-post]
 verify_jwt = true
 
