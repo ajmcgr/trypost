@@ -8,8 +8,25 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, Search, ChevronDown, Send, Save, Info, ImagePlus, X } from 'lucide-react';
+import { Loader2, Search, ChevronDown, Send, Save, Info, ImagePlus, X, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import twitterIcon from '@/assets/x.svg';
+import linkedinIcon from '@/assets/linkedin.svg';
+import instagramIcon from '@/assets/instagram.svg';
+import facebookIcon from '@/assets/facebook.svg';
+import youtubeIcon from '@/assets/youtube.svg';
+import threadsIcon from '@/assets/threads.svg';
+import tiktokIcon from '@/assets/tiktok.svg';
+
+const platformIcons: Record<string, string> = {
+  twitter: twitterIcon,
+  linkedin: linkedinIcon,
+  instagram: instagramIcon,
+  facebook: facebookIcon,
+  youtube: youtubeIcon,
+  threads: threadsIcon,
+  tiktok: tiktokIcon,
+};
 
 interface MediaRef {
   media_id: string;
