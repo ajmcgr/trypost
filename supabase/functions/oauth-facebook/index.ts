@@ -14,6 +14,25 @@ function resolveRedirectUri(redirectUri: string | null | undefined, platform: st
     : `${candidate.replace(/\/+$/, '')}/oauth/${platform}/callback`;
 }
 
+function buildMetaAuthUrl(appId: string, redirectUri: string, options: {
+  configId?: string | null;
+  scope?: string | null;
+}) {
+  const params = new URLSearchParams({
+    client_id: appId,
+    redirect_uri: redirectUri,
+    response_type: 'code',
+  });
+
+  if (options.configId) {
+    params.set('config_id', options.configId);
+  } else if (options.scope) {
+    params.set('scope', options.scope);
+  }
+
+  return `https://www.facebook.com/v25.0/dialog/oauth?${params.toString()}`;
+}
+
 async function fetchMetaPages(userAccessToken: string) {
   const pagesResponse = await fetch(
     `https://graph.facebook.com/v18.0/me/accounts?fields=id,name,access_token&access_token=${encodeURIComponent(userAccessToken)}`
@@ -32,6 +51,22 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const { code, redirect_uri } = await req.json();
+
+    if (!code) {
+      // Prefer Facebook Login for Business when a page-posting config is available.
+      const appId = Deno.env.get('FACEBOOK_APP_ID');
+      const configId = Deno.env.get('META_FACEBOOK_CONFIG_ID');
+      const redirectUri = resolveRedirectUri(redirect_uri, 'facebook', req.headers.get('origin'));
+      const scope = 'pages_manage_posts,pages_read_engagement,pages_show_list,business_management';
+      const authUrl = buildMetaAuthUrl(appId ?? '', redirectUri, { configId, scope });
+      
+      return new Response(
+        JSON.stringify({ authUrl }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       throw new Error('Missing authorization header');
@@ -45,23 +80,11 @@ Deno.serve(async (req) => {
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
+      console.error('Facebook callback auth failure:', userError);
       throw new Error('Unauthorized');
     }
 
-    const { code, redirect_uri } = await req.json();
-
-    if (!code) {
-      const appId = Deno.env.get('FACEBOOK_APP_ID');
-      const redirectUri = resolveRedirectUri(redirect_uri, 'facebook', req.headers.get('origin'));
-      const scope = 'pages_manage_posts,pages_read_engagement,pages_show_list,business_management';
-      const authUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=code`;
-      
-      return new Response(
-        JSON.stringify({ authUrl }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
+    // Exchange code for token
     const appId = Deno.env.get('FACEBOOK_APP_ID');
     const appSecret = Deno.env.get('FACEBOOK_APP_SECRET');
     const redirectUri = resolveRedirectUri(redirect_uri, 'facebook', req.headers.get('origin'));
@@ -83,6 +106,7 @@ Deno.serve(async (req) => {
       throw new Error('No Facebook page was returned. Connect a page to this Meta app first.');
     }
 
+    // Store connection
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({
