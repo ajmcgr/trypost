@@ -392,7 +392,7 @@ const Composer = () => {
           {/* Post Now Button */}
           <Button 
             onClick={handlePublish}
-            disabled={publishing || !content.trim() || connections.length === 0}
+            disabled={publishing || !content.trim() || connections.length === 0 || selectedPlatforms.length === 0}
             className="w-full gap-2 h-12"
           >
             {publishing ? (
@@ -408,9 +408,9 @@ const Composer = () => {
             )}
           </Button>
           
-          {connections.length === 0 && (
+          {(connections.length === 0 || selectedPlatforms.length === 0) && (
             <p className="text-sm text-muted-foreground text-center">
-              Select an account to post to
+              {connections.length === 0 ? 'Connect an account first' : 'Select an account to post to'}
             </p>
           )}
 
