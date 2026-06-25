@@ -232,6 +232,66 @@ const Composer = () => {
             </Card>
           )}
 
+          {/* Account Selector */}
+          {connections.length > 0 && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm text-muted-foreground">
+                  Select accounts to post to ({selectedPlatforms.length}/{connections.length})
+                </Label>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-xs"
+                    onClick={() => setSelectedPlatforms(connections.map((c) => c.platform))}
+                  >
+                    Select all
+                  </Button>
+                  {selectedPlatforms.length > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-xs"
+                      onClick={() => setSelectedPlatforms([])}
+                    >
+                      Clear
+                    </Button>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {connections.map((conn) => {
+                  const isSelected = selectedPlatforms.includes(conn.platform);
+                  return (
+                    <button
+                      key={conn.id}
+                      type="button"
+                      onClick={() => togglePlatform(conn.platform)}
+                      className={`relative group rounded-full transition-all ${
+                        isSelected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'opacity-60 hover:opacity-100'
+                      }`}
+                      title={`${platformNames[conn.platform] || conn.platform}${conn.platform_username ? ` · @${conn.platform_username}` : ''}`}
+                    >
+                      <div className="relative w-12 h-12 rounded-full bg-muted flex items-center justify-center overflow-hidden border">
+                        <img
+                          src={platformIcons[conn.platform]}
+                          alt={conn.platform}
+                          className="w-6 h-6"
+                        />
+                      </div>
+                      {isSelected && (
+                        <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center border-2 border-background">
+                          <Check className="w-3 h-3" />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Main Caption */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
