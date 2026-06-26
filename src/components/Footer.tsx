@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer className="bg-card border-t border-border mt-auto">
       <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="grid md:grid-cols-5 gap-8">
+        <div className="grid md:grid-cols-6 gap-8">
           <div>
             <h4 className="font-semibold mb-4">About</h4>
             <ul className="space-y-2 text-sm">
@@ -36,6 +36,17 @@ const Footer = () => {
             </ul>
           </div>
           <div>
+            <h4 className="font-semibold mb-4">Resources</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/resources/best-times-to-post-on-social-media" className="text-muted-foreground hover:text-foreground">Best Times to Post</Link></li>
+              <li><Link to="/resources/content-calendar-template" className="text-muted-foreground hover:text-foreground">Content Calendar</Link></li>
+              <li><Link to="/resources/instagram-algorithm-2026" className="text-muted-foreground hover:text-foreground">Instagram Algorithm</Link></li>
+              <li><Link to="/resources/repurpose-one-video-into-ten-posts" className="text-muted-foreground hover:text-foreground">Repurpose Video</Link></li>
+              <li><Link to="/resources/writing-hooks-that-stop-the-scroll" className="text-muted-foreground hover:text-foreground">Writing Hooks</Link></li>
+              <li><Link to="/resources" className="text-foreground font-medium hover:text-primary">View All Resources →</Link></li>
+            </ul>
+          </div>
+          <div>
             <h4 className="font-semibold mb-4">Free Tools</h4>
             <ul className="space-y-2 text-sm">
               <li><Link to="/tools/hashtag-generator" className="text-muted-foreground hover:text-foreground">Hashtag Generator</Link></li>
@@ -43,13 +54,13 @@ const Footer = () => {
               <li><Link to="/tools/influencer-rate-calculator" className="text-muted-foreground hover:text-foreground">Influencer Rate Calculator</Link></li>
               <li><Link to="/tools/bio-text-generator" className="text-muted-foreground hover:text-foreground">Bio Text Generator</Link></li>
               <li><Link to="/tools/caption-generator" className="text-muted-foreground hover:text-foreground">Caption Generator</Link></li>
+              <li><Link to="/tools" className="text-foreground font-medium hover:text-primary">View All Tools →</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold mb-4">Connect</h4>
             <ul className="space-y-2 text-sm">
               <li><a href="https://x.com/trypostai" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">X</a></li>
-              <li><a href="https://discord.gg/vNyMmrRDXA" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Discord</a></li>
             </ul>
           </div>
         </div>
