@@ -29,13 +29,13 @@ const Index = () => {
             <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
           </a>
           <nav className="hidden sm:flex flex-1 justify-center items-center gap-6 md:gap-8">
-            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors">
+            <Link to="/pricing" className="text-xs sm:text-sm font-semibold text-foreground hover:opacity-80 transition-colors">
               Pricing
             </Link>
-            <Link to="/faq" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors">
+            <Link to="/faq" className="text-xs sm:text-sm font-semibold text-foreground hover:opacity-80 transition-colors">
               FAQ
             </Link>
-            <Link to="/resources" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors">
+            <Link to="/resources" className="text-xs sm:text-sm font-semibold text-foreground hover:opacity-80 transition-colors">
               Resources
             </Link>
           </nav>
