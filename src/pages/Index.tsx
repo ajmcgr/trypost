@@ -88,9 +88,6 @@ const Index = () => {
         {/* Cross-posting */}
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
-              <Zap className="w-3.5 h-3.5" /> CROSS-POSTING
-            </div>
             <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
               Post to all platforms <span>instantly</span>
             </h2>
@@ -137,9 +134,6 @@ const Index = () => {
             <img src="/hero-screenshot.png" alt="" className="w-full rounded-2xl shadow-lg border" />
           </Card>
           <div className="order-1 md:order-2">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
-              <Calendar className="w-3.5 h-3.5" /> SCHEDULING
-            </div>
             <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
               Schedule posts <span>effortlessly</span>
             </h2>
@@ -157,9 +151,6 @@ const Index = () => {
         {/* Content management */}
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
-              <BarChart3 className="w-3.5 h-3.5" /> CONTENT MANAGEMENT
-            </div>
             <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
               Manage content <span>efficiently</span>
             </h2>
