@@ -77,6 +77,7 @@ const App = () => (
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/oauth/:platform/callback" element={<OAuthCallback />} />
+      <Route path="/reserve" element={<Reserve />} />
       
       {/* Dashboard Routes with Sidebar */}
       <Route path="/dashboard" element={<DashboardLayout />}>
