@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-card border-t border-border mt-auto">
+    <footer className="bg-card mt-auto">
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid md:grid-cols-6 gap-8">
           <div>
@@ -10,7 +10,6 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li><Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link></li>
               <li><a href="https://blog.works.xyz" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Blog</a></li>
-              <li><a href="https://discord.gg/vNyMmrRDXA" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Community</a></li>
             </ul>
           </div>
           <div>
@@ -43,6 +42,9 @@ const Footer = () => {
               <li><Link to="/resources/instagram-algorithm-2026" className="text-muted-foreground hover:text-foreground">Instagram Algorithm</Link></li>
               <li><Link to="/resources/repurpose-one-video-into-ten-posts" className="text-muted-foreground hover:text-foreground">Repurpose Video</Link></li>
               <li><Link to="/resources/writing-hooks-that-stop-the-scroll" className="text-muted-foreground hover:text-foreground">Writing Hooks</Link></li>
+              <li><Link to="/resources/linkedin-content-strategy" className="text-muted-foreground hover:text-foreground">LinkedIn Strategy</Link></li>
+              <li><Link to="/resources/tiktok-growth-playbook" className="text-muted-foreground hover:text-foreground">TikTok Growth</Link></li>
+              <li><Link to="/resources/social-media-analytics-that-matter" className="text-muted-foreground hover:text-foreground">Analytics That Matter</Link></li>
               <li><Link to="/resources" className="text-foreground font-medium hover:text-primary">View All Resources →</Link></li>
             </ul>
           </div>
@@ -51,9 +53,12 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li><Link to="/tools/hashtag-generator" className="text-muted-foreground hover:text-foreground">Hashtag Generator</Link></li>
               <li><Link to="/tools/content-planner" className="text-muted-foreground hover:text-foreground">Content Planner</Link></li>
-              <li><Link to="/tools/influencer-rate-calculator" className="text-muted-foreground hover:text-foreground">Influencer Rate Calculator</Link></li>
-              <li><Link to="/tools/bio-text-generator" className="text-muted-foreground hover:text-foreground">Bio Text Generator</Link></li>
+              <li><Link to="/tools/influencer-rate-calculator" className="text-muted-foreground hover:text-foreground">Rate Calculator</Link></li>
+              <li><Link to="/tools/bio-text-generator" className="text-muted-foreground hover:text-foreground">Bio Generator</Link></li>
               <li><Link to="/tools/caption-generator" className="text-muted-foreground hover:text-foreground">Caption Generator</Link></li>
+              <li><Link to="/tools/character-counter" className="text-muted-foreground hover:text-foreground">Character Counter</Link></li>
+              <li><Link to="/tools/post-idea-generator" className="text-muted-foreground hover:text-foreground">Post Idea Generator</Link></li>
+              <li><Link to="/tools/emoji-picker" className="text-muted-foreground hover:text-foreground">Emoji Picker</Link></li>
               <li><Link to="/tools" className="text-foreground font-medium hover:text-primary">View All Tools →</Link></li>
             </ul>
           </div>
@@ -64,7 +69,7 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
+        <div className="mt-8 pt-8 text-center text-sm text-muted-foreground">
           Copyright © 2026 Works App, Inc. Built with 🫶🏻 by <a href="https://works.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Works</a>.
         </div>
       </div>
