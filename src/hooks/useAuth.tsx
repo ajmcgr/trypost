@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
@@ -48,13 +48,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // supabase-js invoke wrapper hides it behind a generic message).
     let message = 'Sign up failed';
     try {
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/signup-user`;
+      const url = `${SUPABASE_URL}/functions/v1/signup-user`;
       const res = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string,
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({ email, password, fullName }),
       });

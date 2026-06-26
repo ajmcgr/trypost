@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { supabase } from "@/lib/supabase";
+import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
@@ -20,13 +20,13 @@ const ForgotPassword = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-password-reset`;
+      const url = `${SUPABASE_URL}/functions/v1/send-password-reset`;
       const res = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string,
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({
           email,
