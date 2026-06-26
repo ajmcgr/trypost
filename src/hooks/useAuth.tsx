@@ -43,21 +43,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signUp = async (email: string, password: string, fullName: string) => {
     // Route signup through our edge function so Supabase does not send a
-    // confirmation email (avoids Supabase's auth email rate limit). The
-    // edge function creates an auto-confirmed user and sends a branded
-    // welcome email via Resend.
-    const { data, error } = await supabase.functions.invoke('signup-user', {
-      body: { email, password, fullName },
-    });
-
-    if (error || (data && data.error)) {
-      const message = (data && data.error) || error?.message || 'Sign up failed';
-      toast({
-        title: "Sign up failed",
-        description: message,
-        variant: "destructive",
+    // confirmation email (avoids Supabase's auth email rate limit). Use a
+    // direct fetch so we can surface the real error body on non-2xx (the
+    // supabase-js invoke wrapper hides it behind a generic message).
+    let message = 'Sign up failed';
+    try {
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/signup-user`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string,
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ email, password, fullName }),
       });
-      return { error: error ?? new Error(message) };
+      const text = await res.text();
+      let payload: any = {};
+      try { payload = text ? JSON.parse(text) : {}; } catch { payload = { error: text }; }
+      if (!res.ok || payload.error) {
+        message = payload.error || `Sign up failed (${res.status})`;
+        toast({ title: 'Sign up failed', description: message, variant: 'destructive' });
+        return { error: new Error(message) };
+      }
+    } catch (e: any) {
+      toast({ title: 'Sign up failed', description: e.message ?? message, variant: 'destructive' });
+      return { error: e };
     }
 
     // Auto sign-in since the user is already confirmed.
