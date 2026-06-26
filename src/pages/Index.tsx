@@ -38,15 +38,15 @@ const Index = () => {
             <LanguageSwitcher />
             {user ? (
               <Link to="/dashboard">
-                <Button className="text-xs sm:text-sm px-3 sm:px-4">Go to Dashboard →</Button>
+                <Button className="text-xs sm:text-sm">Go to Dashboard →</Button>
               </Link>
             ) : (
               <>
                 <Link to="/login">
-                  <Button variant="ghost" className="text-xs sm:text-sm px-3 sm:px-4">Log In</Button>
+                  <Button variant="ghost" className="text-xs sm:text-sm">Log In</Button>
                 </Link>
                 <Link to="/signup">
-                  <Button className="text-xs sm:text-sm px-3 sm:px-4">Sign Up →</Button>
+                  <Button className="text-xs sm:text-sm">Sign Up →</Button>
                 </Link>
               </>
             )}
@@ -66,7 +66,7 @@ const Index = () => {
         </p>
         <div className="flex flex-col md:flex-row items-center justify-center gap-3">
           <Link to="/signup">
-            <Button size="lg" className="text-xl px-10 py-7 rounded-2xl">
+            <Button size="lg" className="text-lg">
               Start Scheduling Free →
             </Button>
           </Link>
@@ -97,7 +97,7 @@ const Index = () => {
               your content across all platforms with a single click — no learning curve required.
             </p>
             <div className="flex gap-3">
-              <Link to="/signup"><Button className="rounded-full">Start posting <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+              <Link to="/signup"><Button>Start posting <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
             </div>
           </div>
           <Card className="aspect-square rounded-3xl bg-muted/40 border-0 flex items-center justify-center p-12 relative">
@@ -141,7 +141,7 @@ const Index = () => {
               your posts perfectly per platform. Queue up your posts and let Post handle the rest.
             </p>
             <div className="flex gap-3">
-              <Link to="/signup"><Button className="rounded-full">Start scheduling <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+              <Link to="/signup"><Button>Start scheduling <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
             </div>
           </div>
         </div>
@@ -157,7 +157,7 @@ const Index = () => {
               upcoming posts, and stay on top of your content strategy.
             </p>
             <div className="flex gap-3">
-              <Link to="/signup"><Button className="rounded-full">Get started <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+              <Link to="/signup"><Button>Get started <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
             </div>
           </div>
           <Card className="aspect-square rounded-3xl bg-muted/40 border-0 p-8 flex items-center justify-center">
@@ -236,7 +236,7 @@ const Index = () => {
             </ul>
 
             <Link to="/signup">
-              <Button className="w-full rounded-2xl" variant="outline" size="lg">
+              <Button className="w-full" variant="outline" size="lg">
                 Get Started
               </Button>
             </Link>
@@ -274,7 +274,7 @@ const Index = () => {
             </ul>
 
             <Link to="/signup">
-              <Button className="w-full rounded-2xl" size="lg">
+              <Button className="w-full" size="lg">
                 Start Free Trial
               </Button>
             </Link>
@@ -313,7 +313,7 @@ const Index = () => {
             </ul>
 
             <Link to="/signup">
-              <Button className="w-full rounded-2xl" variant="outline" size="lg">
+              <Button className="w-full" variant="outline" size="lg">
                 Start Free Trial
               </Button>
             </Link>
@@ -396,7 +396,7 @@ const Index = () => {
           Join thousands of creators who schedule smarter with Post.
         </p>
         <Link to="/signup">
-          <Button size="lg" className="text-lg px-8 py-6 rounded-2xl">
+          <Button size="lg" className="text-lg">
             Start Scheduling Free →
           </Button>
         </Link>
