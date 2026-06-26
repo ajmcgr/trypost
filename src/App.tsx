@@ -127,6 +127,11 @@ const App = () => (
       <Route path="/tools/influencer-rate-calculator" element={<InfluencerRateCalculator />} />
       <Route path="/tools/bio-text-generator" element={<BioTextGenerator />} />
       <Route path="/tools/caption-generator" element={<CaptionGenerator />} />
+      <Route path="/tools/character-counter" element={<CharacterCounter />} />
+      <Route path="/tools/post-idea-generator" element={<PostIdeaGenerator />} />
+      <Route path="/tools/emoji-picker" element={<EmojiPicker />} />
+      <Route path="/tools/announcement-generator" element={<AnnouncementGenerator />} />
+
 
       {/* Resources */}
       <Route path="/resources" element={<Resources />} />
