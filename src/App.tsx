@@ -6,6 +6,8 @@ import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Composer from "./pages/Composer";
 import DashboardLayout from "./components/DashboardLayout";
