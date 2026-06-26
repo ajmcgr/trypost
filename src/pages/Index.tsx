@@ -17,6 +17,33 @@ import youtubeLogo from "@/assets/youtube.svg";
 import threadsLogo from "@/assets/threads.svg";
 import tiktokLogo from "@/assets/tiktok.svg";
 
+function GracefulImage({
+  src,
+  alt,
+  className = "",
+  priority = false,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  priority?: boolean;
+}) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      onLoad={() => setLoaded(true)}
+      className={`transition-all duration-700 ease-out ${
+        loaded ? "opacity-100 blur-0 scale-100" : "opacity-0 blur-md scale-[1.02]"
+      } ${className}`}
+    />
+  );
+}
+
+
 const Index = () => {
   const { user } = useAuth();
 
@@ -78,14 +105,16 @@ const Index = () => {
           <div className="senja-embed" data-id="eacf7a79-5b6c-4a80-9f5a-0e6dfe631ec6" data-mode="shadow" data-lazyload="false"></div>
         </div>
         <div className="mt-16 rounded-3xl overflow-hidden shadow-2xl border border-border bg-card p-8">
-          <div className="rounded-2xl overflow-hidden">
-            <img
+          <div className="rounded-2xl overflow-hidden bg-muted/30">
+            <GracefulImage
               src="/hero-screenshot.png"
               alt="TryPost composer interface showing connected social accounts and a ready-to-publish post"
               className="w-full h-auto"
+              priority
             />
           </div>
         </div>
+
       </section>
 
       {/* Features Section */}
