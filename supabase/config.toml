@@ -50,3 +50,6 @@ verify_jwt = false
 
 [functions.send-auth-email]
 verify_jwt = false
+
+[functions.signup-user]
+verify_jwt = false
