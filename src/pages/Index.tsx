@@ -105,14 +105,16 @@ const Index = () => {
           <div className="senja-embed" data-id="eacf7a79-5b6c-4a80-9f5a-0e6dfe631ec6" data-mode="shadow" data-lazyload="false"></div>
         </div>
         <div className="mt-16 rounded-3xl overflow-hidden shadow-2xl border border-border bg-card p-8">
-          <div className="rounded-2xl overflow-hidden">
-            <img
+          <div className="rounded-2xl overflow-hidden bg-muted/30">
+            <GracefulImage
               src="/hero-screenshot.png"
               alt="TryPost composer interface showing connected social accounts and a ready-to-publish post"
               className="w-full h-auto"
+              priority
             />
           </div>
         </div>
+
       </section>
 
       {/* Features Section */}
