@@ -17,6 +17,33 @@ import youtubeLogo from "@/assets/youtube.svg";
 import threadsLogo from "@/assets/threads.svg";
 import tiktokLogo from "@/assets/tiktok.svg";
 
+function GracefulImage({
+  src,
+  alt,
+  className = "",
+  priority = false,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  priority?: boolean;
+}) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      onLoad={() => setLoaded(true)}
+      className={`transition-all duration-700 ease-out ${
+        loaded ? "opacity-100 blur-0 scale-100" : "opacity-0 blur-md scale-[1.02]"
+      } ${className}`}
+    />
+  );
+}
+
+
 const Index = () => {
   const { user } = useAuth();
 
