@@ -6,6 +6,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import postLogo from "@/assets/post-logo.png";
+import Footer from "@/components/Footer";
 import facebookLogo from "@/assets/facebook.svg";
 import xLogo from "@/assets/x.svg";
 import linkedinLogo from "@/assets/linkedin.svg";
