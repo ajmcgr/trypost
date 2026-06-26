@@ -6,7 +6,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import postLogo from "@/assets/post-logo.png";
 import facebookLogo from "@/assets/facebook.svg";
 import xLogo from "@/assets/x.svg";
@@ -143,18 +142,19 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header showSignup={!user} showPricing />
 
+      {/* Hero Section */}
       <section className="container mx-auto px-6 py-20 text-center">
-        <h1 className="font-reckless text-5xl md:text-6xl font-medium mb-6 tracking-tight">
+        <h1 className="font-reckless text-4xl md:text-5xl font-medium mb-6 tracking-tight">
           Create once.
           <br />
           <span className="text-primary">Schedule everywhere.</span>
         </h1>
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
           Post helps creators and brands plan, queue, and publish content across all social platforms from one simple dashboard.
         </p>
         <div className="flex flex-col md:flex-row items-center justify-center gap-3">
           <Link to="/signup">
-            <Button size="lg" className="text-xl px-10 py-7 rounded-2xl">
+            <Button size="lg" className="text-lg px-10 py-7 rounded-2xl">
               Start Scheduling Free →
             </Button>
           </Link>
@@ -177,15 +177,15 @@ const Index = () => {
                 className={`grid items-center gap-10 lg:grid-cols-2 ${feature.reverse ? "lg:[&>*:first-child]:order-2 lg:[&>*:last-child]:order-1" : ""}`}
               >
                 <div className="max-w-xl">
-                  <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2 text-sm font-semibold text-primary">
+                  <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2 text-xs font-semibold text-primary">
                     <Icon className="h-4 w-4" />
                     <span>{feature.eyebrow}</span>
                   </div>
-                  <h2 className="mb-4 text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
+                  <h2 className="font-reckless mb-4 text-3xl font-medium leading-tight tracking-tight md:text-4xl">
                     {feature.title.replace(feature.emphasis, "")}
                     <span className="text-primary">{feature.emphasis}</span>
                   </h2>
-                  <p className="mb-8 text-lg leading-8 text-muted-foreground">
+                  <p className="mb-8 text-base leading-7 text-muted-foreground">
                     {feature.description}
                   </p>
                   <div className="flex flex-wrap items-center gap-3">
@@ -208,17 +208,18 @@ const Index = () => {
         </div>
       </section>
 
+      {/* How It Works */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="font-reckless text-4xl font-medium mb-4">How it works</h2>
-          <p className="text-lg text-muted-foreground">Three simple steps to social media success</p>
+          <h2 className="font-reckless text-3xl font-medium mb-4">How it works</h2>
+          <p className="text-base text-muted-foreground">Three simple steps to social media success</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="p-8 text-center rounded-3xl border-2">
             <div className="w-16 h-16 rounded-2xl bg-google-blue/10 flex items-center justify-center mx-auto mb-4">
               <Zap className="w-8 h-8 text-google-blue" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Connect Accounts</h3>
+            <h3 className="text-lg font-semibold mb-2">Connect Accounts</h3>
             <p className="text-muted-foreground">
               Link your Twitter, LinkedIn, Instagram, Facebook, and TikTok accounts in seconds.
             </p>
@@ -227,7 +228,7 @@ const Index = () => {
             <div className="w-16 h-16 rounded-2xl bg-google-red/10 flex items-center justify-center mx-auto mb-4">
               <Calendar className="w-8 h-8 text-google-red" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Schedule Posts</h3>
+            <h3 className="text-lg font-semibold mb-2">Schedule Posts</h3>
             <p className="text-muted-foreground">
               Create content once and schedule it across multiple platforms with one click.
             </p>
@@ -236,7 +237,7 @@ const Index = () => {
             <div className="w-16 h-16 rounded-2xl bg-google-green/10 flex items-center justify-center mx-auto mb-4">
               <BarChart3 className="w-8 h-8 text-google-green" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Track Results</h3>
+            <h3 className="text-lg font-semibold mb-2">Track Results</h3>
             <p className="text-muted-foreground">
               Monitor engagement, reach, and performance across all your social channels.
             </p>
@@ -244,12 +245,14 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Pricing Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="font-reckless text-4xl font-medium mb-4">Simple, transparent pricing</h2>
-          <p className="text-lg text-muted-foreground">Choose the plan that fits your needs</p>
+          <h2 className="font-reckless text-3xl font-medium mb-4">Simple, transparent pricing</h2>
+          <p className="text-base text-muted-foreground">Choose the plan that fits your needs</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {/* Free Plan */}
           <Card className="p-8 rounded-3xl border-2 flex flex-col">
             <h3 className="text-2xl font-bold mb-2">Free</h3>
             <div className="mb-2">
@@ -279,6 +282,7 @@ const Index = () => {
             </Link>
           </Card>
 
+          {/* Pro Plan */}
           <Card className="p-8 rounded-3xl border-2 border-primary shadow-xl scale-105 flex flex-col">
             <div className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full w-fit mx-auto mb-4">
               Most Popular
@@ -316,6 +320,7 @@ const Index = () => {
             </Link>
           </Card>
 
+          {/* Business Plan */}
           <Card className="p-8 rounded-3xl border-2 flex flex-col">
             <h3 className="text-2xl font-bold mb-2">Business</h3>
             <div className="mb-2">
@@ -356,6 +361,7 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Supported Platforms */}
       <section className="container mx-auto px-6 py-20 bg-muted/30 rounded-3xl">
         <div className="text-center mb-12">
           <h2 className="font-reckless text-4xl font-medium mb-4">Works with all your platforms</h2>
@@ -393,6 +399,7 @@ const Index = () => {
         </div>
       </section>
 
+      {/* FAQ Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-12">
           <h2 className="font-reckless text-4xl font-medium mb-4">Frequently Asked Questions</h2>
@@ -422,6 +429,7 @@ const Index = () => {
         </div>
       </section>
 
+      {/* CTA Section */}
       <section className="container mx-auto px-6 py-20 text-center">
         <h2 className="font-reckless text-4xl font-medium mb-6">Ready to simplify your social media?</h2>
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -434,7 +442,63 @@ const Index = () => {
         </Link>
       </section>
 
-      <Footer />
+      {/* Footer */}
+      <footer className="border-t border-border bg-card">
+        <div className="max-w-6xl mx-auto px-6 py-12">
+          <div className="grid md:grid-cols-5 gap-8">
+            <div>
+              <h4 className="font-semibold mb-4">About</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link></li>
+                <li><a href="https://blog.works.xyz" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Blog</a></li>
+                <li><a href="https://discord.gg/vNyMmrRDXA" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Community</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Support</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="mailto:support@trypost.ai" className="text-muted-foreground hover:text-foreground">Support</a></li>
+                <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="text-muted-foreground hover:text-foreground">Terms of Service</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Platforms</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link to="/platforms/instagram" className="text-muted-foreground hover:text-foreground">Instagram</Link></li>
+                <li><Link to="/platforms/youtube" className="text-muted-foreground hover:text-foreground">YouTube</Link></li>
+                <li><Link to="/platforms/tiktok" className="text-muted-foreground hover:text-foreground">TikTok</Link></li>
+                <li><Link to="/platforms/twitter" className="text-muted-foreground hover:text-foreground">X (Twitter)</Link></li>
+                <li><Link to="/platforms/facebook" className="text-muted-foreground hover:text-foreground">Facebook</Link></li>
+                <li><Link to="/platforms/whatsapp" className="text-muted-foreground hover:text-foreground">WhatsApp</Link></li>
+                <li><Link to="/platforms/telegram" className="text-muted-foreground hover:text-foreground">Telegram</Link></li>
+                <li><Link to="/platforms/threads" className="text-muted-foreground hover:text-foreground">Threads</Link></li>
+                <li><Link to="/platforms/snapchat" className="text-muted-foreground hover:text-foreground">Snapchat</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Free Tools</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link to="/tools/hashtag-generator" className="text-muted-foreground hover:text-foreground">Hashtag Generator</Link></li>
+                <li><Link to="/tools/content-planner" className="text-muted-foreground hover:text-foreground">Content Planner</Link></li>
+                <li><Link to="/tools/influencer-rate-calculator" className="text-muted-foreground hover:text-foreground">Influencer Rate Calculator</Link></li>
+                <li><Link to="/tools/bio-text-generator" className="text-muted-foreground hover:text-foreground">Bio Text Generator</Link></li>
+                <li><Link to="/tools/caption-generator" className="text-muted-foreground hover:text-foreground">Caption Generator</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Connect</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="https://x.com/trypostai" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">X</a></li>
+                <li><a href="https://discord.gg/vNyMmrRDXA" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Discord</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
+            Copyright © 2026 Works App, Inc. Built with 🫶🏻 by <a href="https://works.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Works</a>.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
