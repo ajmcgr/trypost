@@ -213,7 +213,7 @@ const Index = () => {
       {/* Pricing Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">Simple, transparent pricing</h2>
+          <h2 className="font-reckless text-4xl font-normal mb-4 text-black">Simple, transparent pricing</h2>
           <p className="text-lg text-muted-foreground">Choose the plan that fits your needs</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
