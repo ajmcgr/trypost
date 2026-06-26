@@ -27,6 +27,9 @@ import ContentPlanner from "./pages/tools/ContentPlanner";
 import InfluencerRateCalculator from "./pages/tools/InfluencerRateCalculator";
 import BioTextGenerator from "./pages/tools/BioTextGenerator";
 import CaptionGenerator from "./pages/tools/CaptionGenerator";
+import Tools from "./pages/Tools";
+import Resources from "./pages/Resources";
+import ResourceArticle from "./pages/ResourceArticle";
 import Calendar from "./pages/dashboard/Calendar";
 import Posts from "./pages/dashboard/Posts";
 import Scheduled from "./pages/dashboard/Scheduled";
@@ -108,11 +111,16 @@ const App = () => (
       <Route path="/platforms/snapchat" element={<Snapchat />} />
 
       {/* Tools Pages */}
+      <Route path="/tools" element={<Tools />} />
       <Route path="/tools/hashtag-generator" element={<HashtagGenerator />} />
       <Route path="/tools/content-planner" element={<ContentPlanner />} />
       <Route path="/tools/influencer-rate-calculator" element={<InfluencerRateCalculator />} />
       <Route path="/tools/bio-text-generator" element={<BioTextGenerator />} />
       <Route path="/tools/caption-generator" element={<CaptionGenerator />} />
+
+      {/* Resources */}
+      <Route path="/resources" element={<Resources />} />
+      <Route path="/resources/:slug" element={<ResourceArticle />} />
 
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
