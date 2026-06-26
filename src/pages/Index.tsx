@@ -88,7 +88,7 @@ const Index = () => {
         {/* Cross-posting */}
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+            <h2 className="font-sans text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
               Post to all platforms <span>instantly</span>
             </h2>
             <p className="text-muted-foreground mb-6">
@@ -134,7 +134,7 @@ const Index = () => {
             <img src="/hero-screenshot.png" alt="" className="w-full rounded-2xl shadow-lg border" />
           </Card>
           <div className="order-1 md:order-2">
-            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+            <h2 className="font-sans text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
               Schedule posts <span>effortlessly</span>
             </h2>
             <p className="text-muted-foreground mb-6">
@@ -151,7 +151,7 @@ const Index = () => {
         {/* Content management */}
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+            <h2 className="font-sans text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
               Manage content <span>efficiently</span>
             </h2>
             <p className="text-muted-foreground mb-6">
