@@ -47,9 +47,8 @@ const LanguageDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="gap-2 px-3 text-sm">
+        <Button variant="ghost" className="gap-1 px-2 text-sm">
           <span className="text-base leading-none">{selectedLanguage.flag}</span>
-          <span className="hidden sm:inline">{selectedLanguage.label}</span>
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
