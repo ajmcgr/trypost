@@ -191,7 +191,7 @@ const Index = () => {
             <div className="w-16 h-16 rounded-2xl bg-google-blue/10 flex items-center justify-center mx-auto mb-4">
               <Zap className="w-8 h-8 text-google-blue" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Connect Accounts</h3>
+            <h3 className="text-xl font-semibold mb-2 text-black">Connect Accounts</h3>
             <p className="text-muted-foreground">
               Link your Twitter, LinkedIn, Instagram, Facebook, and TikTok accounts in seconds.
             </p>
@@ -200,7 +200,7 @@ const Index = () => {
             <div className="w-16 h-16 rounded-2xl bg-google-red/10 flex items-center justify-center mx-auto mb-4">
               <Calendar className="w-8 h-8 text-google-red" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Schedule Posts</h3>
+            <h3 className="text-xl font-semibold mb-2 text-black">Schedule Posts</h3>
             <p className="text-muted-foreground">
               Create content once and schedule it across multiple platforms with one click.
             </p>
@@ -209,7 +209,7 @@ const Index = () => {
             <div className="w-16 h-16 rounded-2xl bg-google-green/10 flex items-center justify-center mx-auto mb-4">
               <BarChart3 className="w-8 h-8 text-google-green" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Track Results</h3>
+            <h3 className="text-xl font-semibold mb-2 text-black">Track Results</h3>
             <p className="text-muted-foreground">
               Monitor engagement, reach, and performance across all your social channels.
             </p>
@@ -226,7 +226,7 @@ const Index = () => {
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {/* Free Plan */}
           <Card className="p-8 rounded-3xl border-2 flex flex-col">
-            <h3 className="text-2xl font-bold mb-2">Free</h3>
+            <h3 className="text-2xl font-bold mb-2 text-black">Free</h3>
             <div className="mb-2">
               <span className="text-5xl font-bold">$0</span>
             </div>
@@ -259,7 +259,7 @@ const Index = () => {
             <div className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full w-fit mx-auto mb-4">
               Most Popular
             </div>
-            <h3 className="text-2xl font-bold mb-2">Pro</h3>
+            <h3 className="text-2xl font-bold mb-2 text-black">Pro</h3>
             <div className="mb-2">
               <span className="text-5xl font-bold">$19</span>
               <span className="text-muted-foreground">/month</span>
@@ -294,7 +294,7 @@ const Index = () => {
 
           {/* Business Plan */}
           <Card className="p-8 rounded-3xl border-2 flex flex-col">
-            <h3 className="text-2xl font-bold mb-2">Business</h3>
+            <h3 className="text-2xl font-bold mb-2 text-black">Business</h3>
             <div className="mb-2">
               <span className="text-5xl font-bold">$49</span>
               <span className="text-muted-foreground">/month</span>
@@ -427,7 +427,7 @@ const FAQItem = ({ question, answer }: { question: string; answer: string }) => 
     <Collapsible open={open} onOpenChange={setOpen}>
       <Card className="border-2 rounded-2xl overflow-hidden">
         <CollapsibleTrigger className="w-full text-left p-6 flex items-center justify-between hover:bg-muted/50 transition-colors">
-          <h3 className="font-semibold text-lg pr-4">{question}</h3>
+          <h3 className="font-semibold text-lg pr-4 text-black">{question}</h3>
           <ChevronDown className={`w-5 h-5 text-muted-foreground flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
         </CollapsibleTrigger>
         <CollapsibleContent className="px-6 pb-6">
