@@ -100,7 +100,7 @@ const Pricing = () => {
 
               <Link to="/signup">
                 <Button
-                  className="w-full rounded-2xl"
+                  className="w-full"
                   variant={plan.highlighted ? "default" : "outline"}
                   size="lg"
                 >
