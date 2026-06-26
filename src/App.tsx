@@ -62,6 +62,7 @@ import Queue from "./pages/dashboard/Queue";
 import BulkImageUpload from "./pages/dashboard/BulkImageUpload";
 import BulkVideoUpload from "./pages/dashboard/BulkVideoUpload";
 import NotFound from "./pages/NotFound";
+import Reserve from "./pages/Reserve";
 
 const App = () => (
   <TooltipProvider>
