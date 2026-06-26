@@ -56,10 +56,10 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20 text-center">
-        <h1 className="font-reckless text-5xl md:text-6xl font-medium mb-6 tracking-tight">
+        <h1 className="font-reckless text-5xl md:text-6xl font-medium mb-6 tracking-tight text-black">
           Create once.
           <br />
-          <span className="text-primary">Schedule everywhere.</span>
+          <span>Schedule everywhere.</span>
         </h1>
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Post helps creators and brands plan, queue, and publish content across all social platforms from one simple dashboard.
@@ -91,8 +91,8 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
               <Zap className="w-3.5 h-3.5" /> CROSS-POSTING
             </div>
-            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight">
-              Post to all platforms <span className="text-primary">instantly</span>
+            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+              Post to all platforms <span>instantly</span>
             </h2>
             <p className="text-muted-foreground mb-6">
               Publish everywhere in 30 seconds, not 30 minutes. Manage all your personal and brand
@@ -140,8 +140,8 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
               <Calendar className="w-3.5 h-3.5" /> SCHEDULING
             </div>
-            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight">
-              Schedule posts <span className="text-primary">effortlessly</span>
+            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+              Schedule posts <span>effortlessly</span>
             </h2>
             <p className="text-muted-foreground mb-6">
               Plan your content strategy ahead of time. Schedule posts across all platforms. Customize
@@ -160,8 +160,8 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
               <BarChart3 className="w-3.5 h-3.5" /> CONTENT MANAGEMENT
             </div>
-            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight">
-              Manage content <span className="text-primary">efficiently</span>
+            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+              Manage content <span>efficiently</span>
             </h2>
             <p className="text-muted-foreground mb-6">
               View all your scheduled and published posts in one place. Track what's been posted, edit
@@ -183,7 +183,7 @@ const Index = () => {
       {/* How It Works */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="font-reckless text-4xl font-medium mb-4">How it works</h2>
+          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">How it works</h2>
           <p className="text-lg text-muted-foreground">Three simple steps to social media success</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
@@ -191,7 +191,7 @@ const Index = () => {
             <div className="w-16 h-16 rounded-2xl bg-google-blue/10 flex items-center justify-center mx-auto mb-4">
               <Zap className="w-8 h-8 text-google-blue" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Connect Accounts</h3>
+            <h3 className="text-xl font-semibold mb-2 text-black">Connect Accounts</h3>
             <p className="text-muted-foreground">
               Link your Twitter, LinkedIn, Instagram, Facebook, and TikTok accounts in seconds.
             </p>
@@ -200,7 +200,7 @@ const Index = () => {
             <div className="w-16 h-16 rounded-2xl bg-google-red/10 flex items-center justify-center mx-auto mb-4">
               <Calendar className="w-8 h-8 text-google-red" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Schedule Posts</h3>
+            <h3 className="text-xl font-semibold mb-2 text-black">Schedule Posts</h3>
             <p className="text-muted-foreground">
               Create content once and schedule it across multiple platforms with one click.
             </p>
@@ -209,7 +209,7 @@ const Index = () => {
             <div className="w-16 h-16 rounded-2xl bg-google-green/10 flex items-center justify-center mx-auto mb-4">
               <BarChart3 className="w-8 h-8 text-google-green" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Track Results</h3>
+            <h3 className="text-xl font-semibold mb-2 text-black">Track Results</h3>
             <p className="text-muted-foreground">
               Monitor engagement, reach, and performance across all your social channels.
             </p>
@@ -220,13 +220,13 @@ const Index = () => {
       {/* Pricing Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="font-reckless text-4xl font-medium mb-4">Simple, transparent pricing</h2>
+          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">Simple, transparent pricing</h2>
           <p className="text-lg text-muted-foreground">Choose the plan that fits your needs</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {/* Free Plan */}
           <Card className="p-8 rounded-3xl border-2 flex flex-col">
-            <h3 className="text-2xl font-bold mb-2">Free</h3>
+            <h3 className="text-2xl font-bold mb-2 text-black">Free</h3>
             <div className="mb-2">
               <span className="text-5xl font-bold">$0</span>
             </div>
@@ -259,7 +259,7 @@ const Index = () => {
             <div className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full w-fit mx-auto mb-4">
               Most Popular
             </div>
-            <h3 className="text-2xl font-bold mb-2">Pro</h3>
+            <h3 className="text-2xl font-bold mb-2 text-black">Pro</h3>
             <div className="mb-2">
               <span className="text-5xl font-bold">$19</span>
               <span className="text-muted-foreground">/month</span>
@@ -294,7 +294,7 @@ const Index = () => {
 
           {/* Business Plan */}
           <Card className="p-8 rounded-3xl border-2 flex flex-col">
-            <h3 className="text-2xl font-bold mb-2">Business</h3>
+            <h3 className="text-2xl font-bold mb-2 text-black">Business</h3>
             <div className="mb-2">
               <span className="text-5xl font-bold">$49</span>
               <span className="text-muted-foreground">/month</span>
@@ -336,7 +336,7 @@ const Index = () => {
       {/* Supported Platforms */}
       <section className="container mx-auto px-6 py-20 bg-muted/30 rounded-3xl">
         <div className="text-center mb-12">
-          <h2 className="font-reckless text-4xl font-medium mb-4">Works with all your platforms</h2>
+          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">Works with all your platforms</h2>
           <p className="text-lg text-muted-foreground">Connect once, publish everywhere</p>
         </div>
         <div className="flex flex-wrap justify-center gap-8">
@@ -374,7 +374,7 @@ const Index = () => {
       {/* FAQ Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-12">
-          <h2 className="font-reckless text-4xl font-medium mb-4">Frequently Asked Questions</h2>
+          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">Frequently Asked Questions</h2>
           <p className="text-lg text-muted-foreground">Everything you need to know about Post</p>
         </div>
         <div className="max-w-3xl mx-auto space-y-4">
@@ -403,7 +403,7 @@ const Index = () => {
 
       {/* CTA Section */}
       <section className="container mx-auto px-6 py-20 text-center">
-        <h2 className="font-reckless text-4xl font-medium mb-6">Ready to simplify your social media?</h2>
+        <h2 className="font-reckless text-4xl font-medium mb-6 text-black">Ready to simplify your social media?</h2>
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Join thousands of creators who schedule smarter with Post.
         </p>
@@ -427,7 +427,7 @@ const FAQItem = ({ question, answer }: { question: string; answer: string }) => 
     <Collapsible open={open} onOpenChange={setOpen}>
       <Card className="border-2 rounded-2xl overflow-hidden">
         <CollapsibleTrigger className="w-full text-left p-6 flex items-center justify-between hover:bg-muted/50 transition-colors">
-          <h3 className="font-semibold text-lg pr-4">{question}</h3>
+          <h3 className="font-semibold text-lg pr-4 text-black">{question}</h3>
           <ChevronDown className={`w-5 h-5 text-muted-foreground flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
         </CollapsibleTrigger>
         <CollapsibleContent className="px-6 pb-6">
