@@ -28,13 +28,15 @@ const Index = () => {
           <a href="https://trypost.ai" className="flex items-center gap-2 shrink-0">
             <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
           </a>
-          <nav className="flex items-center gap-2 sm:gap-4 md:gap-6">
-            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors hidden sm:inline">
+          <nav className="hidden sm:flex items-center gap-6 md:gap-8">
+            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors">
               Pricing
             </Link>
-            <Link to="/resources" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors hidden sm:inline">
+            <Link to="/resources" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors">
               Resources
             </Link>
+          </nav>
+          <div className="flex items-center gap-2 sm:gap-4">
             <LanguageSwitcher />
             {user ? (
               <Link to="/dashboard">
@@ -50,7 +52,7 @@ const Index = () => {
                 </Link>
               </>
             )}
-          </nav>
+          </div>
         </div>
       </header>
 
