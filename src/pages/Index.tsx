@@ -91,8 +91,8 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
               <Zap className="w-3.5 h-3.5" /> CROSS-POSTING
             </div>
-            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight">
-              Post to all platforms <span className="text-primary">instantly</span>
+            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+              Post to all platforms <span>instantly</span>
             </h2>
             <p className="text-muted-foreground mb-6">
               Publish everywhere in 30 seconds, not 30 minutes. Manage all your personal and brand
@@ -140,8 +140,8 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
               <Calendar className="w-3.5 h-3.5" /> SCHEDULING
             </div>
-            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight">
-              Schedule posts <span className="text-primary">effortlessly</span>
+            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+              Schedule posts <span>effortlessly</span>
             </h2>
             <p className="text-muted-foreground mb-6">
               Plan your content strategy ahead of time. Schedule posts across all platforms. Customize
@@ -160,8 +160,8 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
               <BarChart3 className="w-3.5 h-3.5" /> CONTENT MANAGEMENT
             </div>
-            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight">
-              Manage content <span className="text-primary">efficiently</span>
+            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+              Manage content <span>efficiently</span>
             </h2>
             <p className="text-muted-foreground mb-6">
               View all your scheduled and published posts in one place. Track what's been posted, edit
@@ -183,7 +183,7 @@ const Index = () => {
       {/* How It Works */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="font-reckless text-4xl font-medium mb-4">How it works</h2>
+          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">How it works</h2>
           <p className="text-lg text-muted-foreground">Three simple steps to social media success</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
@@ -220,7 +220,7 @@ const Index = () => {
       {/* Pricing Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="font-reckless text-4xl font-medium mb-4">Simple, transparent pricing</h2>
+          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">Simple, transparent pricing</h2>
           <p className="text-lg text-muted-foreground">Choose the plan that fits your needs</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -336,7 +336,7 @@ const Index = () => {
       {/* Supported Platforms */}
       <section className="container mx-auto px-6 py-20 bg-muted/30 rounded-3xl">
         <div className="text-center mb-12">
-          <h2 className="font-reckless text-4xl font-medium mb-4">Works with all your platforms</h2>
+          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">Works with all your platforms</h2>
           <p className="text-lg text-muted-foreground">Connect once, publish everywhere</p>
         </div>
         <div className="flex flex-wrap justify-center gap-8">
@@ -374,7 +374,7 @@ const Index = () => {
       {/* FAQ Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-12">
-          <h2 className="font-reckless text-4xl font-medium mb-4">Frequently Asked Questions</h2>
+          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">Frequently Asked Questions</h2>
           <p className="text-lg text-muted-foreground">Everything you need to know about Post</p>
         </div>
         <div className="max-w-3xl mx-auto space-y-4">
@@ -403,7 +403,7 @@ const Index = () => {
 
       {/* CTA Section */}
       <section className="container mx-auto px-6 py-20 text-center">
-        <h2 className="font-reckless text-4xl font-medium mb-6">Ready to simplify your social media?</h2>
+        <h2 className="font-reckless text-4xl font-medium mb-6 text-black">Ready to simplify your social media?</h2>
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Join thousands of creators who schedule smarter with Post.
         </p>
