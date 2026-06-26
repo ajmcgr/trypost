@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Zap, BarChart3, ChevronDown, Check } from "lucide-react";
+import { Calendar, Zap, BarChart3, ChevronDown, Check, Sparkles, Clock3, PanelsTopLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import postLogo from "@/assets/post-logo.png";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import postLogo from "@/assets/post-logo.png";
 import facebookLogo from "@/assets/facebook.svg";
 import xLogo from "@/assets/x.svg";
 import linkedinLogo from "@/assets/linkedin.svg";
@@ -18,37 +19,130 @@ import tiktokLogo from "@/assets/tiktok.svg";
 const Index = () => {
   const { user } = useAuth();
 
+  const featureSections = [
+    {
+      eyebrow: "CROSS-POSTING",
+      title: "Post to all platforms instantly",
+      emphasis: "instantly",
+      description:
+        "Publish everywhere in 30 seconds, not 30 minutes. Connect your social media accounts and publish your content across all platforms without the tab chaos.",
+      primaryLabel: "Start posting",
+      secondaryLabel: "View platforms",
+      reverse: false,
+      icon: Sparkles,
+      visual: (
+        <div className="relative flex h-full min-h-[340px] items-center justify-center rounded-[2rem] border bg-background/80 shadow-[0_10px_60px_rgba(0,0,0,0.06)]">
+          <div className="absolute left-[14%] top-1/2 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border bg-card shadow-sm">
+            <div className="h-6 w-6 rounded-full border-2 border-primary/30" />
+          </div>
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-full border bg-card shadow-md">
+            <img src={postLogo} alt="Post" className="h-8 w-8 object-contain" />
+          </div>
+          <div className="absolute right-[18%] top-[18%] flex h-14 w-14 items-center justify-center rounded-full border bg-card shadow-sm">
+            <img src={facebookLogo} alt="Facebook" className="h-7 w-7" />
+          </div>
+          <div className="absolute right-[18%] top-[36%] flex h-14 w-14 items-center justify-center rounded-full border bg-card shadow-sm">
+            <img src={instagramLogo} alt="Instagram" className="h-7 w-7" />
+          </div>
+          <div className="absolute right-[18%] top-[54%] flex h-14 w-14 items-center justify-center rounded-full border bg-card shadow-sm">
+            <img src={xLogo} alt="X" className="h-7 w-7" />
+          </div>
+          <div className="absolute right-[18%] top-[72%] flex h-14 w-14 items-center justify-center rounded-full border bg-card shadow-sm">
+            <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7" />
+          </div>
+          <div className="absolute left-[24%] top-1/2 right-[26%] h-px bg-border" />
+          <div className="absolute right-[24%] top-[25%] h-[50%] w-px bg-transparent" />
+          <div className="absolute right-[29%] top-1/2 h-px w-[11%] -rotate-45 bg-border" />
+          <div className="absolute right-[29%] top-1/2 h-px w-[11%] -translate-y-1/2 bg-border" />
+          <div className="absolute right-[29%] top-1/2 h-px w-[11%] rotate-45 bg-border" />
+          <div className="absolute right-[29%] top-[62%] h-px w-[11%] rotate-[35deg] bg-border" />
+        </div>
+      ),
+    },
+    {
+      eyebrow: "SCHEDULING",
+      title: "Schedule posts effortlessly",
+      emphasis: "effortlessly",
+      description:
+        "Plan your content strategy ahead of time. Pick a date, choose the best posting hour, or add content to your queue without leaving the composer.",
+      primaryLabel: "Start scheduling",
+      secondaryLabel: "View demo",
+      reverse: true,
+      icon: Clock3,
+      visual: (
+        <div className="flex min-h-[340px] items-center justify-center rounded-[2rem] border bg-background/80 p-6 shadow-[0_10px_60px_rgba(0,0,0,0.06)]">
+          <div className="w-full max-w-md rounded-[2rem] border bg-card p-5 shadow-sm">
+            <div className="mb-5 flex items-center justify-between">
+              <div className="text-xl font-semibold">Schedule post</div>
+              <div className="h-10 w-20 rounded-full border-2 border-primary/60 bg-primary/10 p-1">
+                <div className="ml-auto h-8 w-8 rounded-full bg-primary" />
+              </div>
+            </div>
+            <div className="mb-4 inline-flex rounded-2xl bg-muted p-1">
+              <div className="rounded-xl bg-card px-5 py-3 text-sm font-medium shadow-sm">Pick a time</div>
+              <div className="px-5 py-3 text-sm text-muted-foreground">Add to queue</div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-2xl border px-4 py-4 text-sm">Select date</div>
+              <div className="rounded-2xl border px-4 py-4 text-sm">12:00 PM</div>
+            </div>
+            <div className="mt-4 flex items-center gap-3 text-sm">
+              <span className="text-muted-foreground">Quick set:</span>
+              <span className="rounded-xl border px-3 py-2 font-medium">11:00 AM</span>
+              <span className="rounded-xl border px-3 py-2 font-medium">3:00 PM</span>
+              <span className="rounded-xl border px-3 py-2 font-medium">7:00 PM</span>
+            </div>
+            <div className="mt-5 rounded-2xl bg-muted px-4 py-5 text-center text-lg font-semibold text-muted-foreground">
+              Schedule
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      eyebrow: "CONTENT MANAGEMENT",
+      title: "Manage content efficiently",
+      emphasis: "efficiently",
+      description:
+        "See upcoming and published posts in one place. Search by platform, filter by account, and keep your content pipeline tidy as your calendar fills up.",
+      primaryLabel: "Get started",
+      secondaryLabel: "See pricing",
+      reverse: false,
+      icon: PanelsTopLeft,
+      visual: (
+        <div className="flex min-h-[340px] items-center justify-center rounded-[2rem] border bg-background/80 p-6 shadow-[0_10px_60px_rgba(0,0,0,0.06)]">
+          <div className="grid w-full max-w-lg grid-cols-2 gap-3 rounded-[1.75rem] border bg-card p-4 shadow-sm">
+            {[
+              "TikTok",
+              "Instagram",
+              "Threads",
+              "YouTube",
+              "Pinterest",
+              "Twitter / X",
+              "LinkedIn",
+              "Facebook",
+            ].map((label, index) => (
+              <div
+                key={label}
+                className={`rounded-2xl border p-3 text-sm ${index % 3 === 0 ? "bg-primary/10 border-primary/20" : "bg-background"}`}
+              >
+                <div className="mb-2 flex items-center gap-2">
+                  <div className="h-6 w-6 rounded-full bg-muted" />
+                  <div className="font-medium">{label}</div>
+                </div>
+                <div className="h-2 rounded-full bg-muted" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card border-b">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
-          <a href="https://trypost.ai" className="flex items-center gap-2 shrink-0">
-            <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
-          </a>
-          <nav className="flex items-center gap-2 sm:gap-4 md:gap-8">
-            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:text-foreground transition-colors hidden sm:inline">
-              Pricing
-            </Link>
-            {user ? (
-              <Link to="/dashboard">
-                <Button className="text-xs sm:text-sm px-3 sm:px-4">Go to Dashboard →</Button>
-              </Link>
-            ) : (
-              <>
-                <Link to="/login">
-                  <Button variant="ghost" className="text-xs sm:text-sm px-3 sm:px-4">Log In</Button>
-                </Link>
-                <Link to="/signup">
-                  <Button className="text-xs sm:text-sm px-3 sm:px-4">Sign Up →</Button>
-                </Link>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
+      <Header showSignup={!user} showPricing />
 
-      {/* Hero Section */}
       <section className="container mx-auto px-6 py-20 text-center">
         <h1 className="font-reckless text-5xl md:text-6xl font-medium mb-6 tracking-tight">
           Create once.
@@ -67,17 +161,53 @@ const Index = () => {
           <div className="senja-embed" data-id="eacf7a79-5b6c-4a80-9f5a-0e6dfe631ec6" data-mode="shadow" data-lazyload="false"></div>
         </div>
         <div className="mt-16 rounded-3xl overflow-hidden shadow-2xl border border-border bg-card p-8">
-          <div className="rounded-2xl overflow-hidden">
-            <img
-              src="/hero-screenshot.png"
-              alt="TryPost composer interface showing connected social accounts and a ready-to-publish post"
-              className="w-full h-auto"
-            />
+          <div className="bg-muted/30 rounded-2xl aspect-video flex items-center justify-center">
+            <Calendar className="w-24 h-24 text-muted-foreground/30" />
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
+      <section className="container mx-auto px-6 py-8 md:py-14">
+        <div className="space-y-20">
+          {featureSections.map((feature) => {
+            const Icon = feature.icon;
+            return (
+              <div
+                key={feature.eyebrow}
+                className={`grid items-center gap-10 lg:grid-cols-2 ${feature.reverse ? "lg:[&>*:first-child]:order-2 lg:[&>*:last-child]:order-1" : ""}`}
+              >
+                <div className="max-w-xl">
+                  <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2 text-sm font-semibold text-primary">
+                    <Icon className="h-4 w-4" />
+                    <span>{feature.eyebrow}</span>
+                  </div>
+                  <h2 className="mb-4 text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
+                    {feature.title.replace(feature.emphasis, "")}
+                    <span className="text-primary">{feature.emphasis}</span>
+                  </h2>
+                  <p className="mb-8 text-lg leading-8 text-muted-foreground">
+                    {feature.description}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Link to="/signup">
+                      <Button size="lg" className="rounded-2xl px-6">
+                        {feature.primaryLabel} →
+                      </Button>
+                    </Link>
+                    <Link to="/pricing">
+                      <Button size="lg" variant="outline" className="rounded-2xl px-6">
+                        {feature.secondaryLabel}
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+                {feature.visual}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
           <h2 className="font-reckless text-4xl font-medium mb-4">How it works</h2>
@@ -114,14 +244,12 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
           <h2 className="font-reckless text-4xl font-medium mb-4">Simple, transparent pricing</h2>
           <p className="text-lg text-muted-foreground">Choose the plan that fits your needs</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {/* Free Plan */}
           <Card className="p-8 rounded-3xl border-2 flex flex-col">
             <h3 className="text-2xl font-bold mb-2">Free</h3>
             <div className="mb-2">
@@ -151,7 +279,6 @@ const Index = () => {
             </Link>
           </Card>
 
-          {/* Pro Plan */}
           <Card className="p-8 rounded-3xl border-2 border-primary shadow-xl scale-105 flex flex-col">
             <div className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full w-fit mx-auto mb-4">
               Most Popular
@@ -189,7 +316,6 @@ const Index = () => {
             </Link>
           </Card>
 
-          {/* Business Plan */}
           <Card className="p-8 rounded-3xl border-2 flex flex-col">
             <h3 className="text-2xl font-bold mb-2">Business</h3>
             <div className="mb-2">
@@ -230,7 +356,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Supported Platforms */}
       <section className="container mx-auto px-6 py-20 bg-muted/30 rounded-3xl">
         <div className="text-center mb-12">
           <h2 className="font-reckless text-4xl font-medium mb-4">Works with all your platforms</h2>
@@ -268,7 +393,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-12">
           <h2 className="font-reckless text-4xl font-medium mb-4">Frequently Asked Questions</h2>
@@ -298,7 +422,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="container mx-auto px-6 py-20 text-center">
         <h2 className="font-reckless text-4xl font-medium mb-6">Ready to simplify your social media?</h2>
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -311,7 +434,6 @@ const Index = () => {
         </Link>
       </section>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
