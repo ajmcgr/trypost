@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Zap, BarChart3, ChevronDown, Check } from "lucide-react";
+import { Calendar, Zap, BarChart3, ChevronDown, Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import postLogo from "@/assets/post-logo.png";
+import postIcon from "@/assets/post-icon.png";
 import Footer from "@/components/Footer";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import facebookLogo from "@/assets/facebook.svg";
 import xLogo from "@/assets/x.svg";
 import linkedinLogo from "@/assets/linkedin.svg";
@@ -21,15 +23,19 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-card border-b">
+      <header className="bg-card">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
           <a href="https://trypost.ai" className="flex items-center gap-2 shrink-0">
             <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
           </a>
-          <nav className="flex items-center gap-2 sm:gap-4 md:gap-8">
-            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:text-foreground transition-colors hidden sm:inline">
+          <nav className="flex items-center gap-2 sm:gap-4 md:gap-6">
+            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors hidden sm:inline">
               Pricing
             </Link>
+            <Link to="/resources" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors hidden sm:inline">
+              Resources
+            </Link>
+            <LanguageSwitcher />
             {user ? (
               <Link to="/dashboard">
                 <Button className="text-xs sm:text-sm px-3 sm:px-4">Go to Dashboard →</Button>
