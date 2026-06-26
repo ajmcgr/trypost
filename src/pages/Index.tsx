@@ -61,7 +61,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20 text-center">
-        <h1 className="font-reckless text-5xl md:text-6xl font-medium mb-6 tracking-tight text-black">
+        <h1 className="font-reckless text-5xl md:text-6xl font-normal mb-6 tracking-tight text-black">
           Create once.
           <br />
           <span>Schedule everywhere.</span>
@@ -93,7 +93,7 @@ const Index = () => {
         {/* Cross-posting */}
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="font-sans text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+            <h2 className="font-sans text-4xl md:text-5xl font-normal mb-4 leading-tight text-black">
               Post to all platforms <span>instantly</span>
             </h2>
             <p className="text-muted-foreground mb-6">
@@ -138,7 +138,7 @@ const Index = () => {
             <img src="/hero-screenshot.png" alt="" className="w-full rounded-2xl shadow-lg border" />
           </Card>
           <div className="order-1 md:order-2">
-            <h2 className="font-sans text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+            <h2 className="font-sans text-4xl md:text-5xl font-normal mb-4 leading-tight text-black">
               Schedule posts <span>effortlessly</span>
             </h2>
             <p className="text-muted-foreground mb-6">
@@ -154,7 +154,7 @@ const Index = () => {
         {/* Content management */}
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="font-sans text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
+            <h2 className="font-sans text-4xl md:text-5xl font-normal mb-4 leading-tight text-black">
               Manage content <span>efficiently</span>
             </h2>
             <p className="text-muted-foreground mb-6">
@@ -176,7 +176,7 @@ const Index = () => {
       {/* How It Works */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">How it works</h2>
+          <h2 className="font-reckless text-4xl font-normal mb-4 text-black">How it works</h2>
           <p className="text-lg text-muted-foreground">Three simple steps to social media success</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
