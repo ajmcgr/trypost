@@ -27,6 +27,10 @@ import ContentPlanner from "./pages/tools/ContentPlanner";
 import InfluencerRateCalculator from "./pages/tools/InfluencerRateCalculator";
 import BioTextGenerator from "./pages/tools/BioTextGenerator";
 import CaptionGenerator from "./pages/tools/CaptionGenerator";
+import CharacterCounter from "./pages/tools/CharacterCounter";
+import PostIdeaGenerator from "./pages/tools/PostIdeaGenerator";
+import EmojiPicker from "./pages/tools/EmojiPicker";
+import AnnouncementGenerator from "./pages/tools/AnnouncementGenerator";
 import Tools from "./pages/Tools";
 import Resources from "./pages/Resources";
 import ResourceArticle from "./pages/ResourceArticle";
@@ -123,6 +127,11 @@ const App = () => (
       <Route path="/tools/influencer-rate-calculator" element={<InfluencerRateCalculator />} />
       <Route path="/tools/bio-text-generator" element={<BioTextGenerator />} />
       <Route path="/tools/caption-generator" element={<CaptionGenerator />} />
+      <Route path="/tools/character-counter" element={<CharacterCounter />} />
+      <Route path="/tools/post-idea-generator" element={<PostIdeaGenerator />} />
+      <Route path="/tools/emoji-picker" element={<EmojiPicker />} />
+      <Route path="/tools/announcement-generator" element={<AnnouncementGenerator />} />
+
 
       {/* Resources */}
       <Route path="/resources" element={<Resources />} />

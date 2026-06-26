@@ -1,14 +1,18 @@
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Hash, Calendar, Calculator, User, MessageSquare, ArrowRight } from "lucide-react";
+import { Hash, Calendar, Calculator, User, MessageSquare, ArrowRight, Type, Lightbulb, Smile, Megaphone } from "lucide-react";
 
-const tools = [
+export const allTools = [
   { to: "/tools/hashtag-generator", title: "Hashtag Generator", desc: "Generate relevant hashtags for any topic.", Icon: Hash },
   { to: "/tools/content-planner", title: "Content Planner", desc: "Plan a week of content in minutes.", Icon: Calendar },
   { to: "/tools/influencer-rate-calculator", title: "Influencer Rate Calculator", desc: "Estimate fair rates for sponsored posts.", Icon: Calculator },
   { to: "/tools/bio-text-generator", title: "Bio Text Generator", desc: "Write a profile bio that converts.", Icon: User },
   { to: "/tools/caption-generator", title: "Caption Generator", desc: "Turn ideas into scroll-stopping captions.", Icon: MessageSquare },
+  { to: "/tools/character-counter", title: "Character Counter", desc: "Check your post against every platform limit.", Icon: Type },
+  { to: "/tools/post-idea-generator", title: "Post Idea Generator", desc: "Get 8 ready-to-write ideas from any topic.", Icon: Lightbulb },
+  { to: "/tools/emoji-picker", title: "Emoji Picker", desc: "Browse and copy emojis by category.", Icon: Smile },
+  { to: "/tools/announcement-generator", title: "Announcement Generator", desc: "Six launch-ready post variations.", Icon: Megaphone },
 ];
 
 const Tools = () => {
@@ -22,7 +26,7 @@ const Tools = () => {
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {tools.map(({ to, title, desc, Icon }) => (
+          {allTools.map(({ to, title, desc, Icon }) => (
             <Link
               key={to}
               to={to}
