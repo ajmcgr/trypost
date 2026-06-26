@@ -29,16 +29,16 @@ const Header = ({ showSignup = false }: HeaderProps) => {
         </nav>
         {user ? (
           <Link to="/dashboard">
-            <Button className="text-xs sm:text-sm">Go to Dashboard →</Button>
+            <Button>Go to Dashboard →</Button>
           </Link>
         ) : (
           showSignup && (
             <div className="flex items-center gap-2 sm:gap-4">
               <Link to="/login">
-                <Button variant="ghost" className="text-xs sm:text-sm">Log In</Button>
+                <Button variant="ghost">Log In</Button>
               </Link>
               <Link to="/signup">
-                <Button className="text-xs sm:text-sm">Sign Up →</Button>
+                <Button>Sign Up →</Button>
               </Link>
             </div>
           )
