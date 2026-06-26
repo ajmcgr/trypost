@@ -1,15 +1,15 @@
 // Creates a Supabase auth user (auto-confirmed) and sends a branded welcome
-// email via Resend. Bypasses Supabase's built-in confirmation email entirely,
-// so it is not subject to Supabase's auth email rate limit.
+// email via Resend's REST API. Bypasses Supabase's built-in confirmation
+// email entirely so it is not subject to Supabase's auth email rate limit.
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 const LOGO_URL = "https://trypost.ai/email-logo.png";
@@ -55,22 +55,35 @@ serve(async (req) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  try {
-    const { email, password, fullName }: SignupRequest = await req.json();
+  const json = (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
 
-    if (!email || !password) {
-      return new Response(
-        JSON.stringify({ error: "Email and password are required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+  try {
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+
+    if (!SUPABASE_URL || !SERVICE_ROLE) {
+      return json({ error: "Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in function env" }, 500);
     }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    let body: SignupRequest;
+    try {
+      body = await req.json();
+    } catch {
+      return json({ error: "Invalid JSON body" }, 400);
+    }
 
-    // Create user, auto-confirmed so Supabase does not send any email.
+    const { email, password, fullName } = body;
+    if (!email || !password) {
+      return json({ error: "Email and password are required" }, 400);
+    }
+
+    const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
+
     const { data, error } = await supabase.auth.admin.createUser({
       email,
       password,
@@ -79,34 +92,38 @@ serve(async (req) => {
     });
 
     if (error) {
-      return new Response(
-        JSON.stringify({ error: error.message }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return json({ error: error.message }, 400);
     }
 
-    // Send branded welcome via Resend (non-blocking on failure).
-    try {
-      const resend = new Resend(Deno.env.get("RESEND_API_KEY")!);
-      await resend.emails.send({
-        from: "Post <alex@trypost.ai>",
-        to: [email],
-        subject: "Welcome to Post 🚀",
-        html: renderWelcomeEmail(fullName ?? ""),
-      });
-    } catch (e) {
-      console.error("Resend welcome email failed:", e);
+    // Best-effort welcome email via Resend REST (no SDK to avoid boot-time imports).
+    if (RESEND_API_KEY) {
+      try {
+        const r = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${RESEND_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "Post <alex@trypost.ai>",
+            to: [email],
+            subject: "Welcome to Post 🚀",
+            html: renderWelcomeEmail(fullName ?? ""),
+          }),
+        });
+        if (!r.ok) {
+          console.error("Resend send failed:", r.status, await r.text());
+        }
+      } catch (e) {
+        console.error("Resend welcome email failed:", e);
+      }
+    } else {
+      console.warn("RESEND_API_KEY not set — skipping welcome email");
     }
 
-    return new Response(
-      JSON.stringify({ success: true, user: data.user }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return json({ success: true, user: data.user }, 200);
   } catch (err) {
     console.error("signup-user error:", err);
-    return new Response(
-      JSON.stringify({ error: (err as Error).message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return json({ error: (err as Error).message ?? "Unknown error" }, 500);
   }
 });
