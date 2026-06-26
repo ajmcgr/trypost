@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Zap, BarChart3, ChevronDown, Check } from "lucide-react";
+import { Calendar, Zap, BarChart3, ChevronDown, Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import postLogo from "@/assets/post-logo.png";
+import postIcon from "@/assets/post-icon.png";
 import Footer from "@/components/Footer";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import facebookLogo from "@/assets/facebook.svg";
 import xLogo from "@/assets/x.svg";
 import linkedinLogo from "@/assets/linkedin.svg";
@@ -21,15 +23,19 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-card border-b">
+      <header className="bg-card">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
           <a href="https://trypost.ai" className="flex items-center gap-2 shrink-0">
             <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
           </a>
-          <nav className="flex items-center gap-2 sm:gap-4 md:gap-8">
-            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:text-foreground transition-colors hidden sm:inline">
+          <nav className="flex items-center gap-2 sm:gap-4 md:gap-6">
+            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors hidden sm:inline">
               Pricing
             </Link>
+            <Link to="/resources" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors hidden sm:inline">
+              Resources
+            </Link>
+            <LanguageSwitcher />
             {user ? (
               <Link to="/dashboard">
                 <Button className="text-xs sm:text-sm px-3 sm:px-4">Go to Dashboard →</Button>
@@ -76,6 +82,103 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Features Section */}
+      <section className="max-w-6xl mx-auto px-6 py-20 space-y-24">
+        {/* Cross-posting */}
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
+              <Zap className="w-3.5 h-3.5" /> CROSS-POSTING
+            </div>
+            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight">
+              Post to all platforms <span className="text-primary">instantly</span>
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              Publish everywhere in 30 seconds, not 30 minutes. Manage all your personal and brand
+              accounts without switching back and forth. Connect your social media accounts and publish
+              your content across all platforms with a single click — no learning curve required.
+            </p>
+            <div className="flex gap-3">
+              <Link to="/signup"><Button className="rounded-full">Start posting <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+              <Link to="/pricing"><Button variant="outline" className="rounded-full">View platforms</Button></Link>
+            </div>
+          </div>
+          <Card className="aspect-square rounded-3xl bg-muted/40 border-0 flex items-center justify-center p-12 relative">
+            <svg viewBox="0 0 400 400" className="w-full h-full">
+              {[
+                { x: 340, y: 80, logo: facebookLogo },
+                { x: 360, y: 180, logo: instagramLogo },
+                { x: 340, y: 280, logo: xLogo },
+                { x: 270, y: 340, logo: linkedinLogo },
+                { x: 160, y: 340, logo: tiktokLogo },
+              ].map((n, i) => (
+                <line key={i} x1="120" y1="200" x2={n.x} y2={n.y} stroke="hsl(var(--border))" strokeWidth="1.5" />
+              ))}
+            </svg>
+            <img src={postIcon} alt="" className="absolute left-[22%] top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-card p-2 shadow-md" />
+            {[
+              { className: "top-[15%] right-[10%]", src: facebookLogo },
+              { className: "top-[40%] right-[5%]", src: instagramLogo },
+              { className: "top-[65%] right-[10%]", src: xLogo },
+              { className: "bottom-[10%] right-[30%]", src: linkedinLogo },
+              { className: "bottom-[10%] left-[35%]", src: tiktokLogo },
+            ].map((b, i) => (
+              <div key={i} className={`absolute ${b.className} w-12 h-12 rounded-full bg-card shadow-md flex items-center justify-center`}>
+                <img src={b.src} alt="" className="w-6 h-6" />
+              </div>
+            ))}
+          </Card>
+        </div>
+
+        {/* Scheduling */}
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <Card className="aspect-square rounded-3xl bg-muted/40 border-0 p-8 flex items-center justify-center order-2 md:order-1">
+            <img src="/hero-screenshot.png" alt="" className="w-full rounded-2xl shadow-lg border" />
+          </Card>
+          <div className="order-1 md:order-2">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
+              <Calendar className="w-3.5 h-3.5" /> SCHEDULING
+            </div>
+            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight">
+              Schedule posts <span className="text-primary">effortlessly</span>
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              Plan your content strategy ahead of time. Schedule posts across all platforms. Customize
+              your posts perfectly per platform. Queue up your posts and let Post handle the rest.
+            </p>
+            <div className="flex gap-3">
+              <Link to="/signup"><Button className="rounded-full">Start scheduling <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+              <Link to="/about"><Button variant="outline" className="rounded-full">View demo</Button></Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Content management */}
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-4">
+              <BarChart3 className="w-3.5 h-3.5" /> CONTENT MANAGEMENT
+            </div>
+            <h2 className="font-reckless text-4xl md:text-5xl font-medium mb-4 leading-tight">
+              Manage content <span className="text-primary">efficiently</span>
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              View all your scheduled and published posts in one place. Track what's been posted, edit
+              upcoming posts, and stay on top of your content strategy.
+            </p>
+            <div className="flex gap-3">
+              <Link to="/signup"><Button className="rounded-full">Get started <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+              <Link to="/pricing"><Button variant="outline" className="rounded-full">See pricing</Button></Link>
+            </div>
+          </div>
+          <Card className="aspect-square rounded-3xl bg-muted/40 border-0 p-8 flex items-center justify-center">
+            <img src="/hero-screenshot.png" alt="" className="w-full rounded-2xl shadow-lg border" />
+          </Card>
+        </div>
+      </section>
+
+
 
       {/* How It Works */}
       <section className="container mx-auto px-6 py-20">

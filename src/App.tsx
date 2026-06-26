@@ -54,6 +54,9 @@ import Publishing from "./pages/dashboard/Publishing";
 import Home from "./pages/dashboard/Home";
 import ImageComposer from "./pages/dashboard/ImageComposer";
 import VideoComposer from "./pages/dashboard/VideoComposer";
+import Queue from "./pages/dashboard/Queue";
+import BulkImageUpload from "./pages/dashboard/BulkImageUpload";
+import BulkVideoUpload from "./pages/dashboard/BulkVideoUpload";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -83,6 +86,9 @@ const App = () => (
         <Route path="drafts" element={<Drafts />} />
         <Route path="studio" element={<Studio />} />
         <Route path="bulk-tools" element={<BulkTools />} />
+        <Route path="bulk/image" element={<BulkImageUpload />} />
+        <Route path="bulk/video" element={<BulkVideoUpload />} />
+        <Route path="queue" element={<Queue />} />
         <Route path="connections" element={<Connections />} />
         <Route path="teams" element={<Teams />} />
         <Route path="invitations" element={<Invitations />} />
