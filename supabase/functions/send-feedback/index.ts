@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { renderEmail } from "../_shared/email-template.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -53,38 +54,17 @@ serve(async (req) => {
       to: ['alex@trypost.ai'],
       reply_to: user.email || undefined,
       subject: `New Feedback from ${user.email || 'User'}`,
-      html: `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <style>
-              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
-              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-              .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; }
-              .content { background: white; padding: 30px; border: 1px solid #e5e7eb; border-top: none; }
-              .feedback-box { background: #f9fafb; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #667eea; }
-              .meta { color: #6b7280; font-size: 14px; margin-top: 20px; }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <div class="header">
-                <h2>📬 New Feedback Received</h2>
-              </div>
-              <div class="content">
-                <p><strong>From:</strong> ${user.email || 'Unknown'}</p>
-                <p><strong>User ID:</strong> ${user.id}</p>
-                <div class="feedback-box">
-                  <p style="margin: 0; white-space: pre-wrap;">${feedback}</p>
-                </div>
-                <div class="meta">
-                  <p>Submitted on: ${new Date().toLocaleString()}</p>
-                </div>
-              </div>
-            </div>
-          </body>
-        </html>
-      `,
+      html: renderEmail({
+        preheader: `New feedback from ${user.email || 'a user'}`,
+        heading: '📬 New feedback received',
+        body: `
+          <p style="margin:0 0 12px;"><strong>From:</strong> ${user.email || 'Unknown'}<br/>
+          <strong>User ID:</strong> ${user.id}</p>
+          <div style="background:#f9fafb;border-left:3px solid #136ed5;padding:14px 16px;border-radius:8px;margin:16px 0;white-space:pre-wrap;">${feedback}</div>
+          <p style="margin:0;color:#64748b;font-size:13px;">Submitted on ${new Date().toLocaleString()}</p>
+        `,
+        footerNote: 'Internal notification from the Post feedback form.',
+      }),
     });
 
     console.log('Feedback email sent successfully');

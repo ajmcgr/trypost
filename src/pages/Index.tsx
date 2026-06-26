@@ -98,7 +98,6 @@ const Index = () => {
             </p>
             <div className="flex gap-3">
               <Link to="/signup"><Button className="rounded-full">Start posting <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
-              <Link to="/pricing"><Button variant="outline" className="rounded-full">View platforms</Button></Link>
             </div>
           </div>
           <Card className="aspect-square rounded-3xl bg-muted/40 border-0 flex items-center justify-center p-12 relative">
@@ -143,7 +142,6 @@ const Index = () => {
             </p>
             <div className="flex gap-3">
               <Link to="/signup"><Button className="rounded-full">Start scheduling <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
-              <Link to="/about"><Button variant="outline" className="rounded-full">View demo</Button></Link>
             </div>
           </div>
         </div>
@@ -160,7 +158,6 @@ const Index = () => {
             </p>
             <div className="flex gap-3">
               <Link to="/signup"><Button className="rounded-full">Get started <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
-              <Link to="/pricing"><Button variant="outline" className="rounded-full">See pricing</Button></Link>
             </div>
           </div>
           <Card className="aspect-square rounded-3xl bg-muted/40 border-0 p-8 flex items-center justify-center">
