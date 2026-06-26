@@ -23,24 +23,16 @@ const Header = ({ showSignup = false, showPricing = false }: HeaderProps) => {
             <>
               <Link
                 to="/pricing"
-                className="hidden md:inline text-[15px] font-medium text-foreground hover:text-primary transition-colors"
+                className="hidden md:inline text-sm font-medium text-foreground hover:text-primary transition-colors"
               >
                 Pricing
               </Link>
-              <a
-                href="https://blog.works.xyz"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden md:inline text-[15px] font-medium text-foreground hover:text-primary transition-colors"
+              <Link
+                to="/resources"
+                className="hidden md:inline text-sm font-medium text-foreground hover:text-primary transition-colors"
               >
                 Resources
-              </a>
-              <a
-                href="mailto:alexander.macgregor@gmail.com?subject=Request%20Demo%20-%20Post"
-                className="hidden lg:inline text-[15px] font-medium text-foreground hover:text-primary transition-colors"
-              >
-                Request Demo
-              </a>
+              </Link>
             </>
           )}
           <LanguageDropdown />
@@ -52,12 +44,12 @@ const Header = ({ showSignup = false, showPricing = false }: HeaderProps) => {
             showSignup && (
               <>
                 <Link to="/login">
-                  <Button variant="ghost" className="px-2 text-[15px] font-medium text-foreground hover:bg-transparent hover:text-primary">
+                  <Button variant="ghost" className="px-2 text-sm font-medium text-foreground hover:bg-transparent hover:text-primary">
                     Login
                   </Button>
                 </Link>
                 <Link to="/signup">
-                  <Button className="rounded-2xl px-8 py-5 text-[15px] font-semibold">
+                  <Button className="rounded-2xl px-8 py-5 text-sm font-semibold">
                     Sign Up
                   </Button>
                 </Link>
