@@ -9,14 +9,34 @@ import { ChevronDown } from "lucide-react";
 
 const LANGS: { code: string; label: string; flag: string }[] = [
   { code: "en", label: "English", flag: "🇺🇸" },
-  { code: "de", label: "Deutsch", flag: "🇩🇪" },
-  { code: "fr", label: "Français", flag: "🇫🇷" },
   { code: "es", label: "Español", flag: "🇪🇸" },
+  { code: "fr", label: "Français", flag: "🇫🇷" },
+  { code: "de", label: "Deutsch", flag: "🇩🇪" },
   { code: "it", label: "Italiano", flag: "🇮🇹" },
   { code: "pt", label: "Português", flag: "🇵🇹" },
   { code: "nl", label: "Nederlands", flag: "🇳🇱" },
   { code: "pl", label: "Polski", flag: "🇵🇱" },
   { code: "tr", label: "Türkçe", flag: "🇹🇷" },
+  { code: "ja", label: "日本語", flag: "🇯🇵" },
+  { code: "zh-CN", label: "中文 (简体)", flag: "🇨🇳" },
+  { code: "zh-TW", label: "中文 (繁體)", flag: "🇹🇼" },
+  { code: "ko", label: "한국어", flag: "🇰🇷" },
+  { code: "ru", label: "Русский", flag: "🇷🇺" },
+  { code: "ar", label: "العربية", flag: "🇸🇦" },
+  { code: "hi", label: "हिन्दी", flag: "🇮🇳" },
+  { code: "id", label: "Bahasa Indonesia", flag: "🇮🇩" },
+  { code: "vi", label: "Tiếng Việt", flag: "🇻🇳" },
+  { code: "th", label: "ไทย", flag: "🇹🇭" },
+  { code: "sv", label: "Svenska", flag: "🇸🇪" },
+  { code: "no", label: "Norsk", flag: "🇳🇴" },
+  { code: "da", label: "Dansk", flag: "🇩🇰" },
+  { code: "fi", label: "Suomi", flag: "🇫🇮" },
+  { code: "cs", label: "Čeština", flag: "🇨🇿" },
+  { code: "el", label: "Ελληνικά", flag: "🇬🇷" },
+  { code: "he", label: "עברית", flag: "🇮🇱" },
+  { code: "hu", label: "Magyar", flag: "🇭🇺" },
+  { code: "ro", label: "Română", flag: "🇷🇴" },
+  { code: "uk", label: "Українська", flag: "🇺🇦" },
 ];
 
 declare global {
@@ -94,7 +114,8 @@ const LanguageSwitcher = () => {
           <span className="text-lg leading-none">{current.flag}</span>
           <ChevronDown className="w-3 h-3" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-[180px]">
+        <DropdownMenuContent align="end" className="min-w-[200px] max-h-[400px] overflow-y-auto">
+
           {LANGS.map((l) => (
             <DropdownMenuItem
               key={l.code}
