@@ -42,33 +42,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const redirectUrl = `${window.location.origin}/dashboard`;
-    
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          full_name: fullName,
-        }
-      }
+    // Route signup through our edge function so Supabase does not send a
+    // confirmation email (avoids Supabase's auth email rate limit). The
+    // edge function creates an auto-confirmed user and sends a branded
+    // welcome email via Resend.
+    const { data, error } = await supabase.functions.invoke('signup-user', {
+      body: { email, password, fullName },
     });
 
-    if (error) {
+    if (error || (data && data.error)) {
+      const message = (data && data.error) || error?.message || 'Sign up failed';
       toast({
         title: "Sign up failed",
-        description: error.message,
+        description: message,
         variant: "destructive",
+      });
+      return { error: error ?? new Error(message) };
+    }
+
+    // Auto sign-in since the user is already confirmed.
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      toast({
+        title: "Account created",
+        description: "Please log in to continue.",
       });
     } else {
       toast({
-        title: "Check your email",
-        description: "We sent you a confirmation link.",
+        title: "Welcome to Post 🚀",
+        description: "Your account is ready.",
       });
     }
 
-    return { error };
+    return { error: signInError };
   };
 
   const signIn = async (email: string, password: string) => {
