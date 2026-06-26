@@ -71,8 +71,8 @@ const Index = () => {
         </p>
         <div className="flex flex-col md:flex-row items-center justify-center gap-3">
           <Link to="/signup">
-            <Button size="lg" className="text-lg">
-              Start Scheduling Free →
+            <Button size="lg" className="text-sm">
+              Start Free Trial →
             </Button>
           </Link>
           <div className="senja-embed" data-id="eacf7a79-5b6c-4a80-9f5a-0e6dfe631ec6" data-mode="shadow" data-lazyload="false"></div>
@@ -401,8 +401,8 @@ const Index = () => {
           Join thousands of creators who schedule smarter with Post.
         </p>
         <Link to="/signup">
-          <Button size="lg" className="text-lg">
-            Start Scheduling Free →
+          <Button size="lg" className="text-sm">
+            Start Free Trial →
           </Button>
         </Link>
       </section>
