@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Zap, BarChart3, ChevronDown, Check, Sparkles, Clock3, PanelsTopLeft } from "lucide-react";
+import { Calendar, Zap, BarChart3, ChevronDown, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import Header from "@/components/Header";
 import postLogo from "@/assets/post-logo.png";
+import Footer from "@/components/Footer";
 import facebookLogo from "@/assets/facebook.svg";
 import xLogo from "@/assets/x.svg";
 import linkedinLogo from "@/assets/linkedin.svg";
@@ -18,212 +18,77 @@ import tiktokLogo from "@/assets/tiktok.svg";
 const Index = () => {
   const { user } = useAuth();
 
-  const featureSections = [
-    {
-      eyebrow: "CROSS-POSTING",
-      title: "Post to all platforms instantly",
-      emphasis: "instantly",
-      description:
-        "Publish everywhere in 30 seconds, not 30 minutes. Connect your social media accounts and publish your content across all platforms without the tab chaos.",
-      primaryLabel: "Start posting",
-      secondaryLabel: "View platforms",
-      reverse: false,
-      icon: Sparkles,
-      visual: (
-        <div className="relative flex h-full min-h-[340px] items-center justify-center rounded-[2rem] border bg-background/80 shadow-[0_10px_60px_rgba(0,0,0,0.06)]">
-          <div className="absolute left-[14%] top-1/2 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border bg-card shadow-sm">
-            <div className="h-6 w-6 rounded-full border-2 border-primary/30" />
-          </div>
-          <div className="relative flex h-16 w-16 items-center justify-center rounded-full border bg-card shadow-md">
-            <img src={postLogo} alt="Post" className="h-8 w-8 object-contain" />
-          </div>
-          <div className="absolute right-[18%] top-[18%] flex h-14 w-14 items-center justify-center rounded-full border bg-card shadow-sm">
-            <img src={facebookLogo} alt="Facebook" className="h-7 w-7" />
-          </div>
-          <div className="absolute right-[18%] top-[36%] flex h-14 w-14 items-center justify-center rounded-full border bg-card shadow-sm">
-            <img src={instagramLogo} alt="Instagram" className="h-7 w-7" />
-          </div>
-          <div className="absolute right-[18%] top-[54%] flex h-14 w-14 items-center justify-center rounded-full border bg-card shadow-sm">
-            <img src={xLogo} alt="X" className="h-7 w-7" />
-          </div>
-          <div className="absolute right-[18%] top-[72%] flex h-14 w-14 items-center justify-center rounded-full border bg-card shadow-sm">
-            <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7" />
-          </div>
-          <div className="absolute left-[24%] top-1/2 right-[26%] h-px bg-border" />
-          <div className="absolute right-[24%] top-[25%] h-[50%] w-px bg-transparent" />
-          <div className="absolute right-[29%] top-1/2 h-px w-[11%] -rotate-45 bg-border" />
-          <div className="absolute right-[29%] top-1/2 h-px w-[11%] -translate-y-1/2 bg-border" />
-          <div className="absolute right-[29%] top-1/2 h-px w-[11%] rotate-45 bg-border" />
-          <div className="absolute right-[29%] top-[62%] h-px w-[11%] rotate-[35deg] bg-border" />
-        </div>
-      ),
-    },
-    {
-      eyebrow: "SCHEDULING",
-      title: "Schedule posts effortlessly",
-      emphasis: "effortlessly",
-      description:
-        "Plan your content strategy ahead of time. Pick a date, choose the best posting hour, or add content to your queue without leaving the composer.",
-      primaryLabel: "Start scheduling",
-      secondaryLabel: "View demo",
-      reverse: true,
-      icon: Clock3,
-      visual: (
-        <div className="flex min-h-[340px] items-center justify-center rounded-[2rem] border bg-background/80 p-6 shadow-[0_10px_60px_rgba(0,0,0,0.06)]">
-          <div className="w-full max-w-md rounded-[2rem] border bg-card p-5 shadow-sm">
-            <div className="mb-5 flex items-center justify-between">
-              <div className="text-xl font-semibold">Schedule post</div>
-              <div className="h-10 w-20 rounded-full border-2 border-primary/60 bg-primary/10 p-1">
-                <div className="ml-auto h-8 w-8 rounded-full bg-primary" />
-              </div>
-            </div>
-            <div className="mb-4 inline-flex rounded-2xl bg-muted p-1">
-              <div className="rounded-xl bg-card px-5 py-3 text-sm font-medium shadow-sm">Pick a time</div>
-              <div className="px-5 py-3 text-sm text-muted-foreground">Add to queue</div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-2xl border px-4 py-4 text-sm">Select date</div>
-              <div className="rounded-2xl border px-4 py-4 text-sm">12:00 PM</div>
-            </div>
-            <div className="mt-4 flex items-center gap-3 text-sm">
-              <span className="text-muted-foreground">Quick set:</span>
-              <span className="rounded-xl border px-3 py-2 font-medium">11:00 AM</span>
-              <span className="rounded-xl border px-3 py-2 font-medium">3:00 PM</span>
-              <span className="rounded-xl border px-3 py-2 font-medium">7:00 PM</span>
-            </div>
-            <div className="mt-5 rounded-2xl bg-muted px-4 py-5 text-center text-lg font-semibold text-muted-foreground">
-              Schedule
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      eyebrow: "CONTENT MANAGEMENT",
-      title: "Manage content efficiently",
-      emphasis: "efficiently",
-      description:
-        "See upcoming and published posts in one place. Search by platform, filter by account, and keep your content pipeline tidy as your calendar fills up.",
-      primaryLabel: "Get started",
-      secondaryLabel: "See pricing",
-      reverse: false,
-      icon: PanelsTopLeft,
-      visual: (
-        <div className="flex min-h-[340px] items-center justify-center rounded-[2rem] border bg-background/80 p-6 shadow-[0_10px_60px_rgba(0,0,0,0.06)]">
-          <div className="grid w-full max-w-lg grid-cols-2 gap-3 rounded-[1.75rem] border bg-card p-4 shadow-sm">
-            {[
-              "TikTok",
-              "Instagram",
-              "Threads",
-              "YouTube",
-              "Pinterest",
-              "Twitter / X",
-              "LinkedIn",
-              "Facebook",
-            ].map((label, index) => (
-              <div
-                key={label}
-                className={`rounded-2xl border p-3 text-sm ${index % 3 === 0 ? "bg-primary/10 border-primary/20" : "bg-background"}`}
-              >
-                <div className="mb-2 flex items-center gap-2">
-                  <div className="h-6 w-6 rounded-full bg-muted" />
-                  <div className="font-medium">{label}</div>
-                </div>
-                <div className="h-2 rounded-full bg-muted" />
-              </div>
-            ))}
-          </div>
-        </div>
-      ),
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-background">
-      <Header showSignup={!user} showPricing />
+      {/* Header */}
+      <header className="bg-card border-b">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
+          <a href="https://trypost.ai" className="flex items-center gap-2 shrink-0">
+            <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
+          </a>
+          <nav className="flex items-center gap-2 sm:gap-4 md:gap-8">
+            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:text-foreground transition-colors hidden sm:inline">
+              Pricing
+            </Link>
+            {user ? (
+              <Link to="/dashboard">
+                <Button className="text-xs sm:text-sm px-3 sm:px-4">Go to Dashboard →</Button>
+              </Link>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="ghost" className="text-xs sm:text-sm px-3 sm:px-4">Log In</Button>
+                </Link>
+                <Link to="/signup">
+                  <Button className="text-xs sm:text-sm px-3 sm:px-4">Sign Up →</Button>
+                </Link>
+              </>
+            )}
+          </nav>
+        </div>
+      </header>
 
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20 text-center">
-        <h1 className="font-reckless text-4xl md:text-5xl font-medium mb-6 tracking-tight">
+        <h1 className="font-reckless text-5xl md:text-6xl font-medium mb-6 tracking-tight">
           Create once.
           <br />
           <span className="text-primary">Schedule everywhere.</span>
         </h1>
-        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Post helps creators and brands plan, queue, and publish content across all social platforms from one simple dashboard.
         </p>
         <div className="flex flex-col md:flex-row items-center justify-center gap-3">
           <Link to="/signup">
-            <Button size="lg" className="text-lg px-10 py-7 rounded-2xl">
+            <Button size="lg" className="text-xl px-10 py-7 rounded-2xl">
               Start Scheduling Free →
             </Button>
           </Link>
           <div className="senja-embed" data-id="eacf7a79-5b6c-4a80-9f5a-0e6dfe631ec6" data-mode="shadow" data-lazyload="false"></div>
         </div>
         <div className="mt-16 rounded-3xl overflow-hidden shadow-2xl border border-border bg-card p-8">
-          <div className="bg-muted/30 rounded-2xl overflow-hidden">
+          <div className="rounded-2xl overflow-hidden">
             <img
-              src="/hero-composer.png"
-              alt="Post composer showing connected social accounts and caption editor"
+              src="/hero-screenshot.png"
+              alt="TryPost composer interface showing connected social accounts and a ready-to-publish post"
               className="w-full h-auto"
             />
           </div>
         </div>
       </section>
 
-      <section className="container mx-auto px-6 py-8 md:py-14">
-        <div className="space-y-20">
-          {featureSections.map((feature) => {
-            const Icon = feature.icon;
-            return (
-              <div
-                key={feature.eyebrow}
-                className={`grid items-center gap-10 lg:grid-cols-2 ${feature.reverse ? "lg:[&>*:first-child]:order-2 lg:[&>*:last-child]:order-1" : ""}`}
-              >
-                <div className="max-w-xl">
-                  <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2 text-xs font-semibold text-primary">
-                    <Icon className="h-4 w-4" />
-                    <span>{feature.eyebrow}</span>
-                  </div>
-                  <h2 className="font-reckless mb-4 text-3xl font-medium leading-tight tracking-tight md:text-4xl">
-                    {feature.title.replace(feature.emphasis, "")}
-                    <span className="text-primary">{feature.emphasis}</span>
-                  </h2>
-                  <p className="mb-8 text-base leading-7 text-muted-foreground">
-                    {feature.description}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Link to="/signup">
-                      <Button size="lg" className="rounded-2xl px-6">
-                        {feature.primaryLabel} →
-                      </Button>
-                    </Link>
-                    <Link to="/pricing">
-                      <Button size="lg" variant="outline" className="rounded-2xl px-6">
-                        {feature.secondaryLabel}
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-                {feature.visual}
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
       {/* How It Works */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="font-reckless text-3xl font-medium mb-4">How it works</h2>
-          <p className="text-base text-muted-foreground">Three simple steps to social media success</p>
+          <h2 className="font-reckless text-4xl font-medium mb-4">How it works</h2>
+          <p className="text-lg text-muted-foreground">Three simple steps to social media success</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="p-8 text-center rounded-3xl border-2">
             <div className="w-16 h-16 rounded-2xl bg-google-blue/10 flex items-center justify-center mx-auto mb-4">
               <Zap className="w-8 h-8 text-google-blue" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Connect Accounts</h3>
+            <h3 className="text-xl font-semibold mb-2">Connect Accounts</h3>
             <p className="text-muted-foreground">
               Link your Twitter, LinkedIn, Instagram, Facebook, and TikTok accounts in seconds.
             </p>
@@ -232,7 +97,7 @@ const Index = () => {
             <div className="w-16 h-16 rounded-2xl bg-google-red/10 flex items-center justify-center mx-auto mb-4">
               <Calendar className="w-8 h-8 text-google-red" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Schedule Posts</h3>
+            <h3 className="text-xl font-semibold mb-2">Schedule Posts</h3>
             <p className="text-muted-foreground">
               Create content once and schedule it across multiple platforms with one click.
             </p>
@@ -241,7 +106,7 @@ const Index = () => {
             <div className="w-16 h-16 rounded-2xl bg-google-green/10 flex items-center justify-center mx-auto mb-4">
               <BarChart3 className="w-8 h-8 text-google-green" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Track Results</h3>
+            <h3 className="text-xl font-semibold mb-2">Track Results</h3>
             <p className="text-muted-foreground">
               Monitor engagement, reach, and performance across all your social channels.
             </p>
@@ -252,8 +117,8 @@ const Index = () => {
       {/* Pricing Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="font-reckless text-3xl font-medium mb-4">Simple, transparent pricing</h2>
-          <p className="text-base text-muted-foreground">Choose the plan that fits your needs</p>
+          <h2 className="font-reckless text-4xl font-medium mb-4">Simple, transparent pricing</h2>
+          <p className="text-lg text-muted-foreground">Choose the plan that fits your needs</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {/* Free Plan */}
@@ -447,62 +312,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-card">
-        <div className="max-w-6xl mx-auto px-6 py-12">
-          <div className="grid md:grid-cols-5 gap-8">
-            <div>
-              <h4 className="font-semibold mb-4">About</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link></li>
-                <li><a href="https://blog.works.xyz" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Blog</a></li>
-                <li><a href="https://discord.gg/vNyMmrRDXA" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Community</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="mailto:support@trypost.ai" className="text-muted-foreground hover:text-foreground">Support</a></li>
-                <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground">Privacy Policy</Link></li>
-                <li><Link to="/terms" className="text-muted-foreground hover:text-foreground">Terms of Service</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Platforms</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link to="/platforms/instagram" className="text-muted-foreground hover:text-foreground">Instagram</Link></li>
-                <li><Link to="/platforms/youtube" className="text-muted-foreground hover:text-foreground">YouTube</Link></li>
-                <li><Link to="/platforms/tiktok" className="text-muted-foreground hover:text-foreground">TikTok</Link></li>
-                <li><Link to="/platforms/twitter" className="text-muted-foreground hover:text-foreground">X (Twitter)</Link></li>
-                <li><Link to="/platforms/facebook" className="text-muted-foreground hover:text-foreground">Facebook</Link></li>
-                <li><Link to="/platforms/whatsapp" className="text-muted-foreground hover:text-foreground">WhatsApp</Link></li>
-                <li><Link to="/platforms/telegram" className="text-muted-foreground hover:text-foreground">Telegram</Link></li>
-                <li><Link to="/platforms/threads" className="text-muted-foreground hover:text-foreground">Threads</Link></li>
-                <li><Link to="/platforms/snapchat" className="text-muted-foreground hover:text-foreground">Snapchat</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Free Tools</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link to="/tools/hashtag-generator" className="text-muted-foreground hover:text-foreground">Hashtag Generator</Link></li>
-                <li><Link to="/tools/content-planner" className="text-muted-foreground hover:text-foreground">Content Planner</Link></li>
-                <li><Link to="/tools/influencer-rate-calculator" className="text-muted-foreground hover:text-foreground">Influencer Rate Calculator</Link></li>
-                <li><Link to="/tools/bio-text-generator" className="text-muted-foreground hover:text-foreground">Bio Text Generator</Link></li>
-                <li><Link to="/tools/caption-generator" className="text-muted-foreground hover:text-foreground">Caption Generator</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Connect</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="https://x.com/trypostai" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">X</a></li>
-                <li><a href="https://discord.gg/vNyMmrRDXA" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Discord</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            Copyright © 2026 Works App, Inc. Built with 🫶🏻 by <a href="https://works.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Works</a>.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

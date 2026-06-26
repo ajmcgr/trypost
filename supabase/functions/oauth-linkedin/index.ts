@@ -17,17 +17,17 @@ function resolveRedirectUri(redirectUri: string | null | undefined, origin: stri
 async function fetchLinkedInProfile(accessToken: string) {
   const endpoints = [
     {
-      url: 'https://api.linkedin.com/v2/userinfo',
-      map: (payload: any) => ({
-        id: payload?.sub,
-        name: payload?.name,
-      }),
-    },
-    {
       url: 'https://api.linkedin.com/v2/me',
       map: (payload: any) => ({
         id: payload?.id,
         name: [payload?.localizedFirstName, payload?.localizedLastName].filter(Boolean).join(' ').trim(),
+      }),
+    },
+    {
+      url: 'https://api.linkedin.com/v2/userinfo',
+      map: (payload: any) => ({
+        id: payload?.sub,
+        name: payload?.name,
       }),
     },
   ];
@@ -64,9 +64,10 @@ Deno.serve(async (req) => {
     const { code, redirect_uri, state } = await req.json();
 
     if (!code) {
+      // Return authorization URL
       const clientId = Deno.env.get('LINKEDIN_CLIENT_ID');
       const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
-      const scope = 'openid profile w_member_social';
+      const scope = 'r_liteprofile w_member_social';
       const authState = state || crypto.randomUUID();
       const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(authState)}&scope=${encodeURIComponent(scope)}`;
       
@@ -93,6 +94,7 @@ Deno.serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
+    // Exchange code for token
     const clientId = Deno.env.get('LINKEDIN_CLIENT_ID');
     const clientSecret = Deno.env.get('LINKEDIN_CLIENT_SECRET');
     const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
@@ -118,6 +120,7 @@ Deno.serve(async (req) => {
 
     const profileData = await fetchLinkedInProfile(tokenData.access_token);
 
+    // Store connection
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({

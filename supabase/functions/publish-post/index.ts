@@ -22,9 +22,7 @@ interface PublishRequest {
   content: string;
   platforms: Platform[];
   media?: MediaRef[];
-  scheduledFor?: string;
-  queue?: boolean;
-  draft?: boolean;
+  // Optional YouTube-only metadata
   title?: string;
   privacy?: 'public' | 'unlisted' | 'private';
 }
@@ -68,9 +66,9 @@ Deno.serve(async (req) => {
     if (userError || !user) throw new Error('Unauthorized');
 
     const body: PublishRequest = await req.json();
-    const { content = '', platforms = [], media = [], scheduledFor, queue = false, draft = false } = body;
+    const { content = '', platforms = [], media = [] } = body;
 
-    if (!platforms.length && !draft) throw new Error('Select at least one platform');
+    if (!platforms.length) throw new Error('Select at least one platform');
     if (!content.trim() && media.length === 0) throw new Error('Empty post');
 
     const { data: connections, error: connErr } = await supabase
@@ -80,42 +78,6 @@ Deno.serve(async (req) => {
       .in('platform', platforms)
       .eq('is_connected', true);
     if (connErr) throw connErr;
-
-    const normalizedScheduledFor = scheduledFor?.trim()
-      ? new Date(scheduledFor).toISOString()
-      : queue
-        ? new Date(Date.now() + 60 * 60 * 1000).toISOString()
-        : null;
-
-    if (draft || normalizedScheduledFor) {
-      const status = draft ? 'draft' : queue ? 'queued' : 'scheduled';
-      const results = platforms.map((platform) => ({
-        platform,
-        success: true,
-        status,
-        scheduled_for: normalizedScheduledFor,
-      }));
-
-      await admin.from('posts').insert({
-        user_id: user.id,
-        content,
-        platforms,
-        results,
-        media,
-      });
-
-      return new Response(
-        JSON.stringify({
-          success: true,
-          draft,
-          queued: queue,
-          scheduled: !draft,
-          scheduled_for: normalizedScheduledFor,
-          results,
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
 
     const image = media.find((m) => m.kind === 'image');
     const video = media.find((m) => m.kind === 'video');
@@ -166,6 +128,8 @@ Deno.serve(async (req) => {
   }
 });
 
+// ---------- shared helpers ----------
+
 async function fetchBytes(url: string): Promise<Uint8Array> {
   const r = await fetch(url);
   if (!r.ok) throw new Error(`Failed to download media (${r.status})`);
@@ -174,6 +138,8 @@ async function fetchBytes(url: string): Promise<Uint8Array> {
 
 function pct(n: number) { return encodeURIComponent(n.toString()); }
 
+// ---------- Twitter / X ----------
+// OAuth 1.0a user context. Images via v1.1 media/upload, then v2 /tweets.
 function twSig(method: string, url: string, params: Record<string, string>, cs: string, ts: string) {
   const base = `${method}&${encodeURIComponent(url)}&${encodeURIComponent(
     Object.entries(params).sort().map(([k, v]) => `${k}=${v}`).join('&')
@@ -198,6 +164,7 @@ function twAuthHeader(method: string, url: string, accessToken: string, accessSe
 }
 async function twUploadMedia(accessToken: string, accessSecret: string, bytes: Uint8Array, mime: string, isVideo: boolean): Promise<string> {
   const url = 'https://upload.twitter.com/1.1/media/upload.json';
+  // INIT
   const initParams = { command: 'INIT', total_bytes: bytes.length.toString(), media_type: mime, ...(isVideo ? { media_category: 'tweet_video' } : {}) };
   const initAuth = twAuthHeader('POST', url, accessToken, accessSecret, initParams);
   const initRes = await fetch(url, {
@@ -209,6 +176,7 @@ async function twUploadMedia(accessToken: string, accessSecret: string, bytes: U
   if (!initRes.ok) throw new Error(`Twitter INIT: ${JSON.stringify(initJson)}`);
   const mediaId = initJson.media_id_string as string;
 
+  // APPEND (chunked, 4MB)
   const chunkSize = 4 * 1024 * 1024;
   let segment = 0;
   for (let off = 0; off < bytes.length; off += chunkSize) {
@@ -225,6 +193,7 @@ async function twUploadMedia(accessToken: string, accessSecret: string, bytes: U
     segment++;
   }
 
+  // FINALIZE
   const finParams = { command: 'FINALIZE', media_id: mediaId };
   const finAuth = twAuthHeader('POST', url, accessToken, accessSecret, finParams);
   const finRes = await fetch(url, {
@@ -235,6 +204,7 @@ async function twUploadMedia(accessToken: string, accessSecret: string, bytes: U
   const finJson = await finRes.json();
   if (!finRes.ok) throw new Error(`Twitter FINALIZE: ${JSON.stringify(finJson)}`);
 
+  // Poll STATUS for video
   if (finJson.processing_info) {
     let info = finJson.processing_info;
     while (info.state === 'pending' || info.state === 'in_progress') {
@@ -268,6 +238,7 @@ async function pubTwitter(conn: any, content: string, image?: MediaRef, video?: 
   return { platform: 'twitter', success: true, post_id: j.data?.id, url: `https://x.com/i/web/status/${j.data?.id}` };
 }
 
+// ---------- Facebook ----------
 async function pubFacebook(conn: any, content: string, image?: MediaRef, video?: MediaRef): Promise<PublishResult> {
   const token = conn.access_token;
   const pageId = conn.platform_user_id;
@@ -301,6 +272,7 @@ async function pubFacebook(conn: any, content: string, image?: MediaRef, video?:
   return { platform: 'facebook', success: true, post_id: j.id };
 }
 
+// ---------- Instagram (Graph) ----------
 async function igCreateContainer(igUserId: string, token: string, body: Record<string, string>) {
   const qs = new URLSearchParams({ ...body, access_token: token });
   const r = await fetch(`https://graph.facebook.com/v18.0/${igUserId}/media?${qs}`, { method: 'POST' });
@@ -336,6 +308,7 @@ async function pubInstagram(conn: any, content: string, image?: MediaRef, video?
   return { platform: 'instagram', success: true, post_id: pubJson.id };
 }
 
+// ---------- LinkedIn ----------
 async function liRegisterUpload(token: string, owner: string, recipe: string) {
   const r = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
     method: 'POST',
@@ -393,6 +366,7 @@ async function pubLinkedIn(conn: any, content: string, image?: MediaRef, video?:
   return { platform: 'linkedin', success: true, post_id: j.id };
 }
 
+// ---------- Threads ----------
 async function threadsPollContainer(containerId: string, token: string) {
   for (let i = 0; i < 30; i++) {
     const r = await fetch(`https://graph.threads.net/v1.0/${containerId}?fields=status&access_token=${token}`);
@@ -424,6 +398,7 @@ async function pubThreads(conn: any, content: string, image?: MediaRef, video?: 
   return { platform: 'threads', success: true, post_id: pJson.id };
 }
 
+// ---------- TikTok ----------
 async function pubTikTok(conn: any, content: string, video?: MediaRef): Promise<PublishResult> {
   if (!video) return { platform: 'tiktok', success: false, error: 'TikTok requires a video' };
   const token = conn.access_token;
@@ -432,6 +407,7 @@ async function pubTikTok(conn: any, content: string, video?: MediaRef): Promise<
   const chunkSize = Math.min(videoSize, 10 * 1024 * 1024);
   const totalChunks = Math.ceil(videoSize / chunkSize);
 
+  // INIT
   const initRes = await fetch('https://open.tiktokapis.com/v2/post/publish/video/init/', {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -444,6 +420,7 @@ async function pubTikTok(conn: any, content: string, video?: MediaRef): Promise<
   if (!initRes.ok) throw new Error(initJson.error?.message || 'TikTok init failed');
   const { upload_url, publish_id } = initJson.data;
 
+  // PUT chunks
   for (let i = 0; i < totalChunks; i++) {
     const start = i * chunkSize;
     const end = Math.min(start + chunkSize, videoSize) - 1;
@@ -465,6 +442,7 @@ async function pubTikTok(conn: any, content: string, video?: MediaRef): Promise<
   return { platform: 'tiktok', success: true, post_id: publish_id };
 }
 
+// ---------- YouTube ----------
 async function refreshGoogleToken(admin: SupabaseClient, conn: any): Promise<string> {
   if (conn.token_expires_at && new Date(conn.token_expires_at).getTime() - Date.now() > 60_000) {
     return conn.access_token;
@@ -499,6 +477,7 @@ async function pubYouTube(admin: SupabaseClient, conn: any, content: string, vid
     status: { privacyStatus: privacy, selfDeclaredMadeForKids: false },
   };
 
+  // Resumable upload init
   const initRes = await fetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status', {
     method: 'POST',
     headers: {

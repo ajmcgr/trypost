@@ -54,6 +54,7 @@ Deno.serve(async (req) => {
     const { code, redirect_uri } = await req.json();
 
     if (!code) {
+      // Prefer Facebook Login for Business when an Instagram Graph API config is available.
       const clientId = Deno.env.get('FACEBOOK_APP_ID');
       const configId = Deno.env.get('META_INSTAGRAM_CONFIG_ID');
       const redirectUri = resolveRedirectUri(redirect_uri, 'instagram', req.headers.get('origin'));
@@ -83,6 +84,7 @@ Deno.serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
+    // Exchange code for a Meta user token, then swap to the linked page token for publishing.
     const clientId = Deno.env.get('FACEBOOK_APP_ID');
     const clientSecret = Deno.env.get('FACEBOOK_APP_SECRET');
     const redirectUri = resolveRedirectUri(redirect_uri, 'instagram', req.headers.get('origin'));
@@ -104,6 +106,7 @@ Deno.serve(async (req) => {
       throw new Error('No Instagram business account is connected to a Facebook page for this login.');
     }
 
+    // Store connection
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({

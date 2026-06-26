@@ -6,14 +6,6 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-function resolveRedirectUri(redirectUri: string | null | undefined, origin: string | null): string {
-  const fallbackOrigin = origin ?? 'https://trypost.ai';
-  const candidate = (redirectUri ?? fallbackOrigin).trim();
-  return candidate.includes('/oauth/')
-    ? candidate
-    : `${candidate.replace(/\/+$/, '')}/oauth/youtube/callback`;
-}
-
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -39,10 +31,11 @@ Deno.serve(async (req) => {
     const { code, redirect_uri } = await req.json();
 
     if (!code) {
+      // Return authorization URL
       const clientId = Deno.env.get('YOUTUBE_CLIENT_ID');
-      const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
+      const redirectUri = `${redirect_uri || req.headers.get('origin')}/oauth/youtube/callback`;
       const scope = 'https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube';
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&access_type=offline&prompt=consent&include_granted_scopes=true`;
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&access_type=offline`;
       
       return new Response(
         JSON.stringify({ authUrl }),
@@ -50,9 +43,10 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Exchange code for token
     const clientId = Deno.env.get('YOUTUBE_CLIENT_ID');
     const clientSecret = Deno.env.get('YOUTUBE_CLIENT_SECRET');
-    const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
+    const redirectUri = redirect_uri || `${req.headers.get('origin')}/oauth/youtube/callback`;
 
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
@@ -73,6 +67,7 @@ Deno.serve(async (req) => {
       throw new Error('Failed to get access token');
     }
 
+    // Get channel info
     const channelResponse = await fetch(
       'https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true',
       { headers: { Authorization: `Bearer ${tokenData.access_token}` } }
@@ -81,6 +76,7 @@ Deno.serve(async (req) => {
     const channelData = await channelResponse.json();
     const channel = channelData.items?.[0];
 
+    // Store connection
     const { error: dbError } = await supabase
       .from('oauth_connections')
       .upsert({
