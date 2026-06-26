@@ -17,6 +17,7 @@ import {
   ChevronDown,
   Home,
   Plus,
+  ListOrdered,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -71,6 +72,7 @@ const createItems = [
 
 const postsItems = [
   { title: "Calendar", url: "/dashboard/calendar", icon: Calendar },
+  { title: "Queue", url: "/dashboard/queue", icon: ListOrdered },
   { title: "All", url: "/dashboard/posts", icon: FileStack },
   { title: "Scheduled", url: "/dashboard/scheduled", icon: Clock },
   { title: "Posted", url: "/dashboard/posted", icon: CheckCircle2 },
