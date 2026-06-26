@@ -20,10 +20,27 @@ const ForgotPassword = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { error } = await supabase.functions.invoke("send-password-reset", {
-        body: { email, redirectTo: `${window.location.origin}/reset-password` },
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-password-reset`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string,
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          email,
+          redirectTo: `${window.location.origin}/reset-password`,
+        }),
       });
-      if (error) throw error;
+      const text = await res.text();
+      let payload: any = {};
+      try {
+        payload = text ? JSON.parse(text) : {};
+      } catch {
+        payload = { error: text };
+      }
+      if (!res.ok) throw new Error(payload.error || `Request failed (${res.status})`);
       setSent(true);
     } catch (err: any) {
       toast({
