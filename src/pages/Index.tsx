@@ -48,7 +48,7 @@ const Index = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background animate-in fade-in duration-500">
       {/* Header */}
       <header className="bg-card">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
@@ -56,13 +56,13 @@ const Index = () => {
             <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
           </a>
           <nav className="hidden sm:flex flex-1 justify-center items-center gap-6 md:gap-8">
-            <Link to="/pricing" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors">
+            <Link to="/pricing" className="text-sm font-medium text-foreground hover:opacity-80 transition-colors">
               Pricing
             </Link>
-            <Link to="/faq" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors">
+            <Link to="/faq" className="text-sm font-medium text-foreground hover:opacity-80 transition-colors">
               FAQ
             </Link>
-            <Link to="/resources" className="text-xs sm:text-sm font-medium text-foreground hover:opacity-80 transition-colors">
+            <Link to="/resources" className="text-sm font-medium text-foreground hover:opacity-80 transition-colors">
               Resources
             </Link>
           </nav>
@@ -70,15 +70,15 @@ const Index = () => {
             <LanguageSwitcher />
             {user ? (
               <Link to="/dashboard">
-                <Button className="text-xs sm:text-sm">Go to Dashboard →</Button>
+                <Button size="sm">Go to Dashboard →</Button>
               </Link>
             ) : (
               <>
                 <Link to="/login">
-                  <Button variant="ghost" className="text-xs sm:text-sm">Log In</Button>
+                  <Button variant="ghost" size="sm">Log In</Button>
                 </Link>
                 <Link to="/signup">
-                  <Button className="text-xs sm:text-sm">Sign Up →</Button>
+                  <Button size="sm">Sign Up →</Button>
                 </Link>
               </>
             )}

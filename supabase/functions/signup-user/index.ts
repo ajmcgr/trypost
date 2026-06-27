@@ -35,10 +35,8 @@ function renderWelcomeEmail(fullName: string) {
           <p style="margin:24px 0;text-align:center;">
             <a href="${SITE_URL}/dashboard" style="display:inline-block;background:#136ed5;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 24px;border-radius:12px;">Open dashboard →</a>
           </p>
-          <p style="margin:0;font-size:13px;line-height:1.6;color:#86868b;">Built with 🫶🏻 by Works App, Inc.</p>
         </td></tr>
       </table>
-      <p style="font-size:12px;color:#86868b;margin:16px 0 0;">© 2026 Works App, Inc. · 447 Sutter St, Ste 405 #3, San Francisco, CA 94108</p>
     </td></tr>
   </table>
 </body></html>`;
