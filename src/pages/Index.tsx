@@ -51,7 +51,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-card">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
           <a href="https://trypost.ai" className="flex items-center gap-2 shrink-0">
             <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
           </a>
