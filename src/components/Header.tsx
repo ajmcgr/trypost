@@ -11,7 +11,7 @@ const Header = ({ showSignup = false }: HeaderProps) => {
   const { user } = useAuth();
 
   return (
-    <header className="bg-card border-b">
+    <header className="bg-card animate-in fade-in duration-500">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
         <a href="https://trypost.ai" className="flex items-center gap-2 shrink-0">
           <img src={postLogo} alt="Post" className="h-6 sm:h-8" />
