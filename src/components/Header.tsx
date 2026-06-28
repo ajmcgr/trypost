@@ -38,7 +38,7 @@ const Header = ({ showSignup = false }: HeaderProps) => {
                 <Button variant="ghost">Log In</Button>
               </Link>
               <Link to="/signup">
-                <Button>Sign Up →</Button>
+                <Button size="lg" className="text-sm">Sign Up →</Button>
               </Link>
             </div>
           )
