@@ -232,8 +232,26 @@ const Index = () => {
               <Link to="/signup"><Button>Get started <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
             </div>
           </div>
-          <Card className="aspect-square rounded-3xl bg-muted/40 border-0 p-8 flex items-center justify-center">
-            <img src="/hero-screenshot.png" alt="" className="w-full rounded-2xl shadow-lg border" />
+          <Card className="aspect-square rounded-3xl bg-muted/40 border-0 p-10 flex items-center justify-center relative overflow-hidden">
+            <div className="w-full max-w-sm space-y-3">
+              {[
+                { logo: xLogo, label: "Launching today →", status: "Published", color: "text-google-green", bar: "w-full" },
+                { logo: linkedinLogo, label: "Behind the build", status: "Scheduled", color: "text-google-blue", bar: "w-3/4" },
+                { logo: instagramLogo, label: "Sneak peek 👀", status: "Draft", color: "text-muted-foreground", bar: "w-1/2" },
+                { logo: tiktokLogo, label: "How we ship fast", status: "Queued", color: "text-google-red", bar: "w-2/3" },
+              ].map((row, i) => (
+                <div key={i} className="bg-card rounded-xl shadow-sm border p-3 flex items-center gap-3">
+                  <img src={row.logo} alt="" className="w-6 h-6 shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-medium truncate">{row.label}</div>
+                    <div className={`h-1 mt-1.5 rounded-full bg-muted overflow-hidden`}>
+                      <div className={`h-full ${row.bar} bg-primary/60 rounded-full`} />
+                    </div>
+                  </div>
+                  <div className={`text-[10px] font-medium ${row.color} shrink-0`}>{row.status}</div>
+                </div>
+              ))}
+            </div>
           </Card>
         </div>
       </section>
