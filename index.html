@@ -20,6 +20,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Preload critical above-the-fold assets to prevent FOUT and image pop -->
+    <link rel="preload" href="/fonts/Reckless-Medium.otf" as="font" type="font/otf" crossorigin />
+    <link rel="preload" href="/fonts/Reckless-Regular.otf" as="font" type="font/otf" crossorigin />
+    <link rel="preload" href="/hero-screenshot.png" as="image" fetchpriority="high" />
     
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QWZVRW4MLC"></script>
