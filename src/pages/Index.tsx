@@ -163,8 +163,46 @@ const Index = () => {
 
         {/* Scheduling */}
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <Card className="aspect-square rounded-3xl bg-muted/40 border-0 p-8 flex items-center justify-center order-2 md:order-1">
-            <img src="/hero-screenshot.png" alt="" className="w-full rounded-2xl shadow-lg border" />
+          <Card className="aspect-square rounded-3xl bg-muted/40 border-0 p-10 flex items-center justify-center order-2 md:order-1 relative overflow-hidden">
+            <div className="w-full max-w-sm bg-card rounded-2xl shadow-lg border p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-sm font-medium">June 2026</div>
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 rounded-full bg-google-red" />
+                  <div className="w-2 h-2 rounded-full bg-google-blue" />
+                  <div className="w-2 h-2 rounded-full bg-google-green" />
+                </div>
+              </div>
+              <div className="grid grid-cols-7 gap-1.5 text-[10px] text-muted-foreground mb-1">
+                {["S","M","T","W","T","F","S"].map((d,i) => <div key={i} className="text-center">{d}</div>)}
+              </div>
+              <div className="grid grid-cols-7 gap-1.5">
+                {Array.from({length: 28}).map((_,i) => {
+                  const dots = [3,7,8,12,15,16,20,24].includes(i);
+                  const today = i === 15;
+                  return (
+                    <div key={i} className={`aspect-square rounded-md flex items-center justify-center text-[10px] ${today ? 'bg-primary text-primary-foreground font-medium' : 'bg-muted/60'}`}>
+                      {dots && !today && <div className="w-1 h-1 rounded-full bg-primary" />}
+                      {today && (i+1)}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="absolute top-6 right-6 bg-card rounded-xl shadow-md border px-3 py-2 flex items-center gap-2">
+              <img src={xLogo} alt="" className="w-4 h-4" />
+              <div className="text-xs">
+                <div className="font-medium">Scheduled</div>
+                <div className="text-muted-foreground text-[10px]">Tue · 9:00 AM</div>
+              </div>
+            </div>
+            <div className="absolute bottom-6 left-6 bg-card rounded-xl shadow-md border px-3 py-2 flex items-center gap-2">
+              <img src={instagramLogo} alt="" className="w-4 h-4" />
+              <div className="text-xs">
+                <div className="font-medium">Queued</div>
+                <div className="text-muted-foreground text-[10px]">Fri · 6:30 PM</div>
+              </div>
+            </div>
           </Card>
           <div className="order-1 md:order-2">
             <h2 className="font-sans text-4xl md:text-5xl font-medium mb-4 leading-tight text-black">
