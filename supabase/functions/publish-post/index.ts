@@ -465,16 +465,15 @@ async function pubTikTok(conn: any, content: string, video?: MediaRef): Promise<
   const totalChunks = Math.ceil(videoSize / chunkSize);
 
   // INIT
-  const initRes = await fetch('https://open.tiktokapis.com/v2/post/publish/video/init/', {
+  const initRes = await fetch('https://open.tiktokapis.com/v2/post/publish/inbox/video/init/', {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      post_info: { title: content.slice(0, 2200), privacy_level: 'SELF_ONLY', disable_duet: false, disable_comment: false, disable_stitch: false },
       source_info: { source: 'FILE_UPLOAD', video_size: videoSize, chunk_size: chunkSize, total_chunk_count: totalChunks },
     }),
   });
   const initJson = await initRes.json();
-  if (!initRes.ok) throw new Error(initJson.error?.message || 'TikTok init failed');
+  if (!initRes.ok) throw new Error(initJson.error?.message || initJson.error?.code || 'TikTok inbox upload init failed');
   const { upload_url, publish_id } = initJson.data;
 
   // PUT chunks
