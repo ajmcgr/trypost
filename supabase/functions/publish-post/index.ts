@@ -45,6 +45,13 @@ const PLATFORM_LIMITS: Record<Platform, number> = {
   youtube: 5000,
 };
 
+function createAdminClient() {
+  return createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+  );
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
@@ -57,10 +64,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       { global: { headers: { Authorization: authHeader } } }
     );
-    const admin = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-    );
+    const admin = createAdminClient();
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) throw new Error('Unauthorized');
@@ -399,9 +403,62 @@ async function pubThreads(conn: any, content: string, image?: MediaRef, video?: 
 }
 
 // ---------- TikTok ----------
+async function refreshTikTokToken(admin: SupabaseClient, conn: any): Promise<string> {
+  if (conn.token_expires_at && new Date(conn.token_expires_at).getTime() - Date.now() > 60_000) {
+    return conn.access_token;
+  }
+  if (!conn.refresh_token) return conn.access_token;
+
+  const clientKey = Deno.env.get('TIKTOK_CLIENT_KEY') ?? Deno.env.get('TIKTOK_CLIENT_ID');
+  const clientSecret = Deno.env.get('TIKTOK_CLIENT_SECRET');
+  if (!clientKey || !clientSecret) return conn.access_token;
+
+  const refreshRes = await fetch('https://open.tiktokapis.com/v2/oauth/token/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Cache-Control': 'no-cache',
+    },
+    body: new URLSearchParams({
+      client_key: clientKey,
+      client_secret: clientSecret,
+      grant_type: 'refresh_token',
+      refresh_token: conn.refresh_token,
+    }),
+  });
+  const refreshJson = await refreshRes.json();
+  if (!refreshRes.ok || !refreshJson.access_token) {
+    console.error('TikTok refresh error:', refreshJson);
+    return conn.access_token;
+  }
+
+  const newAccessToken = refreshJson.access_token as string;
+  const newRefreshToken = (refreshJson.refresh_token as string | undefined) ?? conn.refresh_token;
+  const tokenExpiresAt = refreshJson.expires_in
+    ? new Date(Date.now() + Number(refreshJson.expires_in) * 1000).toISOString()
+    : conn.token_expires_at;
+
+  await admin
+    .from('oauth_connections')
+    .update({
+      access_token: newAccessToken,
+      refresh_token: newRefreshToken,
+      token_expires_at: tokenExpiresAt,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', conn.id);
+
+  conn.access_token = newAccessToken;
+  conn.refresh_token = newRefreshToken;
+  conn.token_expires_at = tokenExpiresAt;
+
+  return newAccessToken;
+}
+
 async function pubTikTok(conn: any, content: string, video?: MediaRef): Promise<PublishResult> {
   if (!video) return { platform: 'tiktok', success: false, error: 'TikTok requires a video' };
-  const token = conn.access_token;
+  const admin = createAdminClient();
+  const token = await refreshTikTokToken(admin, conn);
   const bytes = await fetchBytes(video.url);
   const videoSize = bytes.length;
   const chunkSize = Math.min(videoSize, 10 * 1024 * 1024);
