@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
       // Return authorization URL
       const clientKey = getTikTokClientKey();
       const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
-      const scope = 'user.info.basic,video.publish';
+      const scope = 'user.info.basic,video.upload';
       const csrfState = Math.random().toString(36).substring(2);
 
       if (!clientKey) {
