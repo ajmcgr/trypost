@@ -9,7 +9,7 @@ const Footer = () => {
             <h4 className="font-medium text-sm mb-4">About</h4>
             <ul className="space-y-2 text-sm">
               <li><Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link></li>
-              <li><a href="https://blog.works.xyz" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Blog</a></li>
+              <li><Link to="/blog" className="text-muted-foreground hover:text-foreground">Blog</Link></li>
             </ul>
           </div>
           <div>

@@ -37,6 +37,8 @@ import AnnouncementGenerator from "./pages/tools/AnnouncementGenerator";
 import Tools from "./pages/Tools";
 import Resources from "./pages/Resources";
 import ResourceArticle from "./pages/ResourceArticle";
+import Blog from "./pages/Blog";
+import BlogArticle from "./pages/BlogArticle";
 import Calendar from "./pages/dashboard/Calendar";
 import Posts from "./pages/dashboard/Posts";
 import Scheduled from "./pages/dashboard/Scheduled";
@@ -144,6 +146,8 @@ const App = () => (
       {/* Resources */}
       <Route path="/resources" element={<Resources />} />
       <Route path="/resources/:slug" element={<ResourceArticle />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:slug" element={<BlogArticle />} />
 
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
