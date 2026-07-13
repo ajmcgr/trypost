@@ -14,8 +14,29 @@ function resolveRedirectUri(redirectUri: string | null | undefined, origin: stri
     : `${candidate.replace(/\/+$/, '')}/oauth/tiktok/callback`;
 }
 
-function getTikTokClientKey(): string | null {
-  return Deno.env.get('TIKTOK_CLIENT_KEY') ?? Deno.env.get('TIKTOK_CLIENT_ID');
+function isTikTokSandbox(): boolean {
+  const env = Deno.env.get('TIKTOK_ENV')?.toLowerCase();
+  return env === 'sandbox' || Deno.env.get('TIKTOK_SANDBOX') === 'true';
+}
+
+function getTikTokCredentials(): { clientKey: string | null; clientSecret: string | null } {
+  if (isTikTokSandbox()) {
+    return {
+      clientKey:
+        Deno.env.get('TIKTOK_SANDBOX_CLIENT_KEY') ??
+        Deno.env.get('TIKTOK_SANDBOX_CLIENT_ID') ??
+        Deno.env.get('TIKTOK_CLIENT_KEY') ??
+        Deno.env.get('TIKTOK_CLIENT_ID'),
+      clientSecret:
+        Deno.env.get('TIKTOK_SANDBOX_CLIENT_SECRET') ??
+        Deno.env.get('TIKTOK_CLIENT_SECRET'),
+    };
+  }
+
+  return {
+    clientKey: Deno.env.get('TIKTOK_CLIENT_KEY') ?? Deno.env.get('TIKTOK_CLIENT_ID'),
+    clientSecret: Deno.env.get('TIKTOK_CLIENT_SECRET'),
+  };
 }
 
 async function readJsonResponse(response: Response) {
@@ -53,7 +74,7 @@ Deno.serve(async (req) => {
 
     if (!code) {
       // Return authorization URL
-      const clientKey = getTikTokClientKey();
+      const { clientKey } = getTikTokCredentials();
       const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
       const scope = 'user.info.basic,video.upload';
       const csrfState = Math.random().toString(36).substring(2);
@@ -62,17 +83,23 @@ Deno.serve(async (req) => {
         throw new Error('TikTok client key is not configured');
       }
 
-      const authUrl = `https://www.tiktok.com/v2/auth/authorize?client_key=${clientKey}&scope=${scope}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&state=${csrfState}`;
+      const authUrl = new URL('https://www.tiktok.com/v2/auth/authorize/');
+      authUrl.search = new URLSearchParams({
+        client_key: clientKey,
+        scope,
+        response_type: 'code',
+        redirect_uri: redirectUri,
+        state: csrfState,
+      }).toString();
       
       return new Response(
-        JSON.stringify({ authUrl }),
+        JSON.stringify({ authUrl: authUrl.toString() }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     // Exchange code for token
-    const clientKey = getTikTokClientKey();
-    const clientSecret = Deno.env.get('TIKTOK_CLIENT_SECRET');
+    const { clientKey, clientSecret } = getTikTokCredentials();
     const redirectUri = resolveRedirectUri(redirect_uri, req.headers.get('origin'));
 
     if (!clientKey || !clientSecret) {
@@ -86,8 +113,8 @@ Deno.serve(async (req) => {
         'Cache-Control': 'no-cache'
       },
       body: new URLSearchParams({
-        client_key: clientKey!,
-        client_secret: clientSecret!,
+        client_key: clientKey,
+        client_secret: clientSecret,
         code,
         grant_type: 'authorization_code',
         redirect_uri: redirectUri,
