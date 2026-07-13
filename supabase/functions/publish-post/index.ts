@@ -22,6 +22,9 @@ interface PublishRequest {
   content: string;
   platforms: Platform[];
   media?: MediaRef[];
+  scheduledFor?: string;
+  queue?: boolean;
+  draft?: boolean;
   // Optional YouTube-only metadata
   title?: string;
   privacy?: 'public' | 'unlisted' | 'private';
@@ -70,9 +73,9 @@ Deno.serve(async (req) => {
     if (userError || !user) throw new Error('Unauthorized');
 
     const body: PublishRequest = await req.json();
-    const { content = '', platforms = [], media = [] } = body;
+    const { content = '', platforms = [], media = [], scheduledFor, queue = false, draft = false } = body;
 
-    if (!platforms.length) throw new Error('Select at least one platform');
+    if (!platforms.length && !draft) throw new Error('Select at least one platform');
     if (!content.trim() && media.length === 0) throw new Error('Empty post');
 
     const { data: connections, error: connErr } = await supabase
@@ -82,6 +85,42 @@ Deno.serve(async (req) => {
       .in('platform', platforms)
       .eq('is_connected', true);
     if (connErr) throw connErr;
+
+    const normalizedScheduledFor = scheduledFor?.trim()
+      ? new Date(scheduledFor).toISOString()
+      : queue
+        ? new Date(Date.now() + 60 * 60 * 1000).toISOString()
+        : null;
+
+    if (draft || normalizedScheduledFor) {
+      const status = draft ? 'draft' : queue ? 'queued' : 'scheduled';
+      const results = platforms.map((platform) => ({
+        platform,
+        success: true,
+        status,
+        scheduled_for: normalizedScheduledFor,
+      }));
+
+      await admin.from('posts').insert({
+        user_id: user.id,
+        content,
+        platforms,
+        results,
+        media,
+      });
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          draft,
+          queued: queue,
+          scheduled: !draft,
+          scheduled_for: normalizedScheduledFor,
+          results,
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const image = media.find((m) => m.kind === 'image');
     const video = media.find((m) => m.kind === 'video');
@@ -403,14 +442,38 @@ async function pubThreads(conn: any, content: string, image?: MediaRef, video?: 
 }
 
 // ---------- TikTok ----------
+function isTikTokSandbox(): boolean {
+  const env = Deno.env.get('TIKTOK_ENV')?.toLowerCase();
+  return env === 'sandbox' || Deno.env.get('TIKTOK_SANDBOX') === 'true';
+}
+
+function getTikTokCredentials(): { clientKey: string | null; clientSecret: string | null } {
+  if (isTikTokSandbox()) {
+    return {
+      clientKey:
+        Deno.env.get('TIKTOK_SANDBOX_CLIENT_KEY') ??
+        Deno.env.get('TIKTOK_SANDBOX_CLIENT_ID') ??
+        Deno.env.get('TIKTOK_CLIENT_KEY') ??
+        Deno.env.get('TIKTOK_CLIENT_ID'),
+      clientSecret:
+        Deno.env.get('TIKTOK_SANDBOX_CLIENT_SECRET') ??
+        Deno.env.get('TIKTOK_CLIENT_SECRET'),
+    };
+  }
+
+  return {
+    clientKey: Deno.env.get('TIKTOK_CLIENT_KEY') ?? Deno.env.get('TIKTOK_CLIENT_ID'),
+    clientSecret: Deno.env.get('TIKTOK_CLIENT_SECRET'),
+  };
+}
+
 async function refreshTikTokToken(admin: SupabaseClient, conn: any): Promise<string> {
   if (conn.token_expires_at && new Date(conn.token_expires_at).getTime() - Date.now() > 60_000) {
     return conn.access_token;
   }
   if (!conn.refresh_token) return conn.access_token;
 
-  const clientKey = Deno.env.get('TIKTOK_CLIENT_KEY') ?? Deno.env.get('TIKTOK_CLIENT_ID');
-  const clientSecret = Deno.env.get('TIKTOK_CLIENT_SECRET');
+  const { clientKey, clientSecret } = getTikTokCredentials();
   if (!clientKey || !clientSecret) return conn.access_token;
 
   const refreshRes = await fetch('https://open.tiktokapis.com/v2/oauth/token/', {
