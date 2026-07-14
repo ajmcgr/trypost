@@ -6,7 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileText, Filter, HelpCircle, Loader2, RefreshCw } from 'lucide-react';
+import { FileText, Filter, HelpCircle, Loader2, RefreshCw, Send, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import twitterIcon from '@/assets/x.svg';
 import linkedinIcon from '@/assets/linkedin.svg';
 import instagramIcon from '@/assets/instagram.svg';
@@ -16,8 +17,8 @@ import threadsIcon from '@/assets/threads.svg';
 import tiktokIcon from '@/assets/tiktok.svg';
 
 const platformIcons: Record<string, string> = { twitter: twitterIcon, linkedin: linkedinIcon, instagram: instagramIcon, facebook: facebookIcon, youtube: youtubeIcon, threads: threadsIcon, tiktok: tiktokIcon };
-type Media = { kind?: 'image' | 'video'; url?: string };
-type Result = { status?: string; scheduled_for?: string; success?: boolean };
+type Media = { media_id?: string; path?: string; kind?: 'image' | 'video'; url?: string; mime?: string; size?: number };
+type Result = { status?: string; scheduled_for?: string; success?: boolean; error?: string };
 type PostRow = { id: string; content: string | null; platforms: string[] | null; status: string | null; media: Media[] | null; results: Result[] | null; scheduled_at: string | null; created_at: string | null };
 
 type Props = { title: string; emptyLabel: string; statuses?: string[]; layout?: 'grid' | 'list' };
@@ -47,6 +48,7 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
   const [sortBy, setSortBy] = useState('newest');
   const [platform, setPlatform] = useState('all');
   const [timeFilter, setTimeFilter] = useState('all');
+  const [busyPostId, setBusyPostId] = useState<string | null>(null);
 
   const loadPosts = async () => {
     if (!user) return;
@@ -62,6 +64,62 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
 
   useEffect(() => { if (!authLoading && !user) navigate('/login'); }, [authLoading, navigate, user]);
   useEffect(() => { if (user) loadPosts(); }, [user, sortBy]);
+
+  const publishDraft = async (post: PostRow) => {
+    const platforms = post.platforms ?? [];
+    if (!platforms.length) return toast.error('This draft has no selected platforms.');
+
+    setBusyPostId(post.id);
+    try {
+      const { data, error } = await supabase.functions.invoke('publish-post', {
+        body: {
+          draftId: post.id,
+          content: post.content ?? '',
+          platforms,
+          media: post.media ?? [],
+        },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      const results = data?.results ?? [];
+      const failed = results.filter((result: Result) => !result.success).length;
+      const successful = results.length - failed;
+
+      if (successful && !failed) toast.success(`Published to ${successful} platform${successful === 1 ? '' : 's'}.`);
+      else if (successful) toast.warning(`Published to ${successful}, ${failed} failed.`);
+      else toast.error(results[0]?.error || 'Failed to publish draft.');
+
+      await loadPosts();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to publish draft.');
+    } finally {
+      setBusyPostId(null);
+    }
+  };
+
+  const deleteDraft = async (post: PostRow) => {
+    if (getStatus(post) !== 'draft') return;
+
+    setBusyPostId(post.id);
+    try {
+      const { error } = await supabase
+        .from('posts')
+        .delete()
+        .eq('id', post.id)
+        .eq('user_id', user!.id)
+        .eq('status', 'draft');
+
+      if (error) throw error;
+      toast.success('Draft deleted');
+      setPosts((current) => current.filter((item) => item.id !== post.id));
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete draft.');
+    } finally {
+      setBusyPostId(null);
+    }
+  };
 
   const filteredPosts = useMemo(() => {
     const now = new Date();
@@ -99,6 +157,8 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
           const media = post.media?.[0];
           const status = getStatus(post);
           const platforms = post.platforms ?? [];
+          const isDraft = status === 'draft';
+          const isBusy = busyPostId === post.id;
           return (
             <Card key={post.id} className="p-4">
               <div className="flex items-center gap-3 text-sm text-muted-foreground mb-3"><span>{date}</span><span>{time}</span></div>
@@ -106,7 +166,24 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
               {media?.url && media.kind === 'image' && <img src={media.url} alt="Post media" className="mb-4 h-36 w-full rounded-md object-cover border" />}
               {media?.url && media.kind === 'video' && <video src={media.url} className="mb-4 h-36 w-full rounded-md object-cover border" controls />}
               <p className="mb-4 line-clamp-4 whitespace-pre-wrap">{post.content || 'Untitled post'}</p>
-              <div className="flex items-center justify-between"><div className="flex items-center gap-2">{platforms.slice(0, 5).map((item) => platformIcons[item] && <img key={item} src={platformIcons[item]} alt={item} className="w-5 h-5" />)}</div><Badge className={badgeClass(status)}>{status}</Badge></div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">{platforms.slice(0, 5).map((item) => platformIcons[item] && <img key={item} src={platformIcons[item]} alt={item} className="w-5 h-5" />)}</div>
+                <div className="flex items-center gap-2">
+                  {isDraft && (
+                    <>
+                      <Button size="sm" onClick={() => publishDraft(post)} disabled={isBusy}>
+                        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+                        Post now
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => deleteDraft(post)} disabled={isBusy}>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete
+                      </Button>
+                    </>
+                  )}
+                  <Badge className={badgeClass(status)}>{status}</Badge>
+                </div>
+              </div>
             </Card>
           );
         }) : <div className={`${layout === 'grid' ? 'col-span-full ' : ''}flex items-center justify-center h-96 bg-muted/30 rounded-3xl`}><div className="text-center"><FileText className="w-16 h-16 mx-auto mb-4 text-muted-foreground" /><p className="text-lg text-muted-foreground">{emptyLabel}</p></div></div>}

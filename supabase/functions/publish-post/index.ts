@@ -16,12 +16,13 @@ type Platform =
   | 'twitter' | 'facebook' | 'instagram'
   | 'linkedin' | 'threads' | 'tiktok' | 'youtube';
 
-interface MediaRef { path: string; url: string; kind: 'image' | 'video'; mime?: string }
+interface MediaRef { path: string; url: string; kind: 'image' | 'video'; mime?: string; size?: number }
 
 interface PublishRequest {
   content: string;
   platforms: Platform[];
   media?: MediaRef[];
+  draftId?: string;
   scheduledFor?: string;
   queue?: boolean;
   draft?: boolean;
@@ -47,6 +48,7 @@ const PLATFORM_LIMITS: Record<Platform, number> = {
   tiktok: 2200,
   youtube: 5000,
 };
+const MAX_EDGE_BYTE_UPLOAD = 20 * 1024 * 1024; // Edge functions should not proxy large videos
 
 function createAdminClient() {
   return createClient(
@@ -73,7 +75,7 @@ Deno.serve(async (req) => {
     if (userError || !user) throw new Error('Unauthorized');
 
     const body: PublishRequest = await req.json();
-    const { content = '', platforms = [], media = [], scheduledFor, queue = false, draft = false } = body;
+    const { content = '', platforms = [], media = [], draftId, scheduledFor, queue = false, draft = false } = body;
 
     if (!platforms.length && !draft) throw new Error('Select at least one platform');
     if (!content.trim() && media.length === 0) throw new Error('Empty post');
@@ -101,13 +103,16 @@ Deno.serve(async (req) => {
         scheduled_for: normalizedScheduledFor,
       }));
 
-      await admin.from('posts').insert({
+      const { error: postError } = await admin.from('posts').insert({
         user_id: user.id,
         content,
         platforms,
+        status,
+        scheduled_at: normalizedScheduledFor,
         results,
         media,
       });
+      if (postError) throw postError;
 
       return new Response(
         JSON.stringify({
@@ -150,16 +155,36 @@ Deno.serve(async (req) => {
 
     const results = await Promise.all(tasks);
 
-    await admin.from('posts').insert({
-      user_id: user.id,
-      content,
-      platforms,
-      results,
-      media,
-    });
+    const successful = results.filter((result) => result.success).length;
+    const status = successful > 0 ? 'posted' : 'failed';
+
+    const write = draftId
+      ? admin
+          .from('posts')
+          .update({
+            content,
+            platforms,
+            status,
+            results,
+            media,
+            scheduled_at: null,
+          })
+          .eq('id', draftId)
+          .eq('user_id', user.id)
+      : admin.from('posts').insert({
+          user_id: user.id,
+          content,
+          platforms,
+          status,
+          results,
+          media,
+        });
+
+    const { error: postError } = await write;
+    if (postError) throw postError;
 
     return new Response(
-      JSON.stringify({ success: true, results }),
+      JSON.stringify({ success: true, status, results, draft_id: draftId ?? null }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (err: any) {
@@ -173,10 +198,25 @@ Deno.serve(async (req) => {
 
 // ---------- shared helpers ----------
 
-async function fetchBytes(url: string): Promise<Uint8Array> {
+const formatMB = (bytes: number) => `${Math.ceil(bytes / 1024 / 1024)}MB`;
+
+async function fetchBytes(media: MediaRef, platform: Platform): Promise<Uint8Array> {
+  if (media.kind === 'video' && media.size && media.size > MAX_EDGE_BYTE_UPLOAD) {
+    throw new Error(
+      `${platform} video upload is too large for direct Edge Function publishing (${formatMB(media.size)}). Save it as a draft/schedule it, or use the large-video upload path.`
+    );
+  }
+
+  const url = media.url;
   const r = await fetch(url);
   if (!r.ok) throw new Error(`Failed to download media (${r.status})`);
-  return new Uint8Array(await r.arrayBuffer());
+  const bytes = new Uint8Array(await r.arrayBuffer());
+  if (media.kind === 'video' && bytes.length > MAX_EDGE_BYTE_UPLOAD) {
+    throw new Error(
+      `${platform} video upload is too large for direct Edge Function publishing (${formatMB(bytes.length)}). Save it as a draft/schedule it, or use the large-video upload path.`
+    );
+  }
+  return bytes;
 }
 
 function pct(n: number) { return encodeURIComponent(n.toString()); }
@@ -267,7 +307,7 @@ async function pubTwitter(conn: any, content: string, image?: MediaRef, video?: 
   const mediaIds: string[] = [];
   const m = video ?? image;
   if (m) {
-    const bytes = await fetchBytes(m.url);
+    const bytes = await fetchBytes(m, 'twitter');
     const id = await twUploadMedia(conn.access_token, conn.access_token_secret, bytes, m.mime ?? (m.kind === 'video' ? 'video/mp4' : 'image/jpeg'), m.kind === 'video');
     mediaIds.push(id);
   }
@@ -381,7 +421,7 @@ async function pubLinkedIn(conn: any, content: string, image?: MediaRef, video?:
   if (asset) {
     const recipe = asset.kind === 'video' ? 'urn:li:digitalmediaRecipe:feedshare-video' : 'urn:li:digitalmediaRecipe:feedshare-image';
     const { uploadUrl, asset: urn } = await liRegisterUpload(token, owner, recipe);
-    const bytes = await fetchBytes(asset.url);
+    const bytes = await fetchBytes(asset, 'linkedin');
     const up = await fetch(uploadUrl, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, body: bytes });
     if (!up.ok) throw new Error(`LinkedIn upload failed (${up.status})`);
     category = asset.kind === 'video' ? 'VIDEO' : 'IMAGE';
@@ -522,7 +562,7 @@ async function pubTikTok(conn: any, content: string, video?: MediaRef): Promise<
   if (!video) return { platform: 'tiktok', success: false, error: 'TikTok requires a video' };
   const admin = createAdminClient();
   const token = await refreshTikTokToken(admin, conn);
-  const bytes = await fetchBytes(video.url);
+  const bytes = await fetchBytes(video, 'tiktok');
   const videoSize = bytes.length;
   const chunkSize = Math.min(videoSize, 10 * 1024 * 1024);
   const totalChunks = Math.ceil(videoSize / chunkSize);
@@ -589,7 +629,7 @@ async function refreshGoogleToken(admin: SupabaseClient, conn: any): Promise<str
 async function pubYouTube(admin: SupabaseClient, conn: any, content: string, video?: MediaRef, title?: string, privacy: 'public'|'unlisted'|'private' = 'public'): Promise<PublishResult> {
   if (!video) return { platform: 'youtube', success: false, error: 'YouTube requires a video' };
   const token = await refreshGoogleToken(admin, conn);
-  const bytes = await fetchBytes(video.url);
+  const bytes = await fetchBytes(video, 'youtube');
 
   const metadata = {
     snippet: { title: (title ?? content.split('\n')[0] ?? 'Untitled').slice(0, 100), description: content.slice(0, 5000) },
