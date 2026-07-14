@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import MediaPreview from '@/components/dashboard/MediaPreview';
 import { CalendarClock, FileText, Filter, HelpCircle, Loader2, RefreshCw, Send, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import twitterIcon from '@/assets/x.svg';
@@ -17,7 +18,7 @@ import threadsIcon from '@/assets/threads.svg';
 import tiktokIcon from '@/assets/tiktok.svg';
 
 const platformIcons: Record<string, string> = { twitter: twitterIcon, linkedin: linkedinIcon, instagram: instagramIcon, facebook: facebookIcon, youtube: youtubeIcon, threads: threadsIcon, tiktok: tiktokIcon };
-type Media = { media_id?: string; path?: string; kind?: 'image' | 'video'; url?: string; mime?: string; size?: number };
+type Media = { media_id?: string; path?: string; kind?: 'image' | 'video'; url?: string; mime?: string; size?: number; width?: number; height?: number };
 type Result = { status?: string; scheduled_for?: string; success?: boolean; error?: string };
 type PostRow = { id: string; content: string | null; platforms: string[] | null; status: string | null; media: Media[] | null; results: Result[] | null; scheduled_at: string | null; created_at: string | null };
 
@@ -204,8 +205,7 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
             <Card key={post.id} className="p-4">
               <div className="flex items-center gap-3 text-sm text-muted-foreground mb-3"><span>{date}</span><span>{time}</span></div>
               <div className="flex items-start gap-2 mb-4"><FileText className="w-4 h-4 text-muted-foreground mt-1" /><span className="text-xs text-muted-foreground">{media?.kind ?? 'text'}</span></div>
-              {media?.url && media.kind === 'image' && <img src={media.url} alt="Post media" className="mb-4 h-36 w-full rounded-md object-cover border" />}
-              {media?.url && media.kind === 'video' && <video src={media.url} className="mb-4 h-36 w-full rounded-md object-cover border" controls />}
+              {media?.url && media.kind && <MediaPreview media={{ ...media, url: media.url, kind: media.kind }} alt="Post media" variant="card" className="mb-4" />}
               <p className="mb-4 line-clamp-4 whitespace-pre-wrap">{post.content || 'Untitled post'}</p>
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">{platforms.slice(0, 5).map((item) => platformIcons[item] && <img key={item} src={platformIcons[item]} alt={item} className="w-5 h-5" />)}</div>

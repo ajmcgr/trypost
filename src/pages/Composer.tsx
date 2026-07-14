@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import MediaPreview from '@/components/dashboard/MediaPreview';
+import { getFileMediaDimensions } from '@/lib/media';
 import { Loader2, Search, ChevronDown, Send, Save, Info, ImagePlus, X, Check, Calendar as CalIcon, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import twitterIcon from '@/assets/x.svg';
@@ -46,6 +48,8 @@ interface MediaRef {
   url: string;
   mime: string;
   kind: 'image' | 'video';
+  width?: number;
+  height?: number;
 }
 
 interface OAuthConnection {
@@ -125,6 +129,7 @@ const Composer = () => {
       if (!session) throw new Error('Not authenticated');
       const uploaded: MediaRef[] = [];
       for (const file of Array.from(files)) {
+        const dimensions = await getFileMediaDimensions(file);
         const fd = new FormData();
         fd.append('file', file);
         const resp = await fetch(
@@ -133,7 +138,7 @@ const Composer = () => {
         );
         const j = await resp.json();
         if (!resp.ok) throw new Error(j.error || 'Upload failed');
-        uploaded.push(j);
+        uploaded.push({ ...j, ...(dimensions ?? {}) });
       }
       setMedia((m) => [...m, ...uploaded]);
     } catch (e: any) {
@@ -193,7 +198,7 @@ const Composer = () => {
           platforms: selectedPlatforms,
           status: 'scheduled',
           scheduled_at: scheduledAt.toISOString(),
-          media: media.map(({ media_id, path, url, mime, kind }) => ({ media_id, path, url, mime, kind })),
+          media: media.map(({ media_id, path, url, mime, kind, width, height }) => ({ media_id, path, url, mime, kind, width, height })),
         });
         if (error) throw error;
         toast.success(`Scheduled for ${scheduledAt.toLocaleString()}`);
@@ -205,7 +210,7 @@ const Composer = () => {
         body: {
           content,
           platforms: selectedPlatforms,
-          media: media.map(({ media_id, path, url, mime, kind }) => ({ media_id, path, url, mime, kind })),
+          media: media.map(({ media_id, path, url, mime, kind, width, height }) => ({ media_id, path, url, mime, kind, width, height })),
         },
       });
       if (error) throw error;
@@ -238,7 +243,7 @@ const Composer = () => {
       content,
       platforms: selectedPlatforms,
       status: 'draft',
-      media: media.map(({ media_id, path, url, mime, kind }) => ({ media_id, path, url, mime, kind })),
+      media: media.map(({ media_id, path, url, mime, kind, width, height }) => ({ media_id, path, url, mime, kind, width, height })),
     });
     if (error) toast.error(error.message);
     else {
@@ -412,12 +417,8 @@ const Composer = () => {
             {media.length > 0 && (
               <div className="flex flex-wrap gap-3">
                 {media.map((m) => (
-                  <div key={m.media_id} className="relative w-24 h-24 rounded-md overflow-hidden border bg-muted">
-                    {m.kind === 'image' ? (
-                      <img src={m.url} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <video src={m.url} className="w-full h-full object-cover" muted />
-                    )}
+                  <div key={m.media_id} className="relative rounded-md">
+                    <MediaPreview media={m} alt="Uploaded media" controls={false} muted variant="thumb" />
                     <button type="button" onClick={() => removeMedia(m.media_id)} className="absolute top-1 right-1 bg-background/80 rounded-full p-1" aria-label="Remove media">
                       <X className="w-3 h-3" />
                     </button>

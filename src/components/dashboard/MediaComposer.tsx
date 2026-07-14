@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import MediaPreview from '@/components/dashboard/MediaPreview';
 import {
   compactMedia,
   getNextQueueSlot,
@@ -322,14 +323,10 @@ const MediaComposer = ({ kind, title }: MediaComposerProps) => {
           </Card>
 
           {media.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="space-y-4">
               {media.map((item, index) => (
                 <div key={`${item.path}-${index}`} className="relative group">
-                  {isVideo ? (
-                    <video src={item.url} controls className="w-full h-48 object-cover rounded-lg border" />
-                  ) : (
-                    <img src={item.url} alt={`Upload ${index + 1}`} className="w-full h-48 object-cover rounded-lg border" />
-                  )}
+                  <MediaPreview media={item} alt={`Upload ${index + 1}`} variant="composer" />
                   <Button size="icon" variant="destructive" className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removeMedia(index)}>
                     <X className="w-4 h-4" />
                   </Button>

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import MediaPreview from "@/components/dashboard/MediaPreview";
 import { Loader2, FolderUp, Plus, X, ImagePlus } from "lucide-react";
 import { toast } from "sonner";
 
@@ -190,11 +191,13 @@ const BulkImageUpload = () => {
                   <div className="text-sm text-muted-foreground w-6">{i + 1}</div>
                   <div className="flex gap-2 flex-wrap w-32">
                     {p.images.slice(0, 4).map((img, ix) => (
-                      <img
+                      <MediaPreview
                         key={ix}
-                        src={img.url}
+                        media={{ url: img.url, kind: "image" }}
                         alt=""
-                        className="w-14 h-14 rounded object-cover border"
+                        controls={false}
+                        variant="thumb"
+                        className="h-14 w-14"
                       />
                     ))}
                     {p.images.length === 0 && (

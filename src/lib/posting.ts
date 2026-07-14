@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { getFileMediaDimensions } from '@/lib/media';
 
 export type PostStatus = 'draft' | 'queued' | 'scheduled' | 'posted' | 'failed';
 
@@ -9,6 +10,8 @@ export interface MediaRef {
   mime?: string;
   kind: 'image' | 'video';
   size?: number;
+  width?: number;
+  height?: number;
 }
 
 export type QueueSlot = { time: string; days: boolean[] };
@@ -26,7 +29,7 @@ export const hasPostBody = (content: string, media: MediaRef[] = []) =>
   content.trim().length > 0 || media.length > 0;
 
 export const compactMedia = (media: MediaRef[]) =>
-  media.map(({ media_id, path, url, mime, kind, size }) => ({ media_id, path, url, mime, kind, size }));
+  media.map(({ media_id, path, url, mime, kind, size, width, height }) => ({ media_id, path, url, mime, kind, size, width, height }));
 
 export const uploadPostMedia = async (files: File[]): Promise<MediaRef[]> => {
   const { data: { session } } = await supabase.auth.getSession();
@@ -40,6 +43,7 @@ export const uploadPostMedia = async (files: File[]): Promise<MediaRef[]> => {
   };
 
   for (const file of files) {
+    const dimensions = await getFileMediaDimensions(file);
     const initResponse = await fetch(uploadEndpoint, {
       method: 'POST',
       headers,
@@ -48,6 +52,8 @@ export const uploadPostMedia = async (files: File[]): Promise<MediaRef[]> => {
         fileName: file.name,
         mime: file.type,
         size: file.size,
+        width: dimensions?.width,
+        height: dimensions?.height,
       }),
     });
 
@@ -71,12 +77,14 @@ export const uploadPostMedia = async (files: File[]): Promise<MediaRef[]> => {
         path: init.path,
         mime: file.type,
         size: file.size,
+        width: dimensions?.width,
+        height: dimensions?.height,
       }),
     });
 
     const json = await finalizeResponse.json();
     if (!finalizeResponse.ok) throw new Error(json.error || 'Upload failed');
-    uploaded.push(json);
+    uploaded.push({ ...json, ...(dimensions ?? {}) });
   }
 
   return uploaded;
