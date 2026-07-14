@@ -4,7 +4,7 @@ import { Info } from 'lucide-react';
 
 const Drafts = () => (
   <>
-    <PostList title="Draft Posts" emptyLabel="No drafts saved" statuses={["draft"]} />
+    <PostList title="Draft Posts" emptyLabel="No drafts saved" statuses={["draft"]} layout="grid" />
     <div className="container mx-auto px-6 pb-8">
       <Alert className="border-muted">
         <Info className="h-4 w-4 text-muted-foreground" />
