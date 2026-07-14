@@ -1,0 +1,114 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabase';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { FileText, Filter, HelpCircle, Loader2, RefreshCw } from 'lucide-react';
+import twitterIcon from '@/assets/x.svg';
+import linkedinIcon from '@/assets/linkedin.svg';
+import instagramIcon from '@/assets/instagram.svg';
+import facebookIcon from '@/assets/facebook.svg';
+import youtubeIcon from '@/assets/youtube.svg';
+import threadsIcon from '@/assets/threads.svg';
+import tiktokIcon from '@/assets/tiktok.svg';
+
+const platformIcons: Record<string, string> = { twitter: twitterIcon, linkedin: linkedinIcon, instagram: instagramIcon, facebook: facebookIcon, youtube: youtubeIcon, threads: threadsIcon, tiktok: tiktokIcon };
+type Media = { kind?: 'image' | 'video'; url?: string };
+type PostRow = { id: string; content: string | null; platforms: string[] | null; status: string | null; media: Media[] | null; scheduled_at: string | null; created_at: string | null };
+
+type Props = { title: string; emptyLabel: string; statuses?: string[]; layout?: 'grid' | 'list' };
+
+const badgeClass = (status: string) => ({
+  draft: 'bg-yellow-400 text-black hover:bg-yellow-500',
+  scheduled: 'bg-cyan-400 text-black hover:bg-cyan-500',
+  queued: 'bg-blue-400 text-black hover:bg-blue-500',
+  posted: 'bg-emerald-400 text-black hover:bg-emerald-500',
+  failed: 'bg-red-400 text-black hover:bg-red-500',
+}[status] ?? '');
+
+const formatDateTime = (value?: string | null) => {
+  const date = value ? new Date(value) : null;
+  if (!date || Number.isNaN(date.getTime())) return { date: '—', time: '' };
+  return { date: date.toLocaleDateString(), time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+};
+
+const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState<PostRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState('newest');
+  const [platform, setPlatform] = useState('all');
+  const [timeFilter, setTimeFilter] = useState('all');
+
+  const loadPosts = async () => {
+    if (!user) return;
+    setLoading(true);
+    let query = supabase
+      .from('posts')
+      .select('id,content,platforms,status,media,scheduled_at,created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: sortBy === 'oldest' });
+    if (statuses?.length) query = query.in('status', statuses);
+    const { data } = await query;
+    setPosts((data ?? []) as PostRow[]);
+    setLoading(false);
+  };
+
+  useEffect(() => { if (!authLoading && !user) navigate('/login'); }, [authLoading, navigate, user]);
+  useEffect(() => { if (user) loadPosts(); }, [user, sortBy, statuses?.join(',')]);
+
+  const filteredPosts = useMemo(() => {
+    const now = new Date();
+    return posts.filter((post) => {
+      if (platform !== 'all' && !(post.platforms ?? []).includes(platform)) return false;
+      if (timeFilter === 'all') return true;
+      const basis = post.scheduled_at ?? post.created_at;
+      if (!basis) return false;
+      const date = new Date(basis);
+      if (timeFilter === 'today') return date.toDateString() === now.toDateString();
+      if (timeFilter === 'week') return now.getTime() - date.getTime() <= 7 * 24 * 60 * 60 * 1000;
+      return now.getTime() - date.getTime() <= 31 * 24 * 60 * 60 * 1000;
+    });
+  }, [platform, posts, timeFilter]);
+
+  if (authLoading || loading) return <div className="min-h-[60vh] flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+
+  return (
+    <div className="container mx-auto px-6 py-8">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2"><h1 className="text-3xl font-bold">{title}</h1><HelpCircle className="w-5 h-5 text-muted-foreground" /></div>
+        <Button variant="ghost" size="icon" onClick={loadPosts}><RefreshCw className="h-4 w-4" /></Button>
+      </div>
+      <div className="flex items-center gap-3 mb-6">
+        <Filter className="w-4 h-4 text-muted-foreground" />
+        <Select value={sortBy} onValueChange={setSortBy}><SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="newest">Newest First</SelectItem><SelectItem value="oldest">Oldest First</SelectItem></SelectContent></Select>
+        <Select value={platform} onValueChange={setPlatform}><SelectTrigger className="w-[150px]"><SelectValue /></SelectTrigger><SelectContent>{['all','twitter','instagram','facebook','linkedin','threads','youtube','tiktok'].map((item) => <SelectItem key={item} value={item}>{item === 'all' ? 'All Platforms' : item}</SelectItem>)}</SelectContent></Select>
+        <Select value={timeFilter} onValueChange={setTimeFilter}><SelectTrigger className="w-[130px]"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">All Time</SelectItem><SelectItem value="today">Today</SelectItem><SelectItem value="week">This Week</SelectItem><SelectItem value="month">This Month</SelectItem></SelectContent></Select>
+      </div>
+      <div className={layout === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-4'}>
+        {filteredPosts.length ? filteredPosts.map((post) => {
+          const { date, time } = formatDateTime(post.scheduled_at ?? post.created_at);
+          const media = post.media?.[0];
+          const status = post.status ?? 'posted';
+          const platforms = post.platforms ?? [];
+          return (
+            <Card key={post.id} className="p-4">
+              <div className="flex items-center gap-3 text-sm text-muted-foreground mb-3"><span>{date}</span><span>{time}</span></div>
+              <div className="flex items-start gap-2 mb-4"><FileText className="w-4 h-4 text-muted-foreground mt-1" /><span className="text-xs text-muted-foreground">{media?.kind ?? 'text'}</span></div>
+              {media?.url && media.kind === 'image' && <img src={media.url} alt="Post media" className="mb-4 h-36 w-full rounded-md object-cover border" />}
+              {media?.url && media.kind === 'video' && <video src={media.url} className="mb-4 h-36 w-full rounded-md object-cover border" controls />}
+              <p className="mb-4 line-clamp-4 whitespace-pre-wrap">{post.content || 'Untitled post'}</p>
+              <div className="flex items-center justify-between"><div className="flex items-center gap-2">{platforms.slice(0, 5).map((item) => platformIcons[item] && <img key={item} src={platformIcons[item]} alt={item} className="w-5 h-5" />)}</div><Badge className={badgeClass(status)}>{status}</Badge></div>
+            </Card>
+          );
+        }) : <div className={`${layout === 'grid' ? 'col-span-full ' : ''}flex items-center justify-center h-96 bg-muted/30 rounded-3xl`}><div className="text-center"><FileText className="w-16 h-16 mx-auto mb-4 text-muted-foreground" /><p className="text-lg text-muted-foreground">{emptyLabel}</p></div></div>}
+      </div>
+    </div>
+  );
+};
+
+export default PostList;
