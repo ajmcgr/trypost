@@ -103,15 +103,30 @@ Deno.serve(async (req) => {
         scheduled_for: normalizedScheduledFor,
       }));
 
-      const { error: postError } = await admin.from('posts').insert({
-        user_id: user.id,
-        content,
-        platforms,
-        status,
-        scheduled_at: normalizedScheduledFor,
-        results,
-        media,
-      });
+      const write = draftId
+        ? admin
+            .from('posts')
+            .update({
+              content,
+              platforms,
+              status,
+              scheduled_at: normalizedScheduledFor,
+              results,
+              media,
+            })
+            .eq('id', draftId)
+            .eq('user_id', user.id)
+        : admin.from('posts').insert({
+            user_id: user.id,
+            content,
+            platforms,
+            status,
+            scheduled_at: normalizedScheduledFor,
+            results,
+            media,
+          });
+
+      const { error: postError } = await write;
       if (postError) throw postError;
 
       return new Response(
@@ -121,6 +136,7 @@ Deno.serve(async (req) => {
           queued: queue,
           scheduled: !draft,
           scheduled_for: normalizedScheduledFor,
+          draft_id: draftId ?? null,
           results,
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

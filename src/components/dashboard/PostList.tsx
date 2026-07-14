@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileText, Filter, HelpCircle, Loader2, RefreshCw, Send, Trash2 } from 'lucide-react';
+import { CalendarClock, FileText, Filter, HelpCircle, Loader2, RefreshCw, Send, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import twitterIcon from '@/assets/x.svg';
 import linkedinIcon from '@/assets/linkedin.svg';
@@ -49,6 +49,7 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
   const [platform, setPlatform] = useState('all');
   const [timeFilter, setTimeFilter] = useState('all');
   const [busyPostId, setBusyPostId] = useState<string | null>(null);
+  const [busyAction, setBusyAction] = useState<'publish' | 'schedule' | 'delete' | null>(null);
 
   const loadPosts = async () => {
     if (!user) return;
@@ -70,6 +71,7 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
     if (!platforms.length) return toast.error('This draft has no selected platforms.');
 
     setBusyPostId(post.id);
+    setBusyAction('publish');
     try {
       const { data, error } = await supabase.functions.invoke('publish-post', {
         body: {
@@ -96,6 +98,40 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
       toast.error(error.message || 'Failed to publish draft.');
     } finally {
       setBusyPostId(null);
+      setBusyAction(null);
+    }
+  };
+
+  const scheduleDraft = async (post: PostRow) => {
+    const platforms = post.platforms ?? [];
+    if (!platforms.length) return toast.error('This draft has no selected platforms.');
+
+    const scheduledFor = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+
+    setBusyPostId(post.id);
+    setBusyAction('schedule');
+    try {
+      const { data, error } = await supabase.functions.invoke('publish-post', {
+        body: {
+          draftId: post.id,
+          content: post.content ?? '',
+          platforms,
+          media: post.media ?? [],
+          scheduledFor,
+        },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      const { date, time } = formatDateTime(scheduledFor);
+      toast.success(`Scheduled for ${date} ${time}`);
+      await loadPosts();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to schedule draft.');
+    } finally {
+      setBusyPostId(null);
+      setBusyAction(null);
     }
   };
 
@@ -103,6 +139,7 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
     if (getStatus(post) !== 'draft') return;
 
     setBusyPostId(post.id);
+    setBusyAction('delete');
     try {
       const { error } = await supabase
         .from('posts')
@@ -118,6 +155,7 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
       toast.error(error.message || 'Failed to delete draft.');
     } finally {
       setBusyPostId(null);
+      setBusyAction(null);
     }
   };
 
@@ -159,6 +197,9 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
           const platforms = post.platforms ?? [];
           const isDraft = status === 'draft';
           const isBusy = busyPostId === post.id;
+          const isPublishing = isBusy && busyAction === 'publish';
+          const isScheduling = isBusy && busyAction === 'schedule';
+          const isDeleting = isBusy && busyAction === 'delete';
           return (
             <Card key={post.id} className="p-4">
               <div className="flex items-center gap-3 text-sm text-muted-foreground mb-3"><span>{date}</span><span>{time}</span></div>
@@ -168,15 +209,19 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
               <p className="mb-4 line-clamp-4 whitespace-pre-wrap">{post.content || 'Untitled post'}</p>
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">{platforms.slice(0, 5).map((item) => platformIcons[item] && <img key={item} src={platformIcons[item]} alt={item} className="w-5 h-5" />)}</div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center justify-end gap-2">
                   {isDraft && (
                     <>
                       <Button size="sm" onClick={() => publishDraft(post)} disabled={isBusy}>
-                        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+                        {isPublishing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
                         Post now
                       </Button>
+                      <Button size="sm" variant="outline" onClick={() => scheduleDraft(post)} disabled={isBusy}>
+                        {isScheduling ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CalendarClock className="mr-2 h-4 w-4" />}
+                        Schedule
+                      </Button>
                       <Button size="sm" variant="outline" onClick={() => deleteDraft(post)} disabled={isBusy}>
-                        <Trash2 className="mr-2 h-4 w-4" />
+                        {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
                         Delete
                       </Button>
                     </>
