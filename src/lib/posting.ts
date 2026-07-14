@@ -53,10 +53,39 @@ export const uploadPostMedia = async (files: File[]): Promise<MediaRef[]> => {
 };
 
 export const publishPost = async (payload: PublishPostPayload) => {
+  const media = compactMedia(payload.media ?? []);
+
+  if (payload.draft || payload.scheduledFor || payload.queue) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
+
+    const status: PostStatus = payload.draft ? 'draft' : payload.queue ? 'queued' : 'scheduled';
+    const scheduledAt = payload.scheduledFor ?? null;
+    const results = payload.platforms.map((platform) => ({
+      platform,
+      success: true,
+      status,
+      scheduled_for: scheduledAt,
+    }));
+
+    const { data, error } = await supabase.from('posts').insert({
+      user_id: user.id,
+      content: payload.content,
+      platforms: payload.platforms,
+      status,
+      scheduled_at: scheduledAt,
+      results,
+      media,
+    }).select().single();
+
+    if (error) throw error;
+    return { success: true, status, scheduled_for: scheduledAt, results, post: data };
+  }
+
   const { data, error } = await supabase.functions.invoke('publish-post', {
     body: {
       ...payload,
-      media: compactMedia(payload.media ?? []),
+      media,
     },
   });
 
