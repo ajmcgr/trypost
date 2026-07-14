@@ -33,19 +33,49 @@ export const uploadPostMedia = async (files: File[]): Promise<MediaRef[]> => {
   if (!session) throw new Error('Not authenticated');
 
   const uploaded: MediaRef[] = [];
+  const uploadEndpoint = `${(supabase as any).supabaseUrl}/functions/v1/upload-media`;
+  const headers = {
+    Authorization: `Bearer ${session.access_token}`,
+    'Content-Type': 'application/json',
+  };
 
   for (const file of files) {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const response = await fetch(`${(supabase as any).supabaseUrl}/functions/v1/upload-media`, {
+    const initResponse = await fetch(uploadEndpoint, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${session.access_token}` },
-      body: formData,
+      headers,
+      body: JSON.stringify({
+        action: 'init',
+        fileName: file.name,
+        mime: file.type,
+        size: file.size,
+      }),
     });
 
-    const json = await response.json();
-    if (!response.ok) throw new Error(json.error || 'Upload failed');
+    const init = await initResponse.json();
+    if (!initResponse.ok) throw new Error(init.error || 'Upload failed');
+
+    const { error: uploadError } = await supabase.storage
+      .from('post-media')
+      .uploadToSignedUrl(init.path, init.token, file, {
+        contentType: file.type || 'application/octet-stream',
+      });
+
+    if (uploadError) throw new Error(uploadError.message || 'Upload failed');
+
+    const finalizeResponse = await fetch(uploadEndpoint, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        action: 'finalize',
+        media_id: init.media_id,
+        path: init.path,
+        mime: file.type,
+        size: file.size,
+      }),
+    });
+
+    const json = await finalizeResponse.json();
+    if (!finalizeResponse.ok) throw new Error(json.error || 'Upload failed');
     uploaded.push(json);
   }
 
