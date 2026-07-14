@@ -17,7 +17,8 @@ import tiktokIcon from '@/assets/tiktok.svg';
 
 const platformIcons: Record<string, string> = { twitter: twitterIcon, linkedin: linkedinIcon, instagram: instagramIcon, facebook: facebookIcon, youtube: youtubeIcon, threads: threadsIcon, tiktok: tiktokIcon };
 type Media = { kind?: 'image' | 'video'; url?: string };
-type PostRow = { id: string; content: string | null; platforms: string[] | null; status: string | null; media: Media[] | null; scheduled_at: string | null; created_at: string | null };
+type Result = { status?: string; scheduled_for?: string; success?: boolean };
+type PostRow = { id: string; content: string | null; platforms: string[] | null; status: string | null; media: Media[] | null; results: Result[] | null; scheduled_at: string | null; created_at: string | null };
 
 type Props = { title: string; emptyLabel: string; statuses?: string[]; layout?: 'grid' | 'list' };
 
@@ -28,6 +29,9 @@ const badgeClass = (status: string) => ({
   posted: 'bg-emerald-400 text-black hover:bg-emerald-500',
   failed: 'bg-red-400 text-black hover:bg-red-500',
 }[status] ?? '');
+
+const getStatus = (post: PostRow) => post.status ?? post.results?.[0]?.status ?? (post.results?.some((result) => result.success) ? 'posted' : 'posted');
+const getTimestamp = (post: PostRow) => post.scheduled_at ?? post.results?.[0]?.scheduled_for ?? post.created_at;
 
 const formatDateTime = (value?: string | null) => {
   const date = value ? new Date(value) : null;
@@ -47,33 +51,33 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
   const loadPosts = async () => {
     if (!user) return;
     setLoading(true);
-    let query = supabase
+    const { data } = await supabase
       .from('posts')
-      .select('id,content,platforms,status,media,scheduled_at,created_at')
+      .select('id,content,platforms,status,media,results,scheduled_at,created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: sortBy === 'oldest' });
-    if (statuses?.length) query = query.in('status', statuses);
-    const { data } = await query;
     setPosts((data ?? []) as PostRow[]);
     setLoading(false);
   };
 
   useEffect(() => { if (!authLoading && !user) navigate('/login'); }, [authLoading, navigate, user]);
-  useEffect(() => { if (user) loadPosts(); }, [user, sortBy, statuses?.join(',')]);
+  useEffect(() => { if (user) loadPosts(); }, [user, sortBy]);
 
   const filteredPosts = useMemo(() => {
     const now = new Date();
     return posts.filter((post) => {
+      const status = getStatus(post);
+      if (statuses?.length && !statuses.includes(status)) return false;
       if (platform !== 'all' && !(post.platforms ?? []).includes(platform)) return false;
       if (timeFilter === 'all') return true;
-      const basis = post.scheduled_at ?? post.created_at;
+      const basis = getTimestamp(post);
       if (!basis) return false;
       const date = new Date(basis);
       if (timeFilter === 'today') return date.toDateString() === now.toDateString();
       if (timeFilter === 'week') return now.getTime() - date.getTime() <= 7 * 24 * 60 * 60 * 1000;
       return now.getTime() - date.getTime() <= 31 * 24 * 60 * 60 * 1000;
     });
-  }, [platform, posts, timeFilter]);
+  }, [platform, posts, statuses, timeFilter]);
 
   if (authLoading || loading) return <div className="min-h-[60vh] flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
 
@@ -91,9 +95,9 @@ const PostList = ({ title, emptyLabel, statuses, layout = 'list' }: Props) => {
       </div>
       <div className={layout === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-4'}>
         {filteredPosts.length ? filteredPosts.map((post) => {
-          const { date, time } = formatDateTime(post.scheduled_at ?? post.created_at);
+          const { date, time } = formatDateTime(getTimestamp(post));
           const media = post.media?.[0];
-          const status = post.status ?? 'posted';
+          const status = getStatus(post);
           const platforms = post.platforms ?? [];
           return (
             <Card key={post.id} className="p-4">
