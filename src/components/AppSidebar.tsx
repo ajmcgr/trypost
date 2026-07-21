@@ -61,7 +61,6 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path;
 
   return (
-  return (
     <Sidebar className={collapsed ? "w-20" : "w-64"} collapsible="icon">
       <SidebarHeader className="px-4 pt-4 pb-2">
         <NavLink to="/dashboard" className="flex items-center">
