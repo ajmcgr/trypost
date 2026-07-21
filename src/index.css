@@ -43,6 +43,8 @@ All colors MUST be HSL.
 
     --primary: 210 82% 45%;
     --primary-foreground: 0 0% 100%;
+    --brand-blue: 210 82% 45%;
+    --brand-blue-foreground: 0 0% 100%;
     
     --accent-green: 88 68% 62%;
     --accent-green-foreground: 0 0% 0%;
