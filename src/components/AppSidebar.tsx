@@ -47,7 +47,10 @@ const footerItems = [
 ];
 
 const itemClasses =
-  "h-10 rounded-full px-4 gap-3 text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:font-semibold [&>svg]:!size-[18px]";
+  "h-10 rounded-xl px-4 gap-3 text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:font-semibold [&>svg]:!size-[18px]";
+
+const ctaItemClasses =
+  "h-10 rounded-xl px-4 gap-3 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm [&>svg]:!size-[18px]";
 
 export function AppSidebar() {
   const { state, toggleSidebar } = useSidebar();
@@ -75,13 +78,17 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton onClick={toggleSidebar} className={itemClasses}>
               <PanelLeft />
-              {!collapsed && <span>Collapse</span>}
+              {!collapsed && <span className="text-xs">Collapse</span>}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           {mainItems.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={isActive(item.url)} className={itemClasses}>
+              <SidebarMenuButton
+                asChild
+                isActive={isActive(item.url)}
+                className={item.title === "New post" ? ctaItemClasses : itemClasses}
+              >
                 <NavLink to={item.url}>
                   <item.icon />
                   {!collapsed && <span>{item.title}</span>}
