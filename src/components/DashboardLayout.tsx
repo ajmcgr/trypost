@@ -5,6 +5,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSwitcher } from "@/components/WorkspaceSwitcher";
 import { NotificationsBell } from "@/components/NotificationsBell";
+import { UserMenu } from "@/components/UserMenu";
 import { initNotificationsPatch } from "@/lib/notifications";
 import { Loader2 } from "lucide-react";
 
@@ -41,6 +42,7 @@ const DashboardLayout = () => {
           <header className="h-14 border-b bg-card flex items-center justify-end gap-2 px-4">
             <WorkspaceSwitcher />
             <NotificationsBell />
+            <UserMenu />
           </header>
           <main className="flex-1 overflow-auto">
             <Outlet />
