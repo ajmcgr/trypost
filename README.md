@@ -64,6 +64,34 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/b66a73b2-5867-47f9-ac1f-66b2cb014a04) and click on Share -> Publish.
 
+## Scheduled publishing worker
+
+Scheduled posts are processed by the `run-scheduled-posts` Supabase Edge Function. Deploy it alongside `publish-post`, then trigger it from GitHub Actions or Supabase cron/pg_net.
+
+```sh
+supabase functions deploy publish-post run-scheduled-posts --project-ref qfqowhetrxritoyjzzcz
+supabase secrets set SCHEDULED_WORKER_SECRET=<strong-random-secret> --project-ref qfqowhetrxritoyjzzcz
+gh secret set SCHEDULED_WORKER_SECRET --repo ajmcgr/trypost
+```
+
+The included GitHub Actions workflow runs every five minutes and can also be triggered manually from the Actions tab.
+
+Optional one-minute Supabase cron SQL:
+
+```sql
+select cron.schedule(
+  'run-scheduled-posts-every-minute',
+  '* * * * *',
+  $$
+  select net.http_post(
+    url := 'https://qfqowhetrxritoyjzzcz.supabase.co/functions/v1/run-scheduled-posts',
+    headers := '{"Content-Type":"application/json","x-scheduler-secret":"<strong-random-secret>"}'::jsonb,
+    body := '{"batchSize":10}'::jsonb
+  );
+  $$
+);
+```
+
 ## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!

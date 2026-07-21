@@ -8,7 +8,7 @@ import { createHmac } from 'https://deno.land/std@0.177.0/node/crypto.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-scheduler-secret',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
@@ -19,6 +19,7 @@ type Platform =
 interface MediaRef { path: string; url: string; kind: 'image' | 'video'; mime?: string; size?: number }
 
 interface PublishRequest {
+  userId?: string;
   content: string;
   platforms: Platform[];
   media?: MediaRef[];
@@ -57,33 +58,56 @@ function createAdminClient() {
   );
 }
 
+function isInternalRequest(req: Request, body: PublishRequest) {
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  const schedulerSecret = Deno.env.get('SCHEDULED_WORKER_SECRET') ?? Deno.env.get('CRON_SECRET');
+  const bearer = req.headers.get('Authorization')?.replace(/^Bearer\s+/i, '');
+  const schedulerHeader = req.headers.get('x-scheduler-secret');
+
+  return Boolean(
+    body.userId &&
+      (
+        (serviceRoleKey && bearer === serviceRoleKey) ||
+        (schedulerSecret && schedulerHeader === schedulerSecret)
+      )
+  );
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) throw new Error('Missing authorization header');
-
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: authHeader } } }
-    );
+    const body: PublishRequest = await req.json();
     const admin = createAdminClient();
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) throw new Error('Unauthorized');
+    let userId = body.userId ?? '';
+    let connectionClient: SupabaseClient = admin;
 
-    const body: PublishRequest = await req.json();
+    if (!isInternalRequest(req, body)) {
+      const supabase = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+        { global: { headers: { Authorization: authHeader } } }
+      );
+
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error('Unauthorized');
+
+      userId = user.id;
+      connectionClient = supabase;
+    }
+
     const { content = '', platforms = [], media = [], draftId, scheduledFor, queue = false, draft = false } = body;
 
     if (!platforms.length && !draft) throw new Error('Select at least one platform');
     if (!content.trim() && media.length === 0) throw new Error('Empty post');
 
-    const { data: connections, error: connErr } = await supabase
+    const { data: connections, error: connErr } = await connectionClient
       .from('oauth_connections')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .in('platform', platforms)
       .eq('is_connected', true);
     if (connErr) throw connErr;
@@ -115,9 +139,9 @@ Deno.serve(async (req) => {
               media,
             })
             .eq('id', draftId)
-            .eq('user_id', user.id)
+            .eq('user_id', userId)
         : admin.from('posts').insert({
-            user_id: user.id,
+            user_id: userId,
             content,
             platforms,
             status,
@@ -186,9 +210,9 @@ Deno.serve(async (req) => {
             scheduled_at: null,
           })
           .eq('id', draftId)
-          .eq('user_id', user.id)
+          .eq('user_id', userId)
       : admin.from('posts').insert({
-          user_id: user.id,
+          user_id: userId,
           content,
           platforms,
           status,
