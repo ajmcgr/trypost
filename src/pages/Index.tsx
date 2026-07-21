@@ -73,7 +73,7 @@ const Index = () => {
             ) : (
               <>
                 <Link to="/login">
-                  <Button variant="ghost" size="sm">Log In</Button>
+                  <Button variant="ghost" size="sm">Login</Button>
                 </Link>
                 <Link to="/signup">
                   <Button size="lg" className="text-sm">Sign Up →</Button>
