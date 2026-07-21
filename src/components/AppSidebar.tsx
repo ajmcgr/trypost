@@ -153,58 +153,13 @@ export function AppSidebar() {
         <SidebarContent>
           {/* Logo */}
           <div className="p-3 border-b">
-            <NavLink to="/dashboard" className="flex mb-3">
+            <NavLink to="/dashboard" className="flex">
               <img 
                 src={collapsed ? postIcon : postLogo} 
                 alt="Post" 
                 className={collapsed ? "h-8 w-8 object-contain" : "h-7"} 
               />
             </NavLink>
-
-            {/* Workspace Selector */}
-            {!collapsed && (
-              <div>
-                <p className="text-xs text-muted-foreground mb-2 px-2">Workspace</p>
-                <Popover open={workspaceOpen} onOpenChange={setWorkspaceOpen}>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" className="w-full justify-between hover:bg-muted/50">
-                      <div className="flex items-center gap-2">
-                        <Home className="h-4 w-4" />
-                        <span>{currentWorkspace}</span>
-                      </div>
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-64 p-2" align="start">
-                    <div className="space-y-1">
-                      <Button
-                        variant="secondary"
-                        className="w-full justify-start"
-                      >
-                        <Home className="mr-2 h-4 w-4" />
-                        {currentWorkspace}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start"
-                        onClick={handleManageWorkspaces}
-                      >
-                        <Settings className="mr-2 h-4 w-4" />
-                        Manage Workspaces
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start"
-                        onClick={handleNewWorkspace}
-                      >
-                        <Plus className="mr-2 h-4 w-4" />
-                        New Workspace
-                      </Button>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
-            )}
           </div>
 
         {/* Collapse Toggle */}
