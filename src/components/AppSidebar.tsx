@@ -15,8 +15,6 @@ import {
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
-import postLogo from "@/assets/post-logo.png";
-import { cn } from "@/lib/utils";
 
 import {
   Sidebar,
