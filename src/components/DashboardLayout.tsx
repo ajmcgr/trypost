@@ -3,7 +3,13 @@ import { useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { WorkspaceSwitcher } from "@/components/WorkspaceSwitcher";
+import { NotificationsBell } from "@/components/NotificationsBell";
+import { initNotificationsPatch } from "@/lib/notifications";
 import { Loader2 } from "lucide-react";
+
+initNotificationsPatch();
+
 
 const DashboardLayout = () => {
   const { user, loading } = useAuth();
@@ -32,7 +38,9 @@ const DashboardLayout = () => {
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         <div className="flex-1 flex flex-col">
-          <header className="h-14 border-b bg-card flex items-center px-4">
+          <header className="h-14 border-b bg-card flex items-center justify-end gap-2 px-4">
+            <WorkspaceSwitcher />
+            <NotificationsBell />
           </header>
           <main className="flex-1 overflow-auto">
             <Outlet />
