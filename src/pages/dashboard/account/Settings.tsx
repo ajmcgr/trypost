@@ -84,13 +84,13 @@ const Settings = () => {
       <h1 className="text-4xl mb-8 font-serif">Settings</h1>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
-        <div className="flex justify-center mb-6">
-          <TabsList className="bg-muted/60 rounded-full p-1 h-auto">
+        <div className="mb-6">
+          <TabsList className="bg-muted/60 rounded-xl p-1 h-auto">
             {TAB_LIST.map((t) => (
               <TabsTrigger
                 key={t}
                 value={t}
-                className="rounded-full px-5 py-2 text-sm capitalize data-[state=active]:bg-foreground data-[state=active]:text-background"
+                className="rounded-xl px-5 py-2 text-sm capitalize data-[state=active]:bg-foreground data-[state=active]:text-background"
               >
                 {t}
               </TabsTrigger>
