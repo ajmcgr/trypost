@@ -152,7 +152,7 @@ export function AppSidebar() {
       className="group peer hidden text-sidebar-foreground md:flex flex-col border-r bg-sidebar shrink-0"
       style={
         {
-          width: collapsed ? "var(--sidebar-width-icon)" : "var(--sidebar-width)",
+          width: collapsed ? "4rem" : "var(--sidebar-width)",
         } as React.CSSProperties
       }
     >
