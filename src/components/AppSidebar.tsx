@@ -60,7 +60,7 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path;
 
   return (
-    <Sidebar className={collapsed ? "w-20" : "w-64"} collapsible="icon">
+    <Sidebar className={`${collapsed ? "w-20" : "w-64"} top-14 h-[calc(100vh-3.5rem)]`} collapsible="icon">
       <SidebarContent className="gap-0">
         <SidebarMenu className="px-3 gap-1 pt-2">
           <SidebarMenuItem>
