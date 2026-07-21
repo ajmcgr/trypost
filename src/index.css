@@ -31,6 +31,9 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  h1 {
+    font-family: 'Reckless', serif;
+  }
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
