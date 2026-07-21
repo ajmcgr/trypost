@@ -61,19 +61,8 @@ export function AppSidebar() {
   return (
     <Sidebar className={collapsed ? "w-20" : "w-64"} collapsible="icon">
       <SidebarContent className="gap-0">
-        {/* Logo */}
-        <div className="p-4">
-          <NavLink to="/dashboard" className="flex">
-            <img
-              src={postLogo}
-              alt="Post"
-              className="h-7 w-auto object-contain"
-            />
-          </NavLink>
-        </div>
-
         {/* Menu */}
-        <SidebarMenu className="px-3 gap-1">
+        <SidebarMenu className="px-3 gap-1 pt-2">
           <SidebarMenuItem>
             <SidebarMenuButton onClick={toggleSidebar} className={itemClasses}>
               <PanelLeft />
