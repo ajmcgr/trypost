@@ -16,9 +16,8 @@ import {
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
-  Sheet,
-  SheetContent,
   SidebarContent,
   SidebarFooter,
   SidebarMenu,
