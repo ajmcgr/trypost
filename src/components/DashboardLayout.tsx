@@ -40,7 +40,7 @@ const DashboardLayout = () => {
       <div className="min-h-screen flex flex-col w-full bg-background">
         <header className="h-14 flex items-center justify-between gap-2 px-4 shrink-0 border-b">
           <NavLink to="/dashboard" className="flex items-center">
-            <img src={postLogo} alt="Post" className="h-6 w-auto object-contain" />
+            <img src={postLogo} alt="Post" className="h-7 w-auto object-contain" />
           </NavLink>
           <div className="flex items-center gap-2">
             <WorkspaceSwitcher />
