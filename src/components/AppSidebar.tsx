@@ -61,7 +61,7 @@ function SidebarMenuContent({ collapsed, isActive, onItemClick, toggleSidebar }:
   return (
     <>
       <SidebarContent className="gap-0">
-        <SidebarMenu className="px-3 gap-1 pt-2">
+        <SidebarMenu className="px-3 gap-1 pt-2 group-data-[collapsible=icon]:px-0">
           <SidebarMenuItem>
             <SidebarMenuButton onClick={toggleSidebar} className={itemClasses}>
               <PanelLeft />
