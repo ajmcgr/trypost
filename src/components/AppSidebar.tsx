@@ -59,15 +59,15 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path;
 
   return (
-    <Sidebar className={collapsed ? "w-14" : "w-64"} collapsible="icon">
+    <Sidebar className={collapsed ? "w-20" : "w-64"} collapsible="icon">
       <SidebarContent className="gap-0">
         {/* Logo */}
         <div className="p-4">
           <NavLink to="/dashboard" className="flex">
             <img
-              src={collapsed ? postIcon : postLogo}
+              src={postLogo}
               alt="Post"
-              className={collapsed ? "h-8 w-8 object-contain" : "h-7"}
+              className="h-7 w-auto object-contain"
             />
           </NavLink>
         </div>
