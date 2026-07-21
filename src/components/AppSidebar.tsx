@@ -43,7 +43,7 @@ const mainItems = [
 
 const footerItems = [
   { title: "Settings", url: "/dashboard/account/settings", icon: Settings },
-  { title: "Help", url: "/dashboard/account/support", icon: HelpCircle },
+  { title: "Help", url: "mailto:alex@trypost.ai", icon: HelpCircle },
 ];
 
 const itemClasses =
@@ -89,16 +89,26 @@ export function AppSidebar() {
 
       <SidebarFooter className="pb-4">
         <SidebarMenu className="px-3 gap-1">
-          {footerItems.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={isActive(item.url)} className={itemClasses}>
-                <NavLink to={item.url}>
-                  <item.icon />
-                  {!collapsed && <span>{item.title}</span>}
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {footerItems.map((item) => {
+            const isExternal = item.url.startsWith("mailto:") || item.url.startsWith("http");
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild isActive={!isExternal && isActive(item.url)} className={itemClasses}>
+                  {isExternal ? (
+                    <a href={item.url}>
+                      <item.icon />
+                      {!collapsed && <span>{item.title}</span>}
+                    </a>
+                  ) : (
+                    <NavLink to={item.url}>
+                      <item.icon />
+                      {!collapsed && <span>{item.title}</span>}
+                    </NavLink>
+                  )}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
