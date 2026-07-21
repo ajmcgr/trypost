@@ -40,7 +40,7 @@ const DashboardLayout = () => {
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center justify-end gap-2 px-4 shrink-0">
+          <header className="h-14 flex items-center justify-end gap-2 px-4 shrink-0 border-b">
             <WorkspaceSwitcher />
             <NotificationsBell />
             <UserMenu />
