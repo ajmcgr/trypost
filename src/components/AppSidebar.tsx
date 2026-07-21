@@ -78,13 +78,17 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton onClick={toggleSidebar} className={itemClasses}>
               <PanelLeft />
-              {!collapsed && <span>Collapse</span>}
+              {!collapsed && <span className="text-xs">Collapse</span>}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           {mainItems.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={isActive(item.url)} className={itemClasses}>
+              <SidebarMenuButton
+                asChild
+                isActive={isActive(item.url)}
+                className={item.title === "New post" ? ctaItemClasses : itemClasses}
+              >
                 <NavLink to={item.url}>
                   <item.icon />
                   {!collapsed && <span>{item.title}</span>}
