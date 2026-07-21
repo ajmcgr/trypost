@@ -208,8 +208,11 @@ export function AppSidebar() {
           </div>
 
         {/* Collapse Toggle */}
-        <div className="px-3 pt-3 flex justify-end">
+        <div className="px-3 pt-3 flex items-center justify-between">
           <SidebarTrigger />
+          {!collapsed && (
+            <span className="text-sm font-medium text-sidebar-foreground">Collapse</span>
+          )}
         </div>
 
         {/* Create Post Button */}
