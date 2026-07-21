@@ -50,7 +50,7 @@ const itemClasses =
   "h-10 rounded-xl px-4 gap-3 text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:font-semibold [&>svg]:!size-[18px]";
 
 const ctaItemClasses =
-  "h-10 rounded-xl px-4 gap-3 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm [&>svg]:!size-[18px]";
+  "h-10 rounded-xl px-4 gap-3 text-sm font-semibold bg-brand-blue text-brand-blue-foreground hover:bg-brand-blue/90 shadow-sm [&>svg]:!size-[18px]";
 
 export function AppSidebar() {
   const { state, toggleSidebar } = useSidebar();
