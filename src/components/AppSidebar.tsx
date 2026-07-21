@@ -16,17 +16,15 @@ import {
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
-  Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-
 
 const mainItems = [
   { title: "New post", url: "/dashboard", icon: FileEdit },
@@ -52,15 +50,16 @@ const itemClasses =
 const ctaItemClasses =
   "h-10 rounded-xl px-4 gap-3 text-sm font-semibold bg-brand-blue text-brand-blue-foreground hover:bg-brand-blue/90 shadow-sm [&>svg]:!size-[18px]";
 
-export function AppSidebar() {
-  const { state, toggleSidebar } = useSidebar();
-  const location = useLocation();
-  const currentPath = location.pathname;
-  const collapsed = state === "collapsed";
-  const isActive = (path: string) => currentPath === path;
+interface SidebarMenuProps {
+  collapsed: boolean;
+  isActive: (path: string) => boolean;
+  onItemClick?: () => void;
+  toggleSidebar: () => void;
+}
 
+function SidebarMenuContent({ collapsed, isActive, onItemClick, toggleSidebar }: SidebarMenuProps) {
   return (
-    <Sidebar className={`${collapsed ? "w-20" : "w-64"} top-14 h-[calc(100vh-3.5rem)]`} collapsible="icon">
+    <>
       <SidebarContent className="gap-0">
         <SidebarMenu className="px-3 gap-1 pt-2">
           <SidebarMenuItem>
@@ -76,6 +75,7 @@ export function AppSidebar() {
                 asChild
                 isActive={isActive(item.url)}
                 className={item.title === "New post" ? ctaItemClasses : itemClasses}
+                onClick={onItemClick}
               >
                 <NavLink to={item.url}>
                   <item.icon />
@@ -93,7 +93,7 @@ export function AppSidebar() {
             const isExternal = item.url.startsWith("mailto:") || item.url.startsWith("http");
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild isActive={!isExternal && isActive(item.url)} className={itemClasses}>
+                <SidebarMenuButton asChild isActive={!isExternal && isActive(item.url)} className={itemClasses} onClick={onItemClick}>
                   {isExternal ? (
                     <a href={item.url}>
                       <item.icon />
@@ -111,6 +111,58 @@ export function AppSidebar() {
           })}
         </SidebarMenu>
       </SidebarFooter>
-    </Sidebar>
+    </>
+  );
+}
+
+export function AppSidebar() {
+  const { isMobile, state, toggleSidebar, openMobile, setOpenMobile } = useSidebar();
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const collapsed = state === "collapsed";
+  const isActive = (path: string) => currentPath === path;
+
+  if (isMobile) {
+    return (
+      <Sheet open={openMobile} onOpenChange={setOpenMobile}>
+        <SheetContent
+          data-sidebar="sidebar"
+          data-mobile="true"
+          className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+          style={{ "--sidebar-width": "18rem" } as React.CSSProperties}
+          side="left"
+        >
+          <div className="flex h-full w-full flex-col">
+            <SidebarMenuContent
+              collapsed={false}
+              isActive={isActive}
+              toggleSidebar={toggleSidebar}
+              onItemClick={() => setOpenMobile(false)}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return (
+    <div
+      data-state={state}
+      data-collapsible={state === "collapsed" ? "icon" : ""}
+      className="group peer hidden text-sidebar-foreground md:flex flex-col border-r bg-sidebar shrink-0"
+      style={
+        {
+          width: collapsed ? "var(--sidebar-width-icon)" : "var(--sidebar-width)",
+        } as React.CSSProperties
+      }
+    >
+      <div className="flex h-full w-full flex-col">
+        <SidebarMenuContent
+          collapsed={collapsed}
+          isActive={isActive}
+          toggleSidebar={toggleSidebar}
+        />
+      </div>
+    </div>
   );
 }

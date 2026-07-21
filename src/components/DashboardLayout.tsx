@@ -38,7 +38,7 @@ const DashboardLayout = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex flex-col w-full bg-background">
-        <header className="h-14 flex items-center justify-between gap-2 px-4 shrink-0 border-b">
+        <header className="sticky top-0 z-50 bg-background h-14 flex items-center justify-between gap-2 px-4 shrink-0 border-b">
           <NavLink to="/dashboard" className="flex items-center">
             <img src={postLogo} alt="Post" className="h-7 w-auto object-contain" />
           </NavLink>
@@ -48,9 +48,9 @@ const DashboardLayout = () => {
             <UserMenu />
           </div>
         </header>
-        <div className="flex-1 flex min-w-0 min-h-0">
+        <div className="flex flex-1 min-w-0">
           <AppSidebar />
-          <main className="flex-1 overflow-auto">
+          <main className="flex-1 min-w-0">
             <Outlet />
           </main>
         </div>
