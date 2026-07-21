@@ -28,15 +28,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
 
 const mainItems = [
   { title: "New post", url: "/dashboard", icon: FileEdit },
@@ -70,9 +61,14 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path;
 
   return (
+  return (
     <Sidebar className={collapsed ? "w-20" : "w-64"} collapsible="icon">
+      <SidebarHeader className="px-4 pt-4 pb-2">
+        <NavLink to="/dashboard" className="flex items-center">
+          <img src={postLogo} alt="Post" className="h-6 w-auto object-contain" />
+        </NavLink>
+      </SidebarHeader>
       <SidebarContent className="gap-0">
-        {/* Menu */}
         <SidebarMenu className="px-3 gap-1 pt-2">
           <SidebarMenuItem>
             <SidebarMenuButton onClick={toggleSidebar} className={itemClasses}>
