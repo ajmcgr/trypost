@@ -37,19 +37,19 @@ const DashboardLayout = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
-        <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center justify-between gap-2 px-4 shrink-0 border-b">
-            <NavLink to="/dashboard" className="flex items-center">
-              <img src={postLogo} alt="Post" className="h-6 w-auto object-contain" />
-            </NavLink>
-            <div className="flex items-center gap-2">
-              <WorkspaceSwitcher />
-              <NotificationsBell />
-              <UserMenu />
-            </div>
-          </header>
+      <div className="min-h-screen flex flex-col w-full bg-background">
+        <header className="h-14 flex items-center justify-between gap-2 px-4 shrink-0 border-b">
+          <NavLink to="/dashboard" className="flex items-center">
+            <img src={postLogo} alt="Post" className="h-6 w-auto object-contain" />
+          </NavLink>
+          <div className="flex items-center gap-2">
+            <WorkspaceSwitcher />
+            <NotificationsBell />
+            <UserMenu />
+          </div>
+        </header>
+        <div className="flex-1 flex min-w-0 min-h-0">
+          <AppSidebar />
           <main className="flex-1 overflow-auto">
             <Outlet />
           </main>
