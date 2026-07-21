@@ -45,10 +45,10 @@ const footerItems = [
 ];
 
 const itemClasses =
-  "h-10 rounded-xl px-4 gap-3 text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:font-semibold [&>svg]:!size-[18px]";
+  "h-10 rounded-xl px-4 gap-3 text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:font-semibold [&>svg]:!size-[18px] group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!p-2.5";
 
 const ctaItemClasses =
-  "h-10 rounded-xl px-4 gap-3 text-sm font-semibold bg-brand-blue text-brand-blue-foreground hover:bg-brand-blue/90 shadow-sm [&>svg]:!size-[18px]";
+  "h-10 rounded-xl px-4 gap-3 text-sm font-semibold bg-brand-blue text-brand-blue-foreground hover:bg-brand-blue/90 shadow-sm [&>svg]:!size-[18px] group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!p-2.5";
 
 interface SidebarMenuProps {
   collapsed: boolean;
@@ -61,7 +61,7 @@ function SidebarMenuContent({ collapsed, isActive, onItemClick, toggleSidebar }:
   return (
     <>
       <SidebarContent className="gap-0">
-        <SidebarMenu className="px-3 gap-1 pt-2">
+        <SidebarMenu className="px-3 gap-1 pt-2 group-data-[collapsible=icon]:px-0">
           <SidebarMenuItem>
             <SidebarMenuButton onClick={toggleSidebar} className={itemClasses}>
               <PanelLeft />
@@ -88,7 +88,7 @@ function SidebarMenuContent({ collapsed, isActive, onItemClick, toggleSidebar }:
       </SidebarContent>
 
       <SidebarFooter className="pb-4">
-        <SidebarMenu className="px-3 gap-1">
+        <SidebarMenu className="px-3 gap-1 group-data-[collapsible=icon]:px-0">
           {footerItems.map((item) => {
             const isExternal = item.url.startsWith("mailto:") || item.url.startsWith("http");
             return (
@@ -152,7 +152,7 @@ export function AppSidebar() {
       className="group peer hidden text-sidebar-foreground md:flex flex-col border-r bg-sidebar shrink-0"
       style={
         {
-          width: collapsed ? "var(--sidebar-width-icon)" : "var(--sidebar-width)",
+          width: collapsed ? "4rem" : "var(--sidebar-width)",
         } as React.CSSProperties
       }
     >
