@@ -16,6 +16,7 @@ import {
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import postLogo from "@/assets/post-logo.png";
+import { cn } from "@/lib/utils";
 
 import {
   Sidebar,
@@ -61,52 +62,54 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path;
 
   return (
-    <Sidebar className={collapsed ? "w-20" : "w-64"} collapsible="icon">
-      <SidebarHeader className="px-4 pt-4 pb-2">
+    <Sidebar className={cn(collapsed ? "w-20" : "w-64", "border-r-0")} collapsible="icon">
+      <SidebarHeader className="px-4 pt-4 pb-2 border-b">
         <NavLink to="/dashboard" className="flex items-center">
           <img src={postLogo} alt="Post" className="h-6 w-auto object-contain" />
         </NavLink>
       </SidebarHeader>
-      <SidebarContent className="gap-0">
-        <SidebarMenu className="px-3 gap-1 pt-2">
-          <SidebarMenuItem>
-            <SidebarMenuButton onClick={toggleSidebar} className={itemClasses}>
-              <PanelLeft />
-              {!collapsed && <span className="text-xs">Collapse</span>}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          {mainItems.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                asChild
-                isActive={isActive(item.url)}
-                className={item.title === "New post" ? ctaItemClasses : itemClasses}
-              >
-                <NavLink to={item.url}>
-                  <item.icon />
-                  {!collapsed && <span>{item.title}</span>}
-                </NavLink>
+      <div className="flex-1 flex flex-col border-r">
+        <SidebarContent className="gap-0">
+          <SidebarMenu className="px-3 gap-1 pt-2">
+            <SidebarMenuItem>
+              <SidebarMenuButton onClick={toggleSidebar} className={itemClasses}>
+                <PanelLeft />
+                {!collapsed && <span className="text-xs">Collapse</span>}
               </SidebarMenuButton>
             </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarContent>
 
-      <SidebarFooter className="pb-4">
-        <SidebarMenu className="px-3 gap-1">
-          {footerItems.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={isActive(item.url)} className={itemClasses}>
-                <NavLink to={item.url}>
-                  <item.icon />
-                  {!collapsed && <span>{item.title}</span>}
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarFooter>
+            {mainItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive(item.url)}
+                  className={item.title === "New post" ? ctaItemClasses : itemClasses}
+                >
+                  <NavLink to={item.url}>
+                    <item.icon />
+                    {!collapsed && <span>{item.title}</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarContent>
+
+        <SidebarFooter className="pb-4">
+          <SidebarMenu className="px-3 gap-1">
+            {footerItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild isActive={isActive(item.url)} className={itemClasses}>
+                  <NavLink to={item.url}>
+                    <item.icon />
+                    {!collapsed && <span>{item.title}</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarFooter>
+      </div>
     </Sidebar>
   );
 }
