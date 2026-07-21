@@ -88,7 +88,7 @@ function SidebarMenuContent({ collapsed, isActive, onItemClick, toggleSidebar }:
       </SidebarContent>
 
       <SidebarFooter className="pb-4">
-        <SidebarMenu className="px-3 gap-1">
+        <SidebarMenu className="px-3 gap-1 group-data-[collapsible=icon]:px-0">
           {footerItems.map((item) => {
             const isExternal = item.url.startsWith("mailto:") || item.url.startsWith("http");
             return (
