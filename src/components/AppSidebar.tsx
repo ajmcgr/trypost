@@ -54,12 +54,16 @@ export function AppSidebar() {
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
   const isActive = (path: string) => currentPath === path;
+  const menuButtonClass =
+    "h-[52px] rounded-2xl px-5 text-[17px] font-bold text-foreground/80 hover:bg-muted hover:text-foreground data-[active=true]:bg-[#171717] data-[active=true]:text-white data-[active=true]:font-bold";
+  const menuLinkClass = "gap-5 hover:bg-transparent";
+  const menuIconClass = "h-6 w-6 stroke-[2.4]";
 
   return (
     <Sidebar className={collapsed ? "w-14" : "w-64"} collapsible="icon">
-      <SidebarContent>
+      <SidebarContent className="px-3 py-5">
         {/* Logo */}
-        <div className="p-3">
+        <div className="px-2 pb-5">
           <NavLink to="/dashboard" className="flex">
             <img
               src={collapsed ? postIcon : postLogo}
@@ -69,37 +73,43 @@ export function AppSidebar() {
           </NavLink>
         </div>
 
+        {/* Collapse Button */}
+        <SidebarMenu className="mb-5 gap-3 px-0">
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={toggleSidebar}
+              className={menuButtonClass}
+            >
+              <PanelLeft className={menuIconClass} />
+              {!collapsed && <span>Collapse</span>}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+
         {/* Create Post Button */}
-        <div className="px-3 pb-2">
+        <div className="pb-5">
           <Button
             onClick={() => navigate("/dashboard")}
-            className="w-full rounded-xl"
+            className="h-12 w-full rounded-2xl text-[17px] font-bold"
           >
             {!collapsed ? (
               <>
-                <FileEdit className="mr-2 h-4 w-4" />
+                <FileEdit className="mr-3 h-5 w-5" />
                 Create post
               </>
             ) : (
-              <FileEdit className="h-4 w-4" />
+              <FileEdit className="h-5 w-5" />
             )}
           </Button>
         </div>
 
         {/* Flat menu */}
-        <SidebarMenu className="px-2">
-          <SidebarMenuItem>
-            <SidebarMenuButton onClick={toggleSidebar} className="hover:bg-muted/50">
-              <PanelLeft className="h-4 w-4" />
-              {!collapsed && <span>Collapse</span>}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
+        <SidebarMenu className="gap-3 px-0">
           {mainItems.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                <NavLink to={item.url} className="hover:bg-muted/50">
-                  <item.icon className="h-4 w-4" />
+              <SidebarMenuButton asChild isActive={isActive(item.url)} className={menuButtonClass}>
+                <NavLink to={item.url} className={menuLinkClass}>
+                  <item.icon className={menuIconClass} />
                   {!collapsed && <span>{item.title}</span>}
                 </NavLink>
               </SidebarMenuButton>
@@ -108,13 +118,13 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter>
-        <SidebarMenu>
+      <SidebarFooter className="px-3 pb-6">
+        <SidebarMenu className="gap-3 px-0">
           {footerItems.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                <NavLink to={item.url} className="hover:bg-muted/50">
-                  <item.icon className="h-4 w-4" />
+              <SidebarMenuButton asChild isActive={isActive(item.url)} className={menuButtonClass}>
+                <NavLink to={item.url} className={menuLinkClass}>
+                  <item.icon className={menuIconClass} />
                   {!collapsed && <span>{item.title}</span>}
                 </NavLink>
               </SidebarMenuButton>
