@@ -16,7 +16,6 @@ import {
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import postLogo from "@/assets/post-logo.png";
-import postIcon from "@/assets/post-icon.png";
 
 import {
   Sidebar,
