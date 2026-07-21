@@ -43,7 +43,7 @@ const mainItems = [
 
 const footerItems = [
   { title: "Settings", url: "/dashboard/account/settings", icon: Settings },
-  { title: "Help", url: "/dashboard/account/support", icon: HelpCircle },
+  { title: "Help", url: "mailto:alex@trypost.ai", icon: HelpCircle },
 ];
 
 const itemClasses =
