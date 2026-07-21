@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -8,6 +8,7 @@ import { NotificationsBell } from "@/components/NotificationsBell";
 import { UserMenu } from "@/components/UserMenu";
 import { initNotificationsPatch } from "@/lib/notifications";
 import { Loader2 } from "lucide-react";
+import postLogo from "@/assets/post-logo.png";
 
 initNotificationsPatch();
 
