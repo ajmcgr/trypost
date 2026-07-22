@@ -6,6 +6,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { Resend } from 'https://esm.sh/resend@2.0.0';
 
+const SITE_URL = 'https://trypost.ai';
+
 // Inline shared template so the function bundles without external imports.
 interface EmailTemplateOptions {
   preheader?: string;
