@@ -9,6 +9,7 @@ import postLogo from "@/assets/post-logo.png";
 import postIcon from "@/assets/post-icon.png";
 import Footer from "@/components/Footer";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import heroVideo from "@/assets/hero.mp4.asset.json";
 import facebookLogo from "@/assets/facebook.svg";
 import xLogo from "@/assets/x.svg";
 import linkedinLogo from "@/assets/linkedin.svg";
@@ -102,15 +103,21 @@ const Index = () => {
           </Link>
           <div className="senja-embed" data-id="eacf7a79-5b6c-4a80-9f5a-0e6dfe631ec6" data-mode="shadow" data-lazyload="false"></div>
         </div>
-        <div className="mt-16 rounded-3xl overflow-hidden shadow-2xl border border-border bg-card p-8">
-          <div className="rounded-2xl overflow-hidden bg-muted/30">
-            <GracefulImage
-              src="/hero-screenshot.png"
-              alt="TryPost composer interface showing connected social accounts and a ready-to-publish post"
-              className="w-full h-auto"
-              priority
-            />
+        <div className="mt-16 rounded-xl overflow-hidden shadow-2xl border border-black/10 bg-[#f0f0f0]">
+          {/* Browser chrome */}
+          <div className="flex items-center gap-1.5 px-4 h-9 bg-[#e8e8e8] border-b border-black/10">
+            <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+            <span className="w-3 h-3 rounded-full bg-[#febc2e]" />
+            <span className="w-3 h-3 rounded-full bg-[#28c840]" />
           </div>
+          <video
+            src={heroVideo.url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-auto block bg-white"
+          />
         </div>
 
       </section>
