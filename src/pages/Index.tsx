@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Calendar, Zap, BarChart3, ChevronDown, Check, ArrowRight, Play, Pause } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import postLogo from "@/assets/post-logo.png";
 import postIcon from "@/assets/post-icon.png";
