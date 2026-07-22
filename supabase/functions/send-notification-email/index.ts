@@ -15,6 +15,7 @@ interface EmailTemplateOptions {
   body: string;
   ctaLabel?: string;
   ctaUrl?: string;
+  footerNote?: string;
 }
 
 const LOGO_URL = 'https://trypost.ai/email-logo.png';
