@@ -48,18 +48,23 @@ const Calendar = () => {
 
     const loadPosts = async () => {
       setLoading(true);
-      const { data } = await supabase
-        .from('posts')
-        .select('id,content,platforms,status,scheduled_at')
-        .eq('user_id', user.id)
-        .in('status', ['scheduled', 'queued'])
-        .not('scheduled_at', 'is', null)
-        .gte('scheduled_at', rangeStart.toISOString())
-        .lte('scheduled_at', rangeEnd.toISOString())
-        .order('scheduled_at', { ascending: true });
+      try {
+        const { data } = await supabase
+          .from('posts')
+          .select('id,content,platforms,status,scheduled_at')
+          .eq('user_id', user.id)
+          .in('status', ['scheduled', 'queued'])
+          .not('scheduled_at', 'is', null)
+          .gte('scheduled_at', rangeStart.toISOString())
+          .lte('scheduled_at', rangeEnd.toISOString())
+          .order('scheduled_at', { ascending: true });
 
-      setPosts((data ?? []) as CalendarPost[]);
-      setLoading(false);
+        setPosts((data ?? []) as CalendarPost[]);
+      } catch {
+        setPosts([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadPosts();
