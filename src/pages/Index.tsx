@@ -87,7 +87,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20 text-center">
-        <h1 className="font-reckless text-5xl md:text-6xl font-medium mb-6 tracking-tight text-black">
+        <h1 className="font-reckless text-6xl md:text-7xl font-medium mb-6 tracking-tight text-black">
           Create once.
           <br />
           <span>Schedule everywhere.</span>
