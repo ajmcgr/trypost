@@ -55,7 +55,7 @@ function renderEmail(opts: EmailTemplateOptions): string {
           ${cta}
         </td></tr>
         <tr><td style="padding:24px 40px 32px;"><div style="height:1px;background:#e5e7eb;margin-bottom:20px;"></div>
-          <p style="margin:0;text-align:center;font-size:13px;color:#94a3b8;">You're receiving this because you have an account with Post.</p>
+          <p style="margin:0;text-align:center;font-size:13px;color:#94a3b8;">${footerNote}</p>
         </td></tr>
       </table>
       <p style="margin:16px 0 0;font-size:12px;color:#94a3b8;">© Post · <a href="${SITE_URL}" style="color:#94a3b8;text-decoration:none;">trypost.ai</a></p>
