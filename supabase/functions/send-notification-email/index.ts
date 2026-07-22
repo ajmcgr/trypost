@@ -90,8 +90,6 @@ interface NotifyRequest {
   results?: FailureResult[];
 }
 
-const SITE_URL = 'https://trypost.ai';
-
 function labelFor(p: string) {
   return PLATFORM_LABELS[p] ?? p;
 }
