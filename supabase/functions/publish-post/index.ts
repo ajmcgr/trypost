@@ -223,6 +223,26 @@ Deno.serve(async (req) => {
     const { error: postError } = await write;
     if (postError) throw postError;
 
+    // Notify user by email on any failure (fire-and-forget)
+    const anyFailed = results.some((r) => !r.success);
+    if (anyFailed) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+      const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+      fetch(`${supabaseUrl}/functions/v1/send-notification-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${serviceKey}`,
+        },
+        body: JSON.stringify({
+          type: 'post_failed',
+          userId,
+          content,
+          results,
+        }),
+      }).catch((e) => console.warn('notification email failed:', e));
+    }
+
     return new Response(
       JSON.stringify({ success: true, status, results, draft_id: draftId ?? null }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
