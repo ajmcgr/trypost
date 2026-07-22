@@ -57,12 +57,6 @@ const Index = () => {
     }
   };
 
-  useEffect(() => {
-    if (videoRef.current) {
-      setIsPlaying(!videoRef.current.paused);
-    }
-  }, []);
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
