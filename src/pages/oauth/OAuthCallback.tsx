@@ -74,6 +74,16 @@ const OAuthCallback = () => {
         }
 
         if (data?.success) {
+          // Fire-and-forget confirmation email
+          supabase.functions.invoke('send-notification-email', {
+            headers: { Authorization: `Bearer ${accessToken}` },
+            body: {
+              type: 'connection_success',
+              platform,
+              platformUsername: data?.platform_username ?? data?.username ?? null,
+            },
+          }).catch((e) => console.warn('notification email failed:', e));
+
           // Redirect back to dashboard with success
           navigate('/dashboard?connected=' + platform);
         } else {
