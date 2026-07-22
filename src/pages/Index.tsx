@@ -9,6 +9,7 @@ import postLogo from "@/assets/post-logo.png";
 import postIcon from "@/assets/post-icon.png";
 import Footer from "@/components/Footer";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import heroVideo from "@/assets/hero.mp4.asset.json";
 import facebookLogo from "@/assets/facebook.svg";
 import xLogo from "@/assets/x.svg";
 import linkedinLogo from "@/assets/linkedin.svg";
