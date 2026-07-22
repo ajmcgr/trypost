@@ -122,7 +122,7 @@ const Index = () => {
             </div>
           ))}
         </div>
-        <div className="mt-16 max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl border border-black/10 bg-[#f0f0f0]">
+        <div className="mt-16 max-w-7xl mx-auto rounded-xl overflow-hidden shadow-2xl border border-black/10 bg-[#f0f0f0]">
           {/* Browser chrome */}
           <div className="flex items-center gap-1.5 px-4 h-9 bg-[#e8e8e8] border-b border-black/10">
             <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
