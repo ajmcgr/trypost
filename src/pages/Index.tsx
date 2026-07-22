@@ -45,6 +45,23 @@ function GracefulImage({
 
 const Index = () => {
   const { user } = useAuth();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+    } else {
+      videoRef.current.pause();
+    }
+  };
+
+  useEffect(() => {
+    if (videoRef.current) {
+      setIsPlaying(!videoRef.current.paused);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
