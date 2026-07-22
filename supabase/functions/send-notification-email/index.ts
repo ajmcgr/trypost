@@ -27,6 +27,7 @@ function renderEmail(opts: EmailTemplateOptions): string {
     body,
     ctaLabel,
     ctaUrl,
+    footerNote = "You're receiving this because you have an account with Post.",
   } = opts;
 
   const cta = ctaLabel && ctaUrl
