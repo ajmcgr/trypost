@@ -22,7 +22,7 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<'month' | 'week'>('month');
   const [posts, setPosts] = useState<CalendarPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
@@ -48,18 +48,23 @@ const Calendar = () => {
 
     const loadPosts = async () => {
       setLoading(true);
-      const { data } = await supabase
-        .from('posts')
-        .select('id,content,platforms,status,scheduled_at')
-        .eq('user_id', user.id)
-        .in('status', ['scheduled', 'queued'])
-        .not('scheduled_at', 'is', null)
-        .gte('scheduled_at', rangeStart.toISOString())
-        .lte('scheduled_at', rangeEnd.toISOString())
-        .order('scheduled_at', { ascending: true });
+      try {
+        const { data } = await supabase
+          .from('posts')
+          .select('id,content,platforms,status,scheduled_at')
+          .eq('user_id', user.id)
+          .in('status', ['scheduled', 'queued'])
+          .not('scheduled_at', 'is', null)
+          .gte('scheduled_at', rangeStart.toISOString())
+          .lte('scheduled_at', rangeEnd.toISOString())
+          .order('scheduled_at', { ascending: true });
 
-      setPosts((data ?? []) as CalendarPost[]);
-      setLoading(false);
+        setPosts((data ?? []) as CalendarPost[]);
+      } catch {
+        setPosts([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadPosts();
@@ -73,7 +78,7 @@ const Calendar = () => {
     setCurrentDate(view === 'week' ? addDays(currentDate, 7) : addMonths(currentDate, 1));
   };
 
-  if (authLoading || loading) {
+  if (authLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />

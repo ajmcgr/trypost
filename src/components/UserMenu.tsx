@@ -51,8 +51,8 @@ export function UserMenu() {
           Settings
         </DropdownMenuItem>
         {canAccessBilling && (
-          <DropdownMenuItem onClick={() => navigate("/dashboard/account/plans")}>
-            Plans
+          <DropdownMenuItem onClick={() => navigate("/pricing")}>
+            Pricing
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />

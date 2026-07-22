@@ -45,10 +45,10 @@ const footerItems = [
 ];
 
 const itemClasses =
-  "h-10 rounded-xl px-4 gap-3 text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:font-semibold [&>svg]:!size-[18px] group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!p-2.5";
+  "h-10 rounded-xl px-4 gap-3 text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:font-semibold [&>svg]:!size-[18px] group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!p-2.5 group-data-[collapsible=icon]:justify-center";
 
 const ctaItemClasses =
-  "h-10 rounded-xl px-4 gap-3 text-sm font-semibold bg-brand-blue text-brand-blue-foreground hover:bg-brand-blue/90 shadow-sm [&>svg]:!size-[18px] group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!p-2.5";
+  "h-10 rounded-xl px-4 gap-3 text-sm font-semibold bg-brand-blue text-brand-blue-foreground hover:bg-brand-blue/90 shadow-sm [&>svg]:!size-[18px] group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!p-2.5 group-data-[collapsible=icon]:justify-center";
 
 interface SidebarMenuProps {
   collapsed: boolean;
@@ -149,7 +149,7 @@ export function AppSidebar() {
     <div
       data-state={state}
       data-collapsible={state === "collapsed" ? "icon" : ""}
-      className="group peer hidden text-sidebar-foreground md:flex flex-col border-r bg-sidebar shrink-0"
+      className="group peer hidden text-sidebar-foreground md:flex flex-col border-r bg-sidebar shrink-0 sticky top-14 h-[calc(100vh-3.5rem)] self-start"
       style={
         {
           width: collapsed ? "4rem" : "var(--sidebar-width)",
