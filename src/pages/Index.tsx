@@ -128,7 +128,44 @@ const Index = () => {
           />
         </div>
 
+        {/* Supported Platforms */}
+        <div className="mt-16 text-center">
+          <h2 className="font-reckless text-3xl font-medium mb-4 text-black">Works with all your platforms</h2>
+          <p className="text-base text-muted-foreground mb-8">Connect once, publish everywhere</p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex items-center gap-3 bg-card px-5 py-3 rounded-xl border border-border">
+              <img src={xLogo} alt="X" className="w-5 h-5" />
+              <span className="text-sm font-medium">Twitter / X</span>
+            </div>
+            <div className="flex items-center gap-3 bg-card px-5 py-3 rounded-xl border border-border">
+              <img src={linkedinLogo} alt="LinkedIn" className="w-5 h-5" />
+              <span className="text-sm font-medium">LinkedIn</span>
+            </div>
+            <div className="flex items-center gap-3 bg-card px-5 py-3 rounded-xl border border-border">
+              <img src={instagramLogo} alt="Instagram" className="w-5 h-5" />
+              <span className="text-sm font-medium">Instagram</span>
+            </div>
+            <div className="flex items-center gap-3 bg-card px-5 py-3 rounded-xl border border-border">
+              <img src={facebookLogo} alt="Facebook" className="w-5 h-5" />
+              <span className="text-sm font-medium">Facebook</span>
+            </div>
+            <div className="flex items-center gap-3 bg-card px-5 py-3 rounded-xl border border-border">
+              <img src={youtubeLogo} alt="YouTube" className="w-5 h-5" />
+              <span className="text-sm font-medium">YouTube</span>
+            </div>
+            <div className="flex items-center gap-3 bg-card px-5 py-3 rounded-xl border border-border">
+              <img src={threadsLogo} alt="Threads" className="w-5 h-5" />
+              <span className="text-sm font-medium">Threads</span>
+            </div>
+            <div className="flex items-center gap-3 bg-card px-5 py-3 rounded-xl border border-border">
+              <img src={tiktokLogo} alt="TikTok" className="w-5 h-5" />
+              <span className="text-sm font-medium">TikTok</span>
+            </div>
+          </div>
+        </div>
+
       </section>
+
 
       {/* Features Section */}
       <section className="max-w-6xl mx-auto px-6 py-20 space-y-24">
@@ -424,43 +461,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Supported Platforms */}
-      <section className="container mx-auto px-6 py-20 bg-muted/30 rounded-3xl">
-        <div className="text-center mb-12">
-          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">Works with all your platforms</h2>
-          <p className="text-lg text-muted-foreground">Connect once, publish everywhere</p>
-        </div>
-        <div className="flex flex-wrap justify-center gap-8">
-          <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <img src={xLogo} alt="X" className="w-6 h-6" />
-            <span className="font-medium">Twitter / X</span>
-          </div>
-          <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <img src={linkedinLogo} alt="LinkedIn" className="w-6 h-6" />
-            <span className="font-medium">LinkedIn</span>
-          </div>
-          <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <img src={instagramLogo} alt="Instagram" className="w-6 h-6" />
-            <span className="font-medium">Instagram</span>
-          </div>
-          <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <img src={facebookLogo} alt="Facebook" className="w-6 h-6" />
-            <span className="font-medium">Facebook</span>
-          </div>
-          <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <img src={youtubeLogo} alt="YouTube" className="w-6 h-6" />
-            <span className="font-medium">YouTube</span>
-          </div>
-          <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <img src={threadsLogo} alt="Threads" className="w-6 h-6" />
-            <span className="font-medium">Threads</span>
-          </div>
-          <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border border-border">
-            <img src={tiktokLogo} alt="TikTok" className="w-6 h-6" />
-            <span className="font-medium">TikTok</span>
-          </div>
-        </div>
-      </section>
+
+
 
       {/* FAQ Section */}
       <section className="container mx-auto px-6 py-20">
