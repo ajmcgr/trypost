@@ -149,7 +149,7 @@ export function AppSidebar() {
     <div
       data-state={state}
       data-collapsible={state === "collapsed" ? "icon" : ""}
-      className="group peer hidden text-sidebar-foreground md:flex flex-col border-r bg-sidebar shrink-0"
+      className="group peer hidden text-sidebar-foreground md:flex flex-col border-r bg-sidebar shrink-0 sticky top-14 h-[calc(100vh-3.5rem)] self-start"
       style={
         {
           width: collapsed ? "4rem" : "var(--sidebar-width)",
