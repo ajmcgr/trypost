@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Zap, BarChart3, ChevronDown, Check, ArrowRight, Play, Pause } from "lucide-react";
+import { Calendar, Zap, BarChart3, ChevronDown, Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState, useRef } from "react";
@@ -147,13 +147,18 @@ const Index = () => {
                 e.stopPropagation();
                 togglePlay();
               }}
-              className="absolute inset-0 m-auto w-16 h-16 rounded-full bg-white shadow-xl flex items-center justify-center text-foreground hover:scale-105 transition-transform focus:outline-none"
+              className="absolute inset-0 m-auto w-20 h-20 rounded-full bg-background border border-border shadow-[0_4px_24px_rgba(0,0,0,0.12)] flex items-center justify-center text-foreground hover:scale-105 transition-transform focus:outline-none"
               aria-label={isPlaying ? "Pause" : "Play"}
             >
               {isPlaying ? (
-                <Pause className="w-6 h-6 fill-current" />
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
+                  <rect x="8" y="5" width="3" height="14" rx="1.5" fill="currentColor" />
+                  <rect x="13" y="5" width="3" height="14" rx="1.5" fill="currentColor" />
+                </svg>
               ) : (
-                <Play className="w-6 h-6 fill-current ml-0.5" />
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 ml-1">
+                  <path d="M8 6L18 12L8 18V6Z" fill="currentColor" />
+                </svg>
               )}
             </button>
           </div>
