@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Zap, BarChart3, ChevronDown, Check, ArrowRight, Play, Pause } from "lucide-react";
+import { Calendar, Zap, BarChart3, ChevronDown, Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState, useRef } from "react";
