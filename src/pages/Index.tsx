@@ -103,6 +103,14 @@ const Index = () => {
           </Link>
           <div className="senja-embed" data-id="eacf7a79-5b6c-4a80-9f5a-0e6dfe631ec6" data-mode="shadow" data-lazyload="false"></div>
         </div>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-muted-foreground">
+          {["14-day free trial", "Secure payment", "Cancel any-time"].map((t) => (
+            <div key={t} className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-primary" strokeWidth={3} />
+              <span>{t}</span>
+            </div>
+          ))}
+        </div>
         <div className="mt-16 rounded-xl overflow-hidden shadow-2xl border border-black/10 bg-[#f0f0f0]">
           {/* Browser chrome */}
           <div className="flex items-center gap-1.5 px-4 h-9 bg-[#e8e8e8] border-b border-black/10">
