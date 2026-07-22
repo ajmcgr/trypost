@@ -130,7 +130,7 @@ const Index = () => {
 
         {/* Supported Platforms */}
         <div className="mt-16 text-center">
-          <p className="font-reckless text-2xl font-medium text-black mb-8">Works with all your platforms</p>
+          <p className="text-base text-muted-foreground mb-8">Works with all your platforms</p>
           <div className="flex flex-wrap justify-center gap-4">
             <div className="flex items-center gap-3 bg-card px-5 py-3 rounded-xl border border-border">
               <img src={xLogo} alt="X" className="w-5 h-5" />
