@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Zap, BarChart3, ChevronDown, Check, ArrowRight } from "lucide-react";
+import { Calendar, Zap, BarChart3, ChevronDown, Check, ArrowRight, Play, Pause } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import postLogo from "@/assets/post-logo.png";
 import postIcon from "@/assets/post-icon.png";
@@ -45,6 +45,17 @@ function GracefulImage({
 
 const Index = () => {
   const { user } = useAuth();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+    } else {
+      videoRef.current.pause();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -111,21 +122,41 @@ const Index = () => {
             </div>
           ))}
         </div>
-        <div className="mt-16 rounded-xl overflow-hidden shadow-2xl border border-black/10 bg-[#f0f0f0]">
+        <div className="mt-16 max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl border border-black/10 bg-[#f0f0f0]">
           {/* Browser chrome */}
           <div className="flex items-center gap-1.5 px-4 h-9 bg-[#e8e8e8] border-b border-black/10">
             <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
             <span className="w-3 h-3 rounded-full bg-[#febc2e]" />
             <span className="w-3 h-3 rounded-full bg-[#28c840]" />
           </div>
-          <video
-            src={heroVideo.url}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-auto block bg-white"
-          />
+          <div className="relative" onClick={togglePlay}>
+            <video
+              ref={videoRef}
+              src={heroVideo.url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              className="w-full h-auto block bg-white cursor-pointer"
+            />
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePlay();
+              }}
+              className="absolute inset-0 m-auto w-16 h-16 rounded-full bg-white shadow-xl flex items-center justify-center text-foreground hover:scale-105 transition-transform focus:outline-none"
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? (
+                <Pause className="w-6 h-6 fill-current" />
+              ) : (
+                <Play className="w-6 h-6 fill-current ml-0.5" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Supported Platforms */}
