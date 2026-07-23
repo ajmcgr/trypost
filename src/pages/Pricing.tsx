@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
@@ -5,11 +6,16 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+type Billing = "monthly" | "yearly";
+
 const Pricing = () => {
+  const [billing, setBilling] = useState<Billing>("monthly");
+
   const plans = [
     {
       name: "Free",
-      price: "$0",
+      monthly: 0,
+      yearly: 0,
       description: "Perfect for getting started",
       features: [
         "2 social networks",
@@ -22,7 +28,8 @@ const Pricing = () => {
     },
     {
       name: "Pro",
-      price: "$19",
+      monthly: 19,
+      yearly: 190,
       description: "For individual creators",
       features: [
         "5 social networks",
@@ -36,7 +43,8 @@ const Pricing = () => {
     },
     {
       name: "Business",
-      price: "$49",
+      monthly: 49,
+      yearly: 490,
       description: "For teams and agencies",
       features: [
         "All social networks",
@@ -60,55 +68,87 @@ const Pricing = () => {
         <h1 className="text-5xl font-bold mb-6 tracking-tight">
           Simple, transparent pricing
         </h1>
-        <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Choose the plan that fits your needs. All plans include a 14-day free trial.
         </p>
 
+        {/* Billing toggle */}
+        <div className="inline-flex items-center gap-1 p-1 bg-muted rounded-full mb-12">
+          <button
+            onClick={() => setBilling("monthly")}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+              billing === "monthly" ? "bg-background shadow-sm" : "text-muted-foreground"
+            }`}
+          >
+            Monthly
+          </button>
+          <button
+            onClick={() => setBilling("yearly")}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2 ${
+              billing === "yearly" ? "bg-background shadow-sm" : "text-muted-foreground"
+            }`}
+          >
+            Yearly
+            <span className="text-xs text-primary font-semibold">Save ~17%</span>
+          </button>
+        </div>
+
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan) => (
-            <Card
-              key={plan.name}
-              className={`p-8 rounded-3xl border-2 flex flex-col ${
-                plan.highlighted
-                  ? "border-primary shadow-xl scale-105"
-                  : "border-border"
-              }`}
-            >
-              {plan.highlighted && (
-                <div className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full w-fit mx-auto mb-4">
-                  Most Popular
-                </div>
-              )}
-              <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-              <div className="mb-2">
-                <span className="text-5xl font-bold">{plan.price}</span>
-                {plan.price !== "$0" && (
-                  <span className="text-muted-foreground">/month</span>
+          {plans.map((plan) => {
+            const isFree = plan.monthly === 0;
+            const amount = billing === "monthly" ? plan.monthly : plan.yearly;
+            return (
+              <Card
+                key={plan.name}
+                className={`p-8 rounded-3xl border-2 flex flex-col ${
+                  plan.highlighted
+                    ? "border-primary shadow-xl scale-105"
+                    : "border-border"
+                }`}
+              >
+                {plan.highlighted && (
+                  <div className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full w-fit mx-auto mb-4">
+                    Most Popular
+                  </div>
                 )}
-              </div>
-              <p className="text-muted-foreground mb-8">{plan.description}</p>
-              
-              <ul className="space-y-4 mb-8 flex-grow text-left">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                <div className="mb-2">
+                  <span className="text-5xl font-bold">${amount}</span>
+                  {!isFree && (
+                    <span className="text-muted-foreground">
+                      /{billing === "monthly" ? "month" : "year"}
+                    </span>
+                  )}
+                </div>
+                {!isFree && billing === "yearly" && (
+                  <p className="text-sm text-primary font-medium mb-2">
+                    ~17% off vs monthly
+                  </p>
+                )}
+                <p className="text-muted-foreground mb-8">{plan.description}</p>
 
-              <Link to="/signup">
-                <Button
-                  className="w-full"
-                  variant={plan.highlighted ? "default" : "outline"}
-                  size="lg"
-                >
-                  {plan.cta}
-                </Button>
-              </Link>
-            </Card>
-          ))}
+                <ul className="space-y-4 mb-8 flex-grow text-left">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link to="/signup">
+                  <Button
+                    className="w-full"
+                    variant={plan.highlighted ? "default" : "outline"}
+                    size="lg"
+                  >
+                    {plan.cta}
+                  </Button>
+                </Link>
+              </Card>
+            );
+          })}
         </div>
       </section>
 
