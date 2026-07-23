@@ -97,13 +97,13 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 py-20 text-center">
-        <h1 className="font-reckless text-6xl md:text-7xl font-medium mb-6 tracking-tight text-black">
+      <section className="container mx-auto px-6 py-12 md:py-20 text-center">
+        <h1 className="font-reckless text-4xl sm:text-5xl md:text-7xl font-medium mb-4 md:mb-6 tracking-tight text-black">
           Create Content Once.
           <br />
           <span>Schedule Everywhere.</span>
         </h1>
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+        <p className="text-base md:text-xl text-muted-foreground mb-6 md:mb-8 max-w-2xl mx-auto">
           Post helps creators and brands plan, queue, and publish content across all social platforms from one simple dashboard.
         </p>
         <div className="flex flex-col md:flex-row items-center justify-center gap-3">
