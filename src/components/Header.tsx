@@ -35,7 +35,7 @@ const Header = ({ showSignup = false }: HeaderProps) => {
           showSignup && (
             <div className="flex items-center gap-2 sm:gap-4">
               <Link to="/login">
-                <Button variant="ghost" className="hover:bg-transparent">Login</Button>
+                <Button variant="ghost" className="bg-transparent hover:bg-transparent text-foreground hover:text-foreground">Login</Button>
               </Link>
               <Link to="/signup">
                 <Button size="lg" className="text-sm">Sign Up →</Button>
