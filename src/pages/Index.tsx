@@ -43,10 +43,61 @@ function GracefulImage({
 }
 
 
+type Billing = "monthly" | "yearly";
+
+const plans = [
+  {
+    name: "Free",
+    monthly: 0,
+    yearly: 0,
+    description: "Perfect for getting started",
+    features: [
+      "2 social networks",
+      "10 scheduled posts per month",
+      "Basic analytics",
+      "Calendar view",
+    ],
+    cta: "Get Started",
+    highlighted: false,
+  },
+  {
+    name: "Pro",
+    monthly: 19,
+    yearly: 190,
+    description: "For individual creators",
+    features: [
+      "5 social networks",
+      "Unlimited scheduled posts",
+      "Advanced analytics",
+      "Calendar & queue views",
+      "Priority support",
+    ],
+    cta: "Start Free Trial",
+    highlighted: true,
+  },
+  {
+    name: "Business",
+    monthly: 49,
+    yearly: 490,
+    description: "For teams and agencies",
+    features: [
+      "All social networks",
+      "Unlimited posts",
+      "Team collaboration",
+      "Advanced analytics & reporting",
+      "API access",
+      "Dedicated support",
+    ],
+    cta: "Start Free Trial",
+    highlighted: false,
+  },
+];
+
 const Index = () => {
   const { user } = useAuth();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [billing, setBilling] = useState<Billing>("monthly");
 
   const togglePlay = () => {
     if (!videoRef.current) return;
