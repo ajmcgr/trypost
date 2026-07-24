@@ -43,10 +43,61 @@ function GracefulImage({
 }
 
 
+type Billing = "monthly" | "yearly";
+
+const plans = [
+  {
+    name: "Free",
+    monthly: 0,
+    yearly: 0,
+    description: "Perfect for getting started",
+    features: [
+      "2 social networks",
+      "10 scheduled posts per month",
+      "Basic analytics",
+      "Calendar view",
+    ],
+    cta: "Get Started",
+    highlighted: false,
+  },
+  {
+    name: "Pro",
+    monthly: 19,
+    yearly: 190,
+    description: "For individual creators",
+    features: [
+      "5 social networks",
+      "Unlimited scheduled posts",
+      "Advanced analytics",
+      "Calendar & queue views",
+      "Priority support",
+    ],
+    cta: "Start Free Trial",
+    highlighted: true,
+  },
+  {
+    name: "Business",
+    monthly: 49,
+    yearly: 490,
+    description: "For teams and agencies",
+    features: [
+      "All social networks",
+      "Unlimited posts",
+      "Team collaboration",
+      "Advanced analytics & reporting",
+      "API access",
+      "Dedicated support",
+    ],
+    cta: "Start Free Trial",
+    highlighted: false,
+  },
+];
+
 const Index = () => {
   const { user } = useAuth();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [billing, setBilling] = useState<Billing>("monthly");
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -381,118 +432,91 @@ const Index = () => {
       </section>
 
       {/* Pricing Section */}
-      <section className="container mx-auto px-6 py-20">
-        <div className="text-center mb-16">
-          <h2 className="font-reckless text-4xl font-medium mb-4 text-black">Simple, transparent pricing</h2>
-          <p className="text-lg text-muted-foreground">Choose the plan that fits your needs</p>
+      <section className="container mx-auto px-6 py-20 text-center">
+        <h2 className="font-reckless text-4xl font-medium mb-4 text-black">
+          Simple, transparent pricing
+        </h2>
+        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+          Choose the plan that fits your needs. All plans include a 14-day free trial.
+        </p>
+
+        {/* Billing toggle */}
+        <div className="inline-flex items-center gap-1 p-1 bg-muted rounded-full mb-12">
+          <button
+            onClick={() => setBilling("monthly")}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+              billing === "monthly" ? "bg-background shadow-sm" : "text-muted-foreground"
+            }`}
+          >
+            Monthly
+          </button>
+          <button
+            onClick={() => setBilling("yearly")}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2 ${
+              billing === "yearly" ? "bg-background shadow-sm" : "text-muted-foreground"
+            }`}
+          >
+            Yearly
+            <span className="text-xs text-primary font-semibold">Save ~17%</span>
+          </button>
         </div>
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {/* Free Plan */}
-          <Card className="p-8 rounded-3xl border-2 flex flex-col">
-            <h3 className="text-2xl font-medium mb-2 text-black">Free</h3>
-            <div className="mb-2">
-              <span className="text-5xl font-medium">$0</span>
-            </div>
-            <p className="text-muted-foreground mb-8">Perfect for getting started</p>
-            
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">2 social networks</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">10 scheduled posts per month</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Basic analytics</span>
-              </li>
-            </ul>
 
-            <Link to="/signup">
-              <Button className="w-full" variant="outline" size="lg">
-                Get Started
-              </Button>
-            </Link>
-          </Card>
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {plans.map((plan) => {
+            const isFree = plan.monthly === 0;
+            const amount = billing === "monthly" ? plan.monthly : plan.yearly;
+            return (
+              <Card
+                key={plan.name}
+                className={`p-8 rounded-3xl border-2 flex flex-col text-left ${
+                  plan.highlighted
+                    ? "border-primary shadow-xl scale-105"
+                    : "border-border"
+                }`}
+              >
+                {plan.highlighted && (
+                  <div className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full w-fit mx-auto mb-4">
+                    Most Popular
+                  </div>
+                )}
+                <h3 className="text-2xl font-bold mb-2 text-black">{plan.name}</h3>
+                <div className="mb-2">
+                  <span className="text-5xl font-bold">${amount}</span>
+                  {!isFree && (
+                    <span className="text-muted-foreground">
+                      /{billing === "monthly" ? "month" : "year"}
+                    </span>
+                  )}
+                </div>
+                {!isFree && billing === "yearly" && (
+                  <p className="text-sm text-primary font-medium mb-2">
+                    ~17% off vs monthly
+                  </p>
+                )}
+                <p className="text-muted-foreground mb-8">{plan.description}</p>
 
-          {/* Pro Plan */}
-          <Card className="p-8 rounded-3xl border-2 border-primary shadow-xl scale-105 flex flex-col">
-            <div className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full w-fit mx-auto mb-4">
-              Most Popular
-            </div>
-            <h3 className="text-2xl font-medium mb-2 text-black">Pro</h3>
-            <div className="mb-2">
-              <span className="text-5xl font-medium">$19</span>
-              <span className="text-muted-foreground">/month</span>
-            </div>
-            <p className="text-muted-foreground mb-8">For individual creators</p>
-            
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">5 social networks</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Unlimited scheduled posts</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Advanced analytics</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Priority support</span>
-              </li>
-            </ul>
+                <ul className="space-y-4 mb-8 flex-grow">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
 
-            <Link to="/signup">
-              <Button className="w-full" size="lg">
-                Start Free Trial
-              </Button>
-            </Link>
-          </Card>
-
-          {/* Business Plan */}
-          <Card className="p-8 rounded-3xl border-2 flex flex-col">
-            <h3 className="text-2xl font-medium mb-2 text-black">Business</h3>
-            <div className="mb-2">
-              <span className="text-5xl font-medium">$49</span>
-              <span className="text-muted-foreground">/month</span>
-            </div>
-            <p className="text-muted-foreground mb-8">For teams and agencies</p>
-            
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">All social networks</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Unlimited posts</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Team collaboration</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Advanced analytics & reporting</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Dedicated support</span>
-              </li>
-            </ul>
-
-            <Link to="/signup">
-              <Button className="w-full" variant="outline" size="lg">
-                Start Free Trial
-              </Button>
-            </Link>
-          </Card>
+                <Link to="/signup">
+                  <Button
+                    className="w-full"
+                    variant={plan.highlighted ? "default" : "outline"}
+                    size="lg"
+                  >
+                    {plan.cta}
+                  </Button>
+                </Link>
+              </Card>
+            );
+          })}
         </div>
       </section>
 
